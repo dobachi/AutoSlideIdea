@@ -51,7 +51,7 @@ while IFS= read -r line || [ -n "$line" ]; do
         # CI環境では--puppeteerArgsでno-sandboxを指定
         if [ -n "$CI" ]; then
             npx mmdc -i "${TEMP_FILE}.mmd" -o "$IMAGE_FILE" -t default -b transparent \
-                --puppeteerArgs='--no-sandbox,--disable-setuid-sandbox'
+                -p puppeteer-config.json
         else
             npx mmdc -i "${TEMP_FILE}.mmd" -o "$IMAGE_FILE" -t default -b transparent
         fi
