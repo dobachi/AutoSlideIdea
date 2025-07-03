@@ -15,7 +15,7 @@ cp templates/basic/slides.md presentations/my-presentation/
 
 ### 2. AI支援による構成作成
 
-#### Claude Codeでの例
+#### AIツールでの例（Claude Code、Gemini CLIなど）
 
 ```text
 プロンプト例：

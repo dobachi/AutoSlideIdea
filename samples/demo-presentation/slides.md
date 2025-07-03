@@ -9,7 +9,7 @@ footer: 'AI支援プレゼン作成デモ - 2025-07-03'
 
 # AI支援プレゼンテーション作成
 
-## Marp + Claude Code/Gemini CLIで効率的なスライド作成
+## Marp + AIツールで効率的なスライド作成
 
 作成日: 2025-07-03
 
@@ -24,7 +24,7 @@ AIツールを活用した効率的なプレゼンテーション作成方法の
 ## 使用技術
 
 - **Marp**: Markdownベースのスライド作成ツール
-- **Claude Code**: AIによるコンテンツ生成支援
+- **AIツール**: Claude Code/Gemini CLIによるコンテンツ生成支援
 - **GitHub Actions**: 自動ビルド・配布
 
 ---
@@ -76,7 +76,7 @@ theme: default
 ## 1. 構成の生成
 
 ```bash
-# Claude Codeでの例
+# AIツールでの例
 "技術発表用に10枚のスライド構成を提案してください"
 ```
 
@@ -115,7 +115,7 @@ graph LR
 ```mermaid
 graph TB
     subgraph "開発環境"
-        A[Claude Code/Gemini CLI]
+        A[AIツール\n(Claude Code/Gemini CLI)]
         B[VSCode + Marp拡張]
     end
     

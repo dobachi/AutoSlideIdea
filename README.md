@@ -57,7 +57,7 @@ AutoSlideIdea/
    ```
 
 3. **AI支援でコンテンツ作成**
-   - Claude Codeを起動
+   - AIツール（Claude Code、Gemini CLIなど）を使用
    - プロンプト例: "presentations/my-presentation/slides.md にAIに関する5枚のスライドを作成してください"
 
 4. **ビルド**
