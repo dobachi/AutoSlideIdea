@@ -69,6 +69,34 @@ jobs:
               -o _site/pdf/demo.pdf
           fi
           
+          # Mermaid demo presentation
+          if [ -f samples/mermaid-demo/slides.md ]; then
+            echo "Building Mermaid demo..."
+            # First, preprocess Mermaid diagrams
+            chmod +x scripts/preprocess-mermaid.sh
+            ./scripts/preprocess-mermaid.sh samples/mermaid-demo/slides.md
+            
+            # Then build with Marp
+            if [ -f samples/mermaid-demo/slides-processed.md ]; then
+              npx marp samples/mermaid-demo/slides-processed.md \
+                --html \
+                --allow-local-files \
+                --theme config/marp/base.css \
+                -o _site/slides/mermaid-demo.html
+              npx marp samples/mermaid-demo/slides-processed.md \
+                --pdf \
+                --allow-local-files \
+                --theme config/marp/base.css \
+                -o _site/pdf/mermaid-demo.pdf
+              
+              # Copy Mermaid images
+              if [ -d samples/mermaid-demo/mermaid-images ]; then
+                mkdir -p _site/slides/mermaid-images
+                cp -r samples/mermaid-demo/mermaid-images/* _site/slides/mermaid-images/
+              fi
+            fi
+          fi
+          
           # Build any test presentations (excluding .gitignored presentations/)
           for md in $(find presentations -name "slides.md" 2>/dev/null | head -5); do
             if [ -f "$md" ]; then
@@ -322,9 +350,14 @@ jobs:
             echo "demos.push({ title: 'Demo Presentation', description: 'AutoSlideIdeaの基本的な使い方', html: 'slides/demo.html', pdf: 'pdf/demo.pdf' });" >> _site/index.html
           fi
           
+          # Add Mermaid demo
+          if [ -f _site/slides/mermaid-demo.html ]; then
+            echo "demos.push({ title: 'Mermaid Integration Demo', description: 'Mermaid図表の統合デモンストレーション', html: 'slides/mermaid-demo.html', pdf: 'pdf/mermaid-demo.pdf' });" >> _site/index.html
+          fi
+          
           # Add other presentations
           for html in _site/slides/*.html; do
-            if [ -f "$html" ] && [ "$(basename "$html")" != "demo.html" ]; then
+            if [ -f "$html" ] && [ "$(basename "$html")" != "demo.html" ] && [ "$(basename "$html")" != "mermaid-demo.html" ]; then
               name=$(basename "$html" .html)
               echo "demos.push({ title: '$name', description: 'Sample presentation', html: 'slides/$name.html', pdf: 'pdf/$name.pdf' });" >> _site/index.html
             fi
