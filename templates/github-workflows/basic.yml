@@ -1,0 +1,94 @@
+name: Build Presentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '*.md'
+      - 'research/**'
+      - 'ideation/**'
+      - 'assets/**'
+      - '.github/workflows/build-slides.yml'
+  pull_request:
+    paths:
+      - '*.md'
+      - 'research/**'
+      - 'ideation/**'
+      - 'assets/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install Marp CLI
+        run: |
+          npm install -g @marp-team/marp-cli
+          echo "Marp version: $(marp --version)"
+          
+      - name: Install Japanese fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk fonts-noto-emoji
+          
+      - name: Create output directory
+        run: mkdir -p dist
+        
+      - name: Build PDF
+        run: |
+          if [ -f slides.md ]; then
+            echo "Building PDF from slides.md..."
+            marp slides.md \
+              --pdf \
+              --allow-local-files \
+              -o dist/slides.pdf
+          fi
+          
+      - name: Build HTML
+        run: |
+          if [ -f slides.md ]; then
+            echo "Building HTML from slides.md..."
+            marp slides.md \
+              --html \
+              --allow-local-files \
+              -o dist/index.html
+          fi
+          
+      - name: Copy assets
+        run: |
+          if [ -d assets ]; then
+            cp -r assets dist/
+          fi
+          
+      - name: Generate file list
+        run: |
+          echo "# Generated Files" > dist/README.md
+          echo "" >> dist/README.md
+          echo "- [slides.pdf](slides.pdf) - PDF version" >> dist/README.md
+          echo "- [index.html](index.html) - HTML version" >> dist/README.md
+          echo "" >> dist/README.md
+          echo "Generated at: $(date)" >> dist/README.md
+          
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: presentation-${{ github.sha }}
+          path: dist/
+          retention-days: 30
+          
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          cname: # カスタムドメインがある場合はここに記載

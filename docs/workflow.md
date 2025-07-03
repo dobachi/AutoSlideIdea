@@ -5,12 +5,28 @@
 ### 1. プレゼンテーションの新規作成
 
 ```bash
-# スクリプトを使用して新規作成
+# シンプルなプレゼンテーション作成
 ./scripts/new-presentation.sh my-presentation
 
-# または手動で作成
-mkdir -p presentations/my-presentation
-cp templates/basic/slides.md presentations/my-presentation/
+# フルプロジェクトとして作成（調査・分析含む）
+./scripts/new-presentation.sh --full research-project
+
+# テンプレート指定
+./scripts/new-presentation.sh conference-talk academic
+```
+
+#### フルプロジェクトの構造
+```
+research-project/
+├── research/              # 調査フェーズ
+│   ├── data/             # 生データ
+│   ├── analysis/         # 分析結果
+│   └── notes.md          # 調査メモ
+├── ideation/             # アイデア創出
+│   ├── brainstorm.md     # ブレインストーミング
+│   └── drafts/           # 構成案
+├── assets/               # リソース
+└── slides.md             # 最終スライド
 ```
 
 ### 2. AI支援による構成作成

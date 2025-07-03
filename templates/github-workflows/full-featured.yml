@@ -1,0 +1,169 @@
+# フル機能版 GitHub Actions ワークフロー
+# 複数スライド、調査データ可視化、マルチフォーマット出力対応
+
+name: Build Presentation (Full Featured)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.md'
+      - 'research/**'
+      - 'ideation/**'
+      - 'assets/**'
+      - '.github/workflows/*.yml'
+  pull_request:
+    paths:
+      - '**.md'
+      - 'research/**'
+      - 'ideation/**'
+      - 'assets/**'
+  workflow_dispatch:
+    inputs:
+      release:
+        description: 'Create a release'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+          
+      - name: Install dependencies
+        run: |
+          # Marp CLI
+          npm install -g @marp-team/marp-cli
+          
+          # 日本語フォント
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk fonts-noto-emoji
+          
+          # Python分析ライブラリ（調査データ可視化用）
+          pip install pandas matplotlib seaborn jupyter
+          
+      - name: Process research data
+        if: hashFiles('research/analysis/*.py') != ''
+        run: |
+          cd research/analysis
+          for script in *.py; do
+            if [ -f "$script" ]; then
+              echo "Running analysis script: $script"
+              python "$script"
+            fi
+          done
+          
+      - name: Create output directory
+        run: mkdir -p dist/{pdf,html,assets}
+        
+      - name: Build all markdown files
+        run: |
+          # メインスライド
+          if [ -f slides.md ]; then
+            echo "Building main slides..."
+            marp slides.md --pdf --allow-local-files -o dist/pdf/slides.pdf
+            marp slides.md --html --allow-local-files -o dist/html/index.html
+          fi
+          
+          # その他のMarkdownファイル
+          for md in $(find . -name "*.md" -not -path "./node_modules/*" -not -path "./.github/*" -not -name "README.md"); do
+            filename=$(basename "$md" .md)
+            dirname=$(dirname "$md")
+            
+            echo "Building $md..."
+            marp "$md" --pdf --allow-local-files -o "dist/pdf/${filename}.pdf"
+            marp "$md" --html --allow-local-files -o "dist/html/${filename}.html"
+          done
+          
+      - name: Copy assets and analysis results
+        run: |
+          # アセット
+          if [ -d assets ]; then
+            cp -r assets/* dist/assets/
+          fi
+          
+          # 分析結果の画像
+          if [ -d research/analysis ]; then
+            find research/analysis -name "*.png" -o -name "*.jpg" -o -name "*.svg" | \
+            xargs -I {} cp {} dist/assets/
+          fi
+          
+      - name: Generate index page
+        run: |
+          cat > dist/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Presentation Index</title>
+              <meta charset="utf-8">
+              <style>
+                  body { font-family: 'Noto Sans', sans-serif; margin: 40px; }
+                  h1 { color: #333; }
+                  .files { list-style: none; padding: 0; }
+                  .files li { margin: 10px 0; }
+                  .files a { text-decoration: none; color: #3498db; }
+                  .files a:hover { text-decoration: underline; }
+              </style>
+          </head>
+          <body>
+              <h1>Presentation Files</h1>
+              <h2>HTML Version</h2>
+              <ul class="files">
+          EOF
+          
+          for html in dist/html/*.html; do
+            if [ -f "$html" ] && [ "$html" != "dist/index.html" ]; then
+              filename=$(basename "$html")
+              echo "<li><a href=\"html/$filename\">$filename</a></li>" >> dist/index.html
+            fi
+          done
+          
+          echo "</ul><h2>PDF Version</h2><ul class=\"files\">" >> dist/index.html
+          
+          for pdf in dist/pdf/*.pdf; do
+            if [ -f "$pdf" ]; then
+              filename=$(basename "$pdf")
+              echo "<li><a href=\"pdf/$filename\">$filename</a></li>" >> dist/index.html
+            fi
+          done
+          
+          echo "</ul></body></html>" >> dist/index.html
+          
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: presentation-all-formats-${{ github.sha }}
+          path: dist/
+          retention-days: 30
+          
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          
+      - name: Create Release
+        if: github.event.inputs.release == 'true' || startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            dist/pdf/*.pdf
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false

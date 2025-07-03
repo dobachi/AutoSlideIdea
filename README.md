@@ -58,11 +58,14 @@ AutoSlideIdea/
 
 2. **新規プレゼンテーション作成**
    ```bash
-   # スクリプトを使用
+   # シンプルなプレゼンテーション
    ./scripts/new-presentation.sh my-presentation
    
-   # または手動で
-   cp -r templates/basic/ presentations/my-presentation/
+   # 調査・分析を含むフルプロジェクト
+   ./scripts/new-presentation.sh --full research-project
+   
+   # テンプレート指定
+   ./scripts/new-presentation.sh conference-talk academic
    ```
 
 3. **AI支援でコンテンツ作成**
