@@ -97,13 +97,20 @@ AutoSlideIdea/
 
 4. **ビルド**
    ```bash
-   # PDFを生成（npmスクリプト使用）
+   # HTMLを生成（プレゼンテーションモード）
+   npm run html -- presentations/my-presentation/slides.md -o presentations/my-presentation/output.html
+   
+   # 白背景のHTMLを生成
+   npm run html -- presentations/my-presentation/slides.md -o presentations/my-presentation/output.html
+   ./scripts/generate-static-html.sh presentations/my-presentation/output.html
+   
+   # PDFを生成
    npm run pdf -- presentations/my-presentation/slides.md -o presentations/my-presentation/output.pdf
    
-   # またはnpxを使用
-   npx marp presentations/my-presentation/slides.md -o presentations/my-presentation/output.pdf
+   # テーマを指定してビルド（情報量に応じて選択）
+   npx marp presentations/my-presentation/slides.md --theme config/marp/compact.css -o output.html
    
-   # プレビューモード
+   # プレビューモード（ライブリロード）
    npm run preview -- presentations/my-presentation/slides.md
    ```
 
