@@ -54,14 +54,26 @@ code --install-extension marp-team.marp-vscode
 code --install-extension yzhang.markdown-all-in-one
 ```
 
-### 4. Claude Codeのセットアップ
+### 4. AIツールのセットアップ
 
+以下のAIツールのいずれかをセットアップ：
+
+#### Claude Code
 ```bash
 # Claude Codeのインストール（公式ドキュメント参照）
 # https://docs.anthropic.com/claude-code/
 
 # 設定確認
 claude-code --version
+```
+
+#### Gemini CLI
+```bash
+# Gemini CLIのインストール（公式ドキュメント参照）
+# https://cloud.google.com/gemini/docs/cli
+
+# 設定確認
+gemini --version
 ```
 
 ### 5. フォント設定（日本語対応）
