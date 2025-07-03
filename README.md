@@ -13,6 +13,7 @@
 - **Markdownベースのスライド作成**: Marpを使用したシンプルなスライド作成
 - **AI支援コンテンツ生成**: Claude Code/Gemini CLIによる構成案・内容生成
 - **AI指示書システム**: サブモジュールによる高度なAI制御
+- **Mermaid図表統合**: フローチャート、シーケンス図、ガントチャートなどの自動変換
 - **自動ビルド**: GitHub Actionsによる自動PDF生成
 - **GitHub Pages対応**: プレゼンテーションをWebサイトとして公開
 - **バージョン管理**: Gitによる変更履歴管理
@@ -42,6 +43,8 @@ AutoSlideIdea/
 │   ├── manage-presentation.sh # プレゼンテーション統合管理（推奨）
 │   ├── create-presentation.sh # 作成スクリプト（非推奨：wrapper）
 │   ├── update-presentation.sh # 更新スクリプト（非推奨：wrapper）
+│   ├── preprocess-mermaid.sh  # Mermaid図表の前処理
+│   ├── batch-preprocess-mermaid.sh # 複数ファイルのMermaid処理
 │   └── build.sh              # ビルドスクリプト
 ├── config/                    # 設定ファイル
 │   └── marp/                 # Marp設定

@@ -1,0 +1,433 @@
+# Mermaid対応GitHub Actions ワークフロー
+# Mermaidダイアグラムの自動変換とMarpビルドを実行
+
+name: Build Presentation with Mermaid Support
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '**.md'
+      - 'assets/**'
+      - '.github/workflows/*.yml'
+      - 'scripts/*.sh'
+  pull_request:
+    paths:
+      - '**.md'
+      - 'assets/**'
+  workflow_dispatch:
+    inputs:
+      theme:
+        description: 'Mermaid theme'
+        required: false
+        type: choice
+        options:
+          - default
+          - forest
+          - dark
+          - neutral
+        default: 'default'
+      format:
+        description: 'Diagram format'
+        required: false
+        type: choice
+        options:
+          - svg
+          - png
+          - pdf
+        default: 'svg'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [18]
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          
+      - name: Cache npm dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+          
+      - name: Install system dependencies
+        run: |
+          # Chromiumとフォントのインストール
+          sudo apt-get update
+          sudo apt-get install -y \
+            chromium-browser \
+            fonts-noto-cjk \
+            fonts-noto-emoji \
+            fonts-noto-color-emoji
+          
+          # フォントキャッシュの更新
+          fc-cache -fv
+          
+      - name: Install npm packages
+        run: |
+          # グローバルインストール
+          npm install -g @marp-team/marp-cli@latest
+          npm install -g @mermaid-js/mermaid-cli@latest
+          
+          # バージョン確認
+          echo "Marp version: $(marp --version)"
+          echo "Mermaid CLI version: $(mmdc --version)"
+          
+      - name: Create Mermaid config
+        run: |
+          # 日本語フォント対応のMermaid設定
+          cat > mermaid-config.json << 'EOF'
+          {
+            "theme": "${{ github.event.inputs.theme || 'default' }}",
+            "themeVariables": {
+              "fontFamily": "Noto Sans CJK JP, Noto Sans, sans-serif",
+              "fontSize": "16px"
+            },
+            "flowchart": {
+              "htmlLabels": true,
+              "curve": "basis"
+            },
+            "sequence": {
+              "actorFontFamily": "Noto Sans CJK JP",
+              "noteFontFamily": "Noto Sans CJK JP",
+              "messageFontFamily": "Noto Sans CJK JP"
+            }
+          }
+          EOF
+          
+      - name: Setup processing directories
+        run: |
+          mkdir -p processed dist/{pdf,html,pptx} dist/assets/{images,diagrams}
+          
+      - name: Check for Mermaid diagrams
+        id: check_mermaid
+        run: |
+          if find . -name "*.md" -type f -not -path "./node_modules/*" -exec grep -l '```mermaid' {} \; | grep -q .; then
+            echo "has_mermaid=true" >> $GITHUB_OUTPUT
+            echo "Found Mermaid diagrams in markdown files"
+          else
+            echo "has_mermaid=false" >> $GITHUB_OUTPUT
+            echo "No Mermaid diagrams found"
+          fi
+          
+      - name: Preprocess Mermaid diagrams
+        if: steps.check_mermaid.outputs.has_mermaid == 'true'
+        run: |
+          # スクリプトが存在する場合は使用、なければ直接実行
+          if [ -f scripts/batch-preprocess-mermaid.sh ]; then
+            echo "Using batch preprocessing script..."
+            ./scripts/batch-preprocess-mermaid.sh \
+              --output-dir processed \
+              --preserve-structure \
+              --theme "${{ github.event.inputs.theme || 'default' }}" \
+              --bg-color transparent \
+              --format "${{ github.event.inputs.format || 'svg' }}" \
+              --config mermaid-config.json \
+              $(find . -name "*.md" -type f -not -path "./node_modules/*" -not -path "./processed/*")
+          else
+            echo "Preprocessing with mmdc directly..."
+            for md in $(find . -name "*.md" -type f -not -path "./node_modules/*"); do
+              if grep -q '```mermaid' "$md"; then
+                echo "Processing: $md"
+                
+                # 出力パスを計算
+                rel_path="${md#./}"
+                output_dir="processed/$(dirname "$rel_path")"
+                mkdir -p "$output_dir"
+                
+                # Mermaid処理
+                mmdc -i "$md" -o "processed/$rel_path" \
+                     --configFile mermaid-config.json \
+                     --backgroundColor transparent \
+                     --width 1280 \
+                     --height 720
+              else
+                # Mermaidがない場合はコピー
+                rel_path="${md#./}"
+                output_dir="processed/$(dirname "$rel_path")"
+                mkdir -p "$output_dir"
+                cp "$md" "processed/$rel_path"
+              fi
+            done
+          fi
+          
+          # 生成された画像をアセットディレクトリにコピー
+          find processed -name "*.svg" -o -name "*.png" -o -name "*.pdf" | \
+            xargs -I {} cp {} dist/assets/diagrams/
+          
+      - name: Copy markdown files (no Mermaid)
+        if: steps.check_mermaid.outputs.has_mermaid == 'false'
+        run: |
+          # Mermaidがない場合は直接コピー
+          find . -name "*.md" -type f -not -path "./node_modules/*" | while read md; do
+            rel_path="${md#./}"
+            output_dir="processed/$(dirname "$rel_path")"
+            mkdir -p "$output_dir"
+            cp "$md" "processed/$rel_path"
+          done
+          
+      - name: Build presentations
+        run: |
+          # 処理されたMarkdownファイルからプレゼンテーションをビルド
+          find processed -name "*.md" -type f | while read md; do
+            # 相対パスを取得
+            rel_path="${md#processed/}"
+            base_name=$(basename "$md" .md)
+            dir_name=$(dirname "$rel_path")
+            
+            # 出力ディレクトリを作成
+            if [ "$dir_name" != "." ]; then
+              mkdir -p "dist/pdf/$dir_name" "dist/html/$dir_name" "dist/pptx/$dir_name"
+              output_base="$dir_name/$base_name"
+            else
+              output_base="$base_name"
+            fi
+            
+            echo "Building: $rel_path"
+            
+            # PDF生成
+            if marp "$md" \
+                 --pdf \
+                 --allow-local-files \
+                 --pdf-notes \
+                 -o "dist/pdf/${output_base}.pdf"; then
+              echo "✓ PDF: ${output_base}.pdf"
+            else
+              echo "✗ PDF generation failed for: $rel_path"
+            fi
+            
+            # HTML生成
+            if marp "$md" \
+                 --html \
+                 --allow-local-files \
+                 -o "dist/html/${output_base}.html"; then
+              echo "✓ HTML: ${output_base}.html"
+            else
+              echo "✗ HTML generation failed for: $rel_path"
+            fi
+            
+            # PPTX生成（オプション）
+            if marp "$md" \
+                 --pptx \
+                 --allow-local-files \
+                 -o "dist/pptx/${output_base}.pptx" 2>/dev/null; then
+              echo "✓ PPTX: ${output_base}.pptx"
+            fi
+          done
+          
+      - name: Copy original assets
+        run: |
+          # オリジナルのアセットをコピー
+          if [ -d assets ]; then
+            cp -r assets/* dist/assets/ 2>/dev/null || true
+          fi
+          
+          # 各プレゼンテーションディレクトリのアセットもコピー
+          find . -type d -name "assets" -not -path "./dist/*" -not -path "./node_modules/*" | \
+            while read dir; do
+              parent_dir=$(dirname "$dir")
+              rel_path="${parent_dir#./}"
+              if [ "$rel_path" != "." ]; then
+                mkdir -p "dist/assets/$rel_path"
+                cp -r "$dir"/* "dist/assets/$rel_path/" 2>/dev/null || true
+              fi
+            done
+          
+      - name: Generate index page
+        run: |
+          cat > dist/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="ja">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Presentations with Mermaid Diagrams</title>
+              <style>
+                  body {
+                      font-family: 'Noto Sans', 'Noto Sans CJK JP', sans-serif;
+                      max-width: 1200px;
+                      margin: 0 auto;
+                      padding: 20px;
+                      background-color: #f5f5f5;
+                  }
+                  h1 { 
+                      color: #333;
+                      border-bottom: 3px solid #3498db;
+                      padding-bottom: 10px;
+                  }
+                  .format-section {
+                      background: white;
+                      border-radius: 8px;
+                      padding: 20px;
+                      margin: 20px 0;
+                      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                  }
+                  .file-grid {
+                      display: grid;
+                      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+                      gap: 15px;
+                      margin-top: 15px;
+                  }
+                  .file-card {
+                      background: #f8f9fa;
+                      border: 1px solid #dee2e6;
+                      border-radius: 4px;
+                      padding: 12px;
+                      transition: all 0.3s ease;
+                  }
+                  .file-card:hover {
+                      border-color: #3498db;
+                      box-shadow: 0 2px 8px rgba(52, 152, 219, 0.2);
+                  }
+                  .file-card a {
+                      text-decoration: none;
+                      color: #3498db;
+                      font-weight: 500;
+                  }
+                  .file-card a:hover {
+                      text-decoration: underline;
+                  }
+                  .file-path {
+                      font-size: 0.9em;
+                      color: #6c757d;
+                      margin-top: 4px;
+                  }
+                  .stats {
+                      background: #e9ecef;
+                      padding: 15px;
+                      border-radius: 4px;
+                      margin: 20px 0;
+                      text-align: center;
+                  }
+                  .stats span {
+                      margin: 0 15px;
+                      font-weight: bold;
+                  }
+                  .mermaid-indicator {
+                      display: inline-block;
+                      background: #28a745;
+                      color: white;
+                      font-size: 0.75em;
+                      padding: 2px 6px;
+                      border-radius: 3px;
+                      margin-left: 8px;
+                  }
+              </style>
+          </head>
+          <body>
+              <h1>📊 Presentations with Mermaid Support</h1>
+              
+              <div class="stats">
+                  <span>Build Date: $(date '+%Y-%m-%d %H:%M:%S')</span>
+                  <span>Mermaid Theme: ${{ github.event.inputs.theme || 'default' }}</span>
+                  <span>Format: ${{ github.event.inputs.format || 'svg' }}</span>
+              </div>
+          EOF
+          
+          # HTML版セクション
+          echo '<div class="format-section">' >> dist/index.html
+          echo '<h2>🌐 HTML Version</h2>' >> dist/index.html
+          echo '<div class="file-grid">' >> dist/index.html
+          
+          find dist/html -name "*.html" -type f | sort | while read html; do
+              rel_path="${html#dist/html/}"
+              base_name=$(basename "$html" .html)
+              dir_path=$(dirname "$rel_path")
+              
+              # Mermaid画像の存在確認
+              mermaid_indicator=""
+              if ls dist/assets/diagrams/${base_name}-*.svg 2>/dev/null | grep -q .; then
+                  mermaid_indicator='<span class="mermaid-indicator">Mermaid</span>'
+              fi
+              
+              echo "<div class=\"file-card\">" >> dist/index.html
+              echo "  <a href=\"html/$rel_path\">$base_name</a>$mermaid_indicator" >> dist/index.html
+              if [ "$dir_path" != "." ]; then
+                  echo "  <div class=\"file-path\">📁 $dir_path</div>" >> dist/index.html
+              fi
+              echo "</div>" >> dist/index.html
+          done
+          
+          echo '</div></div>' >> dist/index.html
+          
+          # PDF版セクション
+          echo '<div class="format-section">' >> dist/index.html
+          echo '<h2>📄 PDF Version</h2>' >> dist/index.html
+          echo '<div class="file-grid">' >> dist/index.html
+          
+          find dist/pdf -name "*.pdf" -type f | sort | while read pdf; do
+              rel_path="${pdf#dist/pdf/}"
+              base_name=$(basename "$pdf" .pdf)
+              dir_path=$(dirname "$rel_path")
+              
+              echo "<div class=\"file-card\">" >> dist/index.html
+              echo "  <a href=\"pdf/$rel_path\">$base_name</a>" >> dist/index.html
+              if [ "$dir_path" != "." ]; then
+                  echo "  <div class=\"file-path\">📁 $dir_path</div>" >> dist/index.html
+              fi
+              echo "</div>" >> dist/index.html
+          done
+          
+          echo '</div></div>' >> dist/index.html
+          
+          # フッター
+          echo '</body></html>' >> dist/index.html
+          
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: presentations-mermaid-${{ github.sha }}
+          path: dist/
+          retention-days: 30
+          
+      - name: Upload processed markdown (debug)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: processed-markdown-${{ github.sha }}
+          path: processed/
+          retention-days: 7
+          
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          cname: ${{ secrets.CNAME }}  # カスタムドメインを使用する場合
+          
+      - name: Comment PR with preview links
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const artifactUrl = `https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}`;
+            const body = `## 🎨 Presentation Preview Ready!\n\n` +
+              `Your presentations with Mermaid diagrams have been built successfully.\n\n` +
+              `### 📦 Download Options:\n` +
+              `- [Download all formats](${artifactUrl})\n` +
+              `- Includes: HTML, PDF${context.payload.pull_request.head.ref.includes('pptx') ? ', PPTX' : ''}\n\n` +
+              `### 🔧 Build Configuration:\n` +
+              `- Mermaid Theme: \`${{ github.event.inputs.theme || 'default' }}\`\n` +
+              `- Diagram Format: \`${{ github.event.inputs.format || 'svg' }}\`\n` +
+              `- Node Version: \`${{ matrix.node-version }}\`\n\n` +
+              `*Artifacts will be available for 30 days.*`;
+              
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: body
+            });

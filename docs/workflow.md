@@ -137,6 +137,27 @@ research-project/
 
 ### 5. ビルドと配布
 
+#### Mermaid図表の前処理（図表を含む場合）
+
+Mermaidコードブロックを含む場合は、ビルド前に前処理が必要です：
+
+```bash
+# 単一ファイルの処理
+./scripts/preprocess-mermaid.sh presentations/my-presentation/slides.md
+
+# 処理済みファイルでビルド
+npm run pdf -- presentations/my-presentation/slides-processed.md \
+  -o presentations/my-presentation/output.pdf \
+  --theme ../config/marp/base.css
+
+# または一括処理
+./scripts/batch-preprocess-mermaid.sh \
+  -o presentations/my-presentation/processed \
+  presentations/my-presentation/*.md
+```
+
+詳細は[Mermaid統合ガイド](./mermaid-integration.md)を参照してください。
+
 #### ローカルでのビルド
 
 ```bash
