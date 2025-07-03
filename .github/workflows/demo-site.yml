@@ -60,13 +60,15 @@ jobs:
           
           # Demo presentation
           if [ -f samples/demo-presentation/slides.md ]; then
+            # プレゼンテーションモード（白背景）
             npx marp samples/demo-presentation/slides.md \
               --html \
               --allow-local-files \
               --theme config/marp/base.css \
               -o _site/slides/demo.html
-            # 静的表示用に変換
             ./scripts/generate-static-html.sh _site/slides/demo.html
+            
+            # PDF版
             npx marp samples/demo-presentation/slides.md \
               --pdf \
               --allow-local-files \
@@ -83,13 +85,15 @@ jobs:
             
             # Then build with Marp
             if [ -f samples/mermaid-demo/slides-processed.md ]; then
+              # プレゼンテーションモード（白背景）
               npx marp samples/mermaid-demo/slides-processed.md \
                 --html \
                 --allow-local-files \
                 --theme config/marp/base.css \
                 -o _site/slides/mermaid-demo.html
-              # 静的表示用に変換
               ./scripts/generate-static-html.sh _site/slides/mermaid-demo.html
+              
+              # PDF版
               npx marp samples/mermaid-demo/slides-processed.md \
                 --pdf \
                 --allow-local-files \
