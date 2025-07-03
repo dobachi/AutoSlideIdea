@@ -6,6 +6,8 @@ English | [日本語](README.md)
 
 This project provides a methodology and toolset for efficiently creating presentation materials using AI tools such as Claude Code and Gemini CLI.
 
+🎯 **[View Demo Presentations](https://dobachi.github.io/AutoSlideIdea/)** - See examples of actual output
+
 ## Key Features
 
 - **Markdown-based slide creation**: Simple slide creation using Marp
@@ -51,6 +53,8 @@ AutoSlideIdea/
 ```
 
 ## Quick Start
+
+> 💡 **First, check out the [demo site](https://dobachi.github.io/AutoSlideIdea/) to see output examples**
 
 1. **Environment Setup**
    ```bash
@@ -182,7 +186,7 @@ Project-specific instructions are defined in these files:
 - [Setup Guide](docs/setup.en.md)
 - [Workflow](docs/workflow.en.md)
 - [Scripts Reference](docs/scripts-reference.en.md) - Details of create-presentation.sh, update-presentation.sh
-- [GitHub Pages Integration](docs/github-pages.en.md) - Publish presentations as websites
+- [GitHub Pages Integration](docs/github-pages.en.md) - Publish presentations as websites ([Demo](https://dobachi.github.io/AutoSlideIdea/))
 - [Advanced Workflow](docs/advanced-workflow.en.md) - Research/analysis/ideation using AI instruction system
 - [Tips & Tricks](docs/tips.en.md)
 

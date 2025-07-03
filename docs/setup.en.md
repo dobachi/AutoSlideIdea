@@ -103,6 +103,8 @@ brew install --cask font-noto-sans-cjk
 
 ## Environment Verification
 
+> 💡 **Reference**: Check out the [demo site](https://dobachi.github.io/AutoSlideIdea/) for actual output examples
+
 ### Create Test Slides
 
 ```bash
