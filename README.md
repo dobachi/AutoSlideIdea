@@ -28,17 +28,19 @@ AutoSlideIdea/
 ├── templates/                 # テンプレート集
 │   ├── basic/                # 基本テンプレート
 │   ├── academic/             # 学術発表用
-│   └── business/             # ビジネス用
+│   ├── business/             # ビジネス用
+│   ├── full-project/         # 調査・分析含む完全版
+│   └── github-workflows/     # GitHub Actions設定
 ├── samples/                   # サンプルスライド
 │   └── demo-presentation/    # デモプレゼンテーション
 ├── scripts/                   # 支援スクリプト
-│   ├── build.sh              # ビルドスクリプト
-│   └── new-presentation.sh   # 新規作成スクリプト
-├── .github/                   # GitHub設定
-│   └── workflows/            # GitHub Actions
+│   ├── create-presentation.sh # 統合プレゼンテーション作成
+│   └── build.sh              # ビルドスクリプト
 ├── config/                    # 設定ファイル
 │   └── marp/                 # Marp設定
-└── presentations/             # 作成したプレゼンテーション
+├── presentations/             # 作成したプレゼンテーション
+├── package.json              # npm依存関係
+└── CONTRIBUTING.md           # 貢献ガイドライン
 ```
 
 ## クイックスタート

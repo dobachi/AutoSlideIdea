@@ -26,8 +26,11 @@
 2. **個別リポジトリ化**: 共有やGitHub Actions連携が必要な場合
 
 ```bash
-# 後からGitHubリポジトリ化する場合は、作業ディレクトリで手動でGit初期化
-# （今後、オプション追加予定）
+# GitHubリポジトリとして作成（推奨）
+./scripts/create-presentation.sh --github my-presentation
+
+# パブリックリポジトリとして作成（GitHub Pages対応）
+./scripts/create-presentation.sh --github --public my-presentation
 ```
 
 #### フルプロジェクトの構造

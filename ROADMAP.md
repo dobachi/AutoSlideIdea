@@ -1,5 +1,21 @@
 # AutoSlideIdea ロードマップ
 
+## 完了した機能 ✅
+
+### 基本機能
+- [x] Markdownベースのスライド作成（Marp）
+- [x] 統合スクリプト（create-presentation.sh）
+- [x] ローカルnpm依存関係管理（package.json）
+- [x] GitHub Actions連携
+- [x] AI指示書システムのサブモジュール化
+- [x] フルプロジェクトテンプレート（調査・アイデア・スライド）
+
+### テンプレート
+- [x] 基本テンプレート（basic）
+- [x] 学術発表用（academic）
+- [x] ビジネス用（business）
+- [x] フルプロジェクト用（full-project）
+
 ## 短期的改善（〜3ヶ月）
 
 ### 1. テンプレートの拡充
@@ -14,7 +30,8 @@
 
 ### 3. AI連携の最適化
 - [ ] プロンプトテンプレートライブラリ
-- [ ] ワークフロー自動化スクリプト
+- [x] ワークフロー自動化スクリプト（create-presentation.sh）
+- [ ] AI指示書の自動選択機能
 
 ### 4. ブラウザベース化（Phase 1）
 - [ ] GitHub Codespaces対応（.devcontainer設定）
