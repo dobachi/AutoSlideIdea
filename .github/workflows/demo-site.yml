@@ -37,7 +37,11 @@ jobs:
           
           # Install Japanese fonts
           sudo apt-get update
-          sudo apt-get install -y fonts-noto-cjk fonts-noto-emoji
+          sudo apt-get install -y fonts-noto-cjk
+          
+          # Note: fonts-noto-emoji is not available in Ubuntu 24.04
+          # The emoji support is now included in fonts-noto-color-emoji
+          sudo apt-get install -y fonts-noto-color-emoji || true
           
       - name: Setup Pages
         uses: actions/configure-pages@v4
