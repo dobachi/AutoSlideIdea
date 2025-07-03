@@ -2,20 +2,34 @@
 
 ## 基本的なワークフロー
 
-### 1. プレゼンテーションの新規作成
+### 1. プレゼンテーションの作成・管理
+
+🎯 **推奨：統合管理スクリプト**
 
 ```bash
-# ローカル作業用（デフォルト）
-./scripts/create-presentation.sh my-presentation
+# 自動判定モード（新規なら作成、既存なら適切な提案）
+./scripts/manage-presentation.sh my-presentation
 
-# GitHubリポジトリとして作成
-./scripts/create-presentation.sh --github conference-2024
+# GitHubリポジトリとして作成・更新
+./scripts/manage-presentation.sh --github conference-2024
 
 # フルプロジェクト（調査・分析含む）
-./scripts/create-presentation.sh --full research-project
+./scripts/manage-presentation.sh --full research-project
 
 # テンプレート指定
-./scripts/create-presentation.sh --template academic conference-talk
+./scripts/manage-presentation.sh --template academic conference-talk
+
+# 明示的モード
+./scripts/manage-presentation.sh --create my-new-presentation   # 新規作成のみ
+./scripts/manage-presentation.sh --update existing-project     # 更新のみ
+```
+
+📝 **従来方式（非推奨）**
+
+```bash
+# 自動的に manage-presentation.sh に転送されます
+./scripts/create-presentation.sh my-presentation
+./scripts/update-presentation.sh --add-github my-presentation
 ```
 
 **重要**: presentations/ディレクトリは`.gitignore`されているため、作成したプレゼンテーションはAutoSlideIdeaリポジトリにはプッシュされません。
@@ -29,8 +43,11 @@
 # GitHubリポジトリとして作成（推奨）
 ./scripts/create-presentation.sh --github my-presentation
 
-# パブリックリポジトリとして作成（GitHub Pages対応）
+# パブリックリポジトリとして作成
 ./scripts/create-presentation.sh --github --public my-presentation
+
+# GitHub Pages専用ワークフローで作成
+./scripts/create-presentation.sh --github --workflow github-pages my-presentation
 ```
 
 #### フルプロジェクトの構造
@@ -144,6 +161,42 @@ on:
     branches: [main]
     paths:
       - 'presentations/**/*.md'
+```
+
+### 6. 統合管理スクリプトの詳細機能
+
+`manage-presentation.sh`は自動判定で適切な処理を行いますが、明示的なオプションも利用できます。
+
+#### 自動判定の動作
+
+```bash
+# 既存チェック → 新規作成または更新提案
+./scripts/manage-presentation.sh my-presentation
+
+# GitHub連携（新規なら作成、既存なら追加）
+./scripts/manage-presentation.sh --github existing-or-new-presentation
+```
+
+#### 明示的な操作
+
+```bash
+# 強制作成モード（既存の場合はエラー）
+./scripts/manage-presentation.sh --create new-presentation
+
+# 強制更新モード（存在しない場合はエラー）
+./scripts/manage-presentation.sh --update existing-presentation --workflow github-pages
+
+# 構造の拡張
+./scripts/manage-presentation.sh --add-assets --add-research my-presentation
+```
+
+#### 従来スクリプトとの互換性
+
+```bash
+# 以下は自動的に manage-presentation.sh に転送されます
+./scripts/update-presentation.sh --add-github my-presentation
+# ↓ 実際の実行
+./scripts/manage-presentation.sh --update --add-github my-presentation
 ```
 
 ## 高度なワークフロー

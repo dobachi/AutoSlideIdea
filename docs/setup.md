@@ -106,11 +106,11 @@ brew install --cask font-noto-sans-cjk
 ### テスト用スライドの作成
 
 ```bash
-# サンプルをコピー
-cp -r samples/demo-presentation test-presentation
+# 🎯 推奨：統合管理スクリプトでテスト用プレゼンテーションを作成
+./scripts/manage-presentation.sh test-presentation
 
 # PDFを生成
-cd test-presentation
+cd presentations/test-presentation
 npm run pdf -- slides.md -o test.pdf
 # または
 npx marp slides.md -o test.pdf
@@ -118,6 +118,17 @@ npx marp slides.md -o test.pdf
 # 生成されたPDFを確認
 open test.pdf  # macOS
 xdg-open test.pdf  # Linux
+```
+
+### スクリプトの動作確認
+
+```bash
+# 🎯 推奨：統合管理スクリプトの動作確認
+./scripts/manage-presentation.sh --help
+
+# 従来スクリプト（自動転送される）
+./scripts/create-presentation.sh --help
+./scripts/update-presentation.sh --help
 ```
 
 ### トラブルシューティング

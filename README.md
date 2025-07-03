@@ -12,6 +12,7 @@
 - **AI支援コンテンツ生成**: Claude Code/Gemini CLIによる構成案・内容生成
 - **AI指示書システム**: サブモジュールによる高度なAI制御
 - **自動ビルド**: GitHub Actionsによる自動PDF生成
+- **GitHub Pages対応**: プレゼンテーションをWebサイトとして公開
 - **バージョン管理**: Gitによる変更履歴管理
 
 ## ディレクトリ構成
@@ -36,7 +37,9 @@ AutoSlideIdea/
 ├── samples/                   # サンプルスライド
 │   └── demo-presentation/    # デモプレゼンテーション
 ├── scripts/                   # 支援スクリプト
-│   ├── create-presentation.sh # 統合プレゼンテーション作成
+│   ├── manage-presentation.sh # プレゼンテーション統合管理（推奨）
+│   ├── create-presentation.sh # 作成スクリプト（非推奨：wrapper）
+│   ├── update-presentation.sh # 更新スクリプト（非推奨：wrapper）
 │   └── build.sh              # ビルドスクリプト
 ├── config/                    # 設定ファイル
 │   └── marp/                 # Marp設定
@@ -60,17 +63,25 @@ AutoSlideIdea/
    git submodule update --init --recursive
    ```
 
-2. **新規プレゼンテーション作成**
+2. **プレゼンテーション作成・管理**
    ```bash
-   # ローカル作業用（デフォルト）
-   ./scripts/create-presentation.sh my-presentation
+   # 🎯 推奨：統合管理スクリプト（自動判定）
+   ./scripts/manage-presentation.sh my-presentation
    
-   # GitHubリポジトリとして作成
-   ./scripts/create-presentation.sh --github conference-2024
+   # GitHub連携（新規なら作成、既存なら追加）
+   ./scripts/manage-presentation.sh --github conference-2024
    
-   # フルプロジェクト（調査・分析含む）
-   ./scripts/create-presentation.sh --full research-project
-   ./scripts/create-presentation.sh --github --full --public big-conference
+   # フルプロジェクト構造
+   ./scripts/manage-presentation.sh --full research-project
+   
+   # GitHub Pages対応
+   ./scripts/manage-presentation.sh --github --workflow github-pages my-web-presentation
+   
+   # 明示的な新規作成（既存の場合はエラー）
+   ./scripts/manage-presentation.sh --create --github new-project
+   
+   # 明示的な更新（存在しない場合はエラー）  
+   ./scripts/manage-presentation.sh --update --workflow github-pages existing-project
    ```
 
 3. **AI支援でコンテンツ作成**
@@ -111,11 +122,17 @@ cd presentations/my-local-presentation
 - チーム共有やバージョン管理が必要な場合
 
 ```bash
-# 最初からGitHubリポジトリとして作成
-./scripts/create-presentation.sh --github my-conference-2024
+# 🎯 推奨：統合管理スクリプト（自動判定）
+./scripts/manage-presentation.sh --github my-conference-2024
 
-# パブリックリポジトリとして作成（GitHub Pages対応）
-./scripts/create-presentation.sh --github --public tech-talk-2024
+# パブリックリポジトリとして作成
+./scripts/manage-presentation.sh --github --public tech-talk-2024
+
+# GitHub Pages専用ワークフローで作成（Webサイトとして公開）
+./scripts/manage-presentation.sh --github --workflow github-pages portfolio-2024
+
+# 従来方式（非推奨、自動転送される）
+./scripts/create-presentation.sh --github legacy-project
 ```
 
 詳細は[presentations/README.md](presentations/README.md)を参照してください。
@@ -163,6 +180,8 @@ AI指示書システムの豊富な機能を活用することで、単なるス
 
 - [セットアップガイド](docs/setup.md)
 - [作業フロー](docs/workflow.md)
+- [スクリプトリファレンス](docs/scripts-reference.md) - create-presentation.sh, update-presentation.shの詳細
+- [GitHub Pages連携](docs/github-pages.md) - プレゼンテーションをWebサイトとして公開
 - [高度なワークフロー](docs/advanced-workflow.md) - AI指示書システムを活用した調査・分析・アイデア創出
 - [Tips & Tricks](docs/tips.md)
 
