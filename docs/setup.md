@@ -16,11 +16,24 @@
 
 ## インストール手順
 
-### 1. 依存関係のインストール
+### 1. プロジェクトのセットアップ
+
+```bash
+# リポジトリのクローン（サブモジュール含む）
+git clone --recursive https://github.com/your-username/AutoSlideIdea.git
+cd AutoSlideIdea
+
+# ディレクトリ構造の確認
+ls -la
+
+# 既存のクローンにサブモジュールを追加する場合
+git submodule update --init --recursive
+```
+
+### 2. 依存関係のインストール
 
 ```bash
 # プロジェクトルートで実行
-cd AutoSlideIdea
 npm install
 
 # 確認
@@ -38,17 +51,6 @@ npx marp --version
 
 ```bash
 npm install -g @marp-team/marp-cli
-```
-
-### 2. プロジェクトのセットアップ
-
-```bash
-# リポジトリのクローン
-git clone https://github.com/your-username/AutoSlideIdea.git
-cd AutoSlideIdea
-
-# ディレクトリ構造の確認
-ls -la
 ```
 
 ### 3. VSCode拡張機能（推奨）
