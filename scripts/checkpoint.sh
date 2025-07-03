@@ -1,1 +1,1 @@
-../instructions/ai_instruction_kits/tools/checkpoint.sh
+../instructions/ai_instruction_kits/scripts/checkpoint.sh
