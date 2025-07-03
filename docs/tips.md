@@ -198,6 +198,12 @@ section {
 
 #### Mermaidが表示されない
 
+Mermaidの統合については、専用のガイドを参照してください：
+- [Mermaid統合ガイド](./mermaid-integration.md)
+- [プリプロセッシングスクリプト](../scripts/preprocess-mermaid.sh)
+- [デモプレゼンテーション](../samples/mermaid-demo/)
+
+簡易的な対処法（HTMLエクスポートのみ）：
 ```markdown
 <!-- Mermaid有効化 -->
 <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>

@@ -22,7 +22,8 @@
   "author": "dobachi",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@marp-team/marp-cli": "^3.0.0"
+    "@marp-team/marp-cli": "^3.0.0",
+    "@mermaid-js/mermaid-cli": "^11.6.0"
   },
   "engines": {
     "node": ">=14.0.0"
