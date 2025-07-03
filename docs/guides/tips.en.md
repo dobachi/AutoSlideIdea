@@ -1,3 +1,5 @@
+[English](tips.en.md) | [日本語](tips.md)
+
 # Tips & Tricks
 
 ## AI Usage Tips

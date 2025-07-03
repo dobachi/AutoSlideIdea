@@ -1,3 +1,5 @@
+[English](REORGANIZATION_PLAN.en.md) | 日本語
+
 # ドキュメント再構成計画
 
 ## 現状の問題点

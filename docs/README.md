@@ -1,3 +1,5 @@
+[English](README.en.md) | 日本語
+
 # AutoSlideIdea ドキュメント
 
 このディレクトリには、AutoSlideIdeaプロジェクトの詳細なドキュメントが含まれています。

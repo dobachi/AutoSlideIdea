@@ -1,3 +1,5 @@
+[English](basic-workflow.en.md) | [日本語](basic-workflow.md)
+
 # Workflow
 
 ## Basic Workflow
