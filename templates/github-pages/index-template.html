@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="{{LANG}}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{TITLE}} - Presentation Gallery</title>
+    <meta name="description" content="{{DESCRIPTION}}">
+    <style>
+        :root {
+            --primary: #3498db;
+            --secondary: #2c3e50;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --background: #f5f7fa;
+            --card-bg: #ffffff;
+            --text: #333333;
+            --text-light: #7f8c8d;
+            --border: #e0e6ed;
+            --shadow: rgba(0,0,0,0.1);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: #1a1a2e;
+                --card-bg: #16213e;
+                --text: #eee;
+                --text-light: #bbb;
+                --border: #0f3460;
+                --shadow: rgba(0,0,0,0.3);
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans CJK JP', 'Noto Sans', sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+            color: white;
+            padding: 3rem 0;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            text-align: center;
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            text-align: center;
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .search-container {
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            padding: 1rem;
+            font-size: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: var(--card-bg);
+            color: var(--text);
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .filters {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border);
+            background: var(--card-bg);
+            color: var(--text);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .filter-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .filter-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .presentations {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .presentation-card {
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px var(--shadow);
+            transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .presentation-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px var(--shadow);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1.5rem;
+        }
+
+        .card-header h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-metadata {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .card-body {
+            padding: 1.5rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-description {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+            flex: 1;
+        }
+
+        .card-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+        }
+
+        .tag {
+            background: var(--background);
+            color: var(--text-light);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+
+        .card-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 0.75rem 1rem;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .stats {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            text-align: center;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .stat-label {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        footer {
+            background: var(--card-bg);
+            padding: 3rem 0;
+            margin-top: 4rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .footer-section a {
+            color: var(--text-light);
+            text-decoration: none;
+            display: block;
+            padding: 0.25rem 0;
+            transition: color 0.3s;
+        }
+
+        .footer-section a:hover {
+            color: var(--primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            color: var(--text-light);
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-light);
+        }
+
+        @media (max-width: 768px) {
+            .presentations {
+                grid-template-columns: 1fr;
+            }
+            
+            header h1 {
+                font-size: 2rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* Loading animation */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner {
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>{{HEADER_TITLE}}</h1>
+            <p>{{HEADER_SUBTITLE}}</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchBox" placeholder="{{SEARCH_PLACEHOLDER}}">
+        </div>
+
+        <div class="filters" id="filters">
+            <button class="filter-btn active" data-filter="all">{{FILTER_ALL}}</button>
+            <!-- Dynamic filters will be added here -->
+        </div>
+
+        <div class="stats" id="stats">
+            <div class="stat">
+                <div class="stat-number" id="totalCount">0</div>
+                <div class="stat-label">{{STAT_TOTAL}}</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="categoryCount">0</div>
+                <div class="stat-label">{{STAT_CATEGORIES}}</div>
+            </div>
+            <div class="stat">
+                <div class="stat-number" id="latestCount">0</div>
+                <div class="stat-label">{{STAT_RECENT}}</div>
+            </div>
+        </div>
+
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>{{LOADING_TEXT}}</p>
+        </div>
+
+        <div class="presentations" id="presentations">
+            <!-- Presentation cards will be inserted here -->
+        </div>
+
+        <div class="no-results" id="noResults" style="display: none;">
+            <h3>{{NO_RESULTS_TITLE}}</h3>
+            <p>{{NO_RESULTS_TEXT}}</p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>{{FOOTER_ABOUT}}</h4>
+                    <p>{{FOOTER_ABOUT_TEXT}}</p>
+                </div>
+                <div class="footer-section">
+                    <h4>{{FOOTER_LINKS}}</h4>
+                    <a href="https://github.com/dobachi/AutoSlideIdea">GitHub Repository</a>
+                    <a href="https://github.com/dobachi/AutoSlideIdea#readme">Documentation</a>
+                    <a href="https://github.com/dobachi/AutoSlideIdea/issues">Report Issue</a>
+                </div>
+                <div class="footer-section">
+                    <h4>{{FOOTER_TOOLS}}</h4>
+                    <a href="https://marp.app/">Marp</a>
+                    <a href="https://pages.github.com/">GitHub Pages</a>
+                    <a href="https://github.com/features/actions">GitHub Actions</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>{{FOOTER_COPYRIGHT}}</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Presentation data will be injected here
+        const presentations = {{PRESENTATIONS_DATA}};
+
+        // Initialize
+        let filteredPresentations = [...presentations];
+        let currentFilter = 'all';
+        let searchTerm = '';
+
+        // Elements
+        const searchBox = document.getElementById('searchBox');
+        const presentationsContainer = document.getElementById('presentations');
+        const filtersContainer = document.getElementById('filters');
+        const noResults = document.getElementById('noResults');
+        const totalCount = document.getElementById('totalCount');
+        const categoryCount = document.getElementById('categoryCount');
+        const latestCount = document.getElementById('latestCount');
+
+        // Extract unique categories
+        const categories = [...new Set(presentations.flatMap(p => p.tags || []))];
+        
+        // Add category filters
+        categories.forEach(category => {
+            const btn = document.createElement('button');
+            btn.className = 'filter-btn';
+            btn.dataset.filter = category;
+            btn.textContent = category;
+            filtersContainer.appendChild(btn);
+        });
+
+        // Search functionality
+        searchBox.addEventListener('input', (e) => {
+            searchTerm = e.target.value.toLowerCase();
+            filterPresentations();
+        });
+
+        // Filter functionality
+        filtersContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-btn')) {
+                document.querySelectorAll('.filter-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                e.target.classList.add('active');
+                currentFilter = e.target.dataset.filter;
+                filterPresentations();
+            }
+        });
+
+        // Filter presentations
+        function filterPresentations() {
+            filteredPresentations = presentations.filter(pres => {
+                const matchesSearch = searchTerm === '' || 
+                    pres.title.toLowerCase().includes(searchTerm) ||
+                    (pres.description && pres.description.toLowerCase().includes(searchTerm)) ||
+                    (pres.tags && pres.tags.some(tag => tag.toLowerCase().includes(searchTerm)));
+                
+                const matchesFilter = currentFilter === 'all' || 
+                    (pres.tags && pres.tags.includes(currentFilter));
+                
+                return matchesSearch && matchesFilter;
+            });
+            
+            renderPresentations();
+        }
+
+        // Render presentations
+        function renderPresentations() {
+            presentationsContainer.innerHTML = '';
+            
+            if (filteredPresentations.length === 0) {
+                noResults.style.display = 'block';
+                return;
+            }
+            
+            noResults.style.display = 'none';
+            
+            filteredPresentations.forEach(pres => {
+                const card = document.createElement('div');
+                card.className = 'presentation-card';
+                
+                const tagsHtml = pres.tags ? pres.tags.map(tag => 
+                    `<span class="tag">${tag}</span>`
+                ).join('') : '';
+                
+                card.innerHTML = `
+                    <div class="card-header">
+                        <h3>${pres.title}</h3>
+                        <div class="card-metadata">
+                            ${pres.date || ''} ${pres.author ? `• ${pres.author}` : ''}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        ${pres.description ? `<p class="card-description">${pres.description}</p>` : ''}
+                        ${tagsHtml ? `<div class="card-tags">${tagsHtml}</div>` : ''}
+                        <div class="card-actions">
+                            <a href="${pres.html}" class="btn btn-primary">{{BTN_VIEW}}</a>
+                            <a href="${pres.pdf}" class="btn btn-secondary">{{BTN_DOWNLOAD}}</a>
+                        </div>
+                    </div>
+                `;
+                
+                presentationsContainer.appendChild(card);
+            });
+            
+            updateStats();
+        }
+
+        // Update statistics
+        function updateStats() {
+            totalCount.textContent = presentations.length;
+            categoryCount.textContent = categories.length;
+            
+            // Count recent (last 30 days)
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            
+            const recentCount = presentations.filter(pres => {
+                if (!pres.date) return false;
+                const presDate = new Date(pres.date);
+                return presDate >= thirtyDaysAgo;
+            }).length;
+            
+            latestCount.textContent = recentCount;
+        }
+
+        // Initial render
+        renderPresentations();
+    </script>
+</body>
+</html>

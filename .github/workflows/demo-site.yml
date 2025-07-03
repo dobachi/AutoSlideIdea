@@ -1,0 +1,370 @@
+name: Build Demo Site
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'samples/**'
+      - 'presentations/**'
+      - '.github/workflows/demo-site.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          
+      - name: Install dependencies
+        run: |
+          npm ci
+          
+          # Install Japanese fonts
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk fonts-noto-emoji
+          
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Build demo presentations
+        run: |
+          # Create output directory
+          mkdir -p _site/{slides,pdf,assets}
+          
+          # Copy sample assets
+          if [ -d samples/demo-presentation/assets ]; then
+            cp -r samples/demo-presentation/assets/* _site/assets/
+          fi
+          
+          # Build sample presentations
+          echo "Building sample presentations..."
+          
+          # Demo presentation
+          if [ -f samples/demo-presentation/slides.md ]; then
+            npx marp samples/demo-presentation/slides.md --html --allow-local-files -o _site/slides/demo.html
+            npx marp samples/demo-presentation/slides.md --pdf --allow-local-files -o _site/pdf/demo.pdf
+          fi
+          
+          # Build any test presentations (excluding .gitignored presentations/)
+          for md in $(find presentations -name "slides.md" 2>/dev/null | head -5); do
+            if [ -f "$md" ]; then
+              dir=$(dirname "$md")
+              name=$(basename "$dir")
+              echo "Building $name..."
+              npx marp "$md" --html --allow-local-files -o "_site/slides/$name.html"
+              npx marp "$md" --pdf --allow-local-files -o "_site/pdf/$name.pdf"
+            fi
+          done
+          
+      - name: Generate demo page
+        run: |
+          cat > _site/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="ja">
+          <head>
+              <meta charset="utf-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1">
+              <title>AutoSlideIdea Demo</title>
+              <style>
+                  :root {
+                      --primary: #3498db;
+                      --secondary: #2c3e50;
+                      --accent: #e74c3c;
+                      --background: #f5f7fa;
+                      --card-bg: #ffffff;
+                  }
+                  
+                  * {
+                      margin: 0;
+                      padding: 0;
+                      box-sizing: border-box;
+                  }
+                  
+                  body {
+                      font-family: 'Noto Sans CJK JP', 'Noto Sans', sans-serif;
+                      background: var(--background);
+                      color: #333;
+                      line-height: 1.6;
+                  }
+                  
+                  .hero {
+                      background: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+                      color: white;
+                      padding: 4rem 0;
+                      text-align: center;
+                  }
+                  
+                  .hero h1 {
+                      font-size: 3rem;
+                      font-weight: 300;
+                      margin-bottom: 1rem;
+                  }
+                  
+                  .hero p {
+                      font-size: 1.2rem;
+                      opacity: 0.9;
+                      max-width: 600px;
+                      margin: 0 auto 2rem;
+                  }
+                  
+                  .container {
+                      max-width: 1200px;
+                      margin: 0 auto;
+                      padding: 0 20px;
+                  }
+                  
+                  .section {
+                      padding: 3rem 0;
+                  }
+                  
+                  .section h2 {
+                      color: var(--secondary);
+                      font-size: 2rem;
+                      margin-bottom: 2rem;
+                      text-align: center;
+                  }
+                  
+                  .features {
+                      display: grid;
+                      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                      gap: 2rem;
+                      margin-bottom: 3rem;
+                  }
+                  
+                  .feature {
+                      background: var(--card-bg);
+                      padding: 2rem;
+                      border-radius: 8px;
+                      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                      text-align: center;
+                  }
+                  
+                  .feature-icon {
+                      font-size: 3rem;
+                      margin-bottom: 1rem;
+                  }
+                  
+                  .demos {
+                      display: grid;
+                      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+                      gap: 2rem;
+                  }
+                  
+                  .demo-card {
+                      background: var(--card-bg);
+                      border-radius: 8px;
+                      overflow: hidden;
+                      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                      transition: transform 0.3s, box-shadow 0.3s;
+                  }
+                  
+                  .demo-card:hover {
+                      transform: translateY(-4px);
+                      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+                  }
+                  
+                  .demo-card-header {
+                      background: var(--primary);
+                      color: white;
+                      padding: 1rem;
+                  }
+                  
+                  .demo-card-body {
+                      padding: 1.5rem;
+                  }
+                  
+                  .demo-links {
+                      display: flex;
+                      gap: 1rem;
+                      margin-top: 1rem;
+                  }
+                  
+                  .btn {
+                      flex: 1;
+                      padding: 0.75rem 1.5rem;
+                      text-align: center;
+                      text-decoration: none;
+                      border-radius: 4px;
+                      font-weight: 500;
+                      transition: all 0.3s;
+                  }
+                  
+                  .btn-primary {
+                      background: var(--primary);
+                      color: white;
+                  }
+                  
+                  .btn-primary:hover {
+                      background: #2980b9;
+                  }
+                  
+                  .btn-secondary {
+                      background: #ecf0f1;
+                      color: var(--secondary);
+                  }
+                  
+                  .btn-secondary:hover {
+                      background: #bdc3c7;
+                  }
+                  
+                  .cta {
+                      background: var(--secondary);
+                      color: white;
+                      padding: 3rem 0;
+                      text-align: center;
+                  }
+                  
+                  .cta h3 {
+                      font-size: 2rem;
+                      margin-bottom: 1rem;
+                  }
+                  
+                  .cta-buttons {
+                      display: flex;
+                      gap: 1rem;
+                      justify-content: center;
+                      flex-wrap: wrap;
+                      margin-top: 2rem;
+                  }
+                  
+                  .btn-large {
+                      padding: 1rem 2rem;
+                      font-size: 1.1rem;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="hero">
+                  <div class="container">
+                      <h1>🚀 AutoSlideIdea</h1>
+                      <p>AI-Assisted Presentation Creation Framework</p>
+                      <p>Markdownで書いて、AIで充実させて、自動でビルド</p>
+                  </div>
+              </div>
+              
+              <section class="section">
+                  <div class="container">
+                      <h2>✨ Features</h2>
+                      <div class="features">
+                          <div class="feature">
+                              <div class="feature-icon">📝</div>
+                              <h3>Markdown Based</h3>
+                              <p>Marpを使用したシンプルなスライド作成</p>
+                          </div>
+                          <div class="feature">
+                              <div class="feature-icon">🤖</div>
+                              <h3>AI Powered</h3>
+                              <p>Claude Code/Gemini CLIによる内容生成</p>
+                          </div>
+                          <div class="feature">
+                              <div class="feature-icon">🔧</div>
+                              <h3>Automated Build</h3>
+                              <p>GitHub Actionsで自動PDF/HTML生成</p>
+                          </div>
+                      </div>
+                  </div>
+              </section>
+              
+              <section class="section">
+                  <div class="container">
+                      <h2>📊 Sample Presentations</h2>
+                      <div class="demos" id="demos">
+                          <!-- Demo cards will be inserted here -->
+                      </div>
+                  </div>
+              </section>
+              
+              <div class="cta">
+                  <div class="container">
+                      <h3>Start Creating Your Presentation</h3>
+                      <p>AIの力を借りて、プロフェッショナルなプレゼンテーションを作成しましょう</p>
+                      <div class="cta-buttons">
+                          <a href="https://github.com/dobachi/AutoSlideIdea" class="btn btn-primary btn-large">
+                              View on GitHub
+                          </a>
+                          <a href="https://github.com/dobachi/AutoSlideIdea#quick-start" class="btn btn-secondary btn-large">
+                              Get Started
+                          </a>
+                      </div>
+                  </div>
+              </div>
+              
+              <script>
+                  const demos = [];
+          EOF
+          
+          # Add demo presentations
+          if [ -f _site/slides/demo.html ]; then
+            echo "demos.push({ title: 'Demo Presentation', description: 'AutoSlideIdeaの基本的な使い方', html: 'slides/demo.html', pdf: 'pdf/demo.pdf' });" >> _site/index.html
+          fi
+          
+          # Add other presentations
+          for html in _site/slides/*.html; do
+            if [ -f "$html" ] && [ "$(basename "$html")" != "demo.html" ]; then
+              name=$(basename "$html" .html)
+              echo "demos.push({ title: '$name', description: 'Sample presentation', html: 'slides/$name.html', pdf: 'pdf/$name.pdf' });" >> _site/index.html
+            fi
+          done
+          
+          cat >> _site/index.html << 'EOF'
+                  
+                  const container = document.getElementById('demos');
+                  
+                  if (demos.length === 0) {
+                      container.innerHTML = '<p style="text-align: center; color: #7f8c8d;">No demo presentations available yet.</p>';
+                  } else {
+                      demos.forEach(demo => {
+                          const card = document.createElement('div');
+                          card.className = 'demo-card';
+                          card.innerHTML = `
+                              <div class="demo-card-header">
+                                  <h3>${demo.title}</h3>
+                              </div>
+                              <div class="demo-card-body">
+                                  <p>${demo.description}</p>
+                                  <div class="demo-links">
+                                      <a href="${demo.html}" class="btn btn-primary">View Slides</a>
+                                      <a href="${demo.pdf}" class="btn btn-secondary">Download PDF</a>
+                                  </div>
+                              </div>
+                          `;
+                          container.appendChild(card);
+                      });
+                  }
+              </script>
+          </body>
+          </html>
+          EOF
+          
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./_site
+          
+  deploy:
+    if: github.repository == 'dobachi/AutoSlideIdea'  # Only deploy on main repo
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

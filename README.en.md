@@ -12,6 +12,7 @@ This project provides a methodology and toolset for efficiently creating present
 - **AI-assisted content generation**: Generate outlines and content with Claude Code/Gemini CLI
 - **AI instruction system**: Advanced AI control via submodules
 - **Automated builds**: Automatic PDF generation with GitHub Actions
+- **GitHub Pages support**: Publish presentations as websites
 - **Version control**: Change history management with Git
 
 ## Directory Structure
@@ -38,7 +39,9 @@ AutoSlideIdea/
 ├── samples/                   # Sample slides
 │   └── demo-presentation/    # Demo presentation
 ├── scripts/                   # Support scripts
-│   ├── create-presentation.sh # Unified presentation creation
+│   ├── manage-presentation.sh # Unified presentation manager (recommended)
+│   ├── create-presentation.sh # Create script (deprecated: wrapper)
+│   ├── update-presentation.sh # Update script (deprecated: wrapper)
 │   └── build.sh              # Build script
 ├── config/                    # Configuration files
 │   └── marp/                 # Marp settings
@@ -62,17 +65,25 @@ AutoSlideIdea/
    git submodule update --init --recursive
    ```
 
-2. **Create New Presentation**
+2. **Create and Manage Presentations**
    ```bash
-   # For local work (default)
-   ./scripts/create-presentation.sh my-presentation
+   # 🎯 Recommended: Unified manager (auto-detection)
+   ./scripts/manage-presentation.sh my-presentation
    
-   # Create as GitHub repository
-   ./scripts/create-presentation.sh --github conference-2024
+   # GitHub integration (create if new, add if existing)
+   ./scripts/manage-presentation.sh --github conference-2024
    
-   # Full project (including research/analysis)
-   ./scripts/create-presentation.sh --full research-project
-   ./scripts/create-presentation.sh --github --full --public big-conference
+   # Full project structure
+   ./scripts/manage-presentation.sh --full research-project
+   
+   # GitHub Pages support
+   ./scripts/manage-presentation.sh --github --workflow github-pages my-web-presentation
+   
+   # Explicit create mode (fails if exists)
+   ./scripts/manage-presentation.sh --create --github new-project
+   
+   # Explicit update mode (fails if not exists)
+   ./scripts/manage-presentation.sh --update --workflow github-pages existing-project
    ```
 
 3. **AI-Assisted Content Creation**
@@ -101,8 +112,10 @@ The presentations/ directory is excluded by `.gitignore`, allowing for two manag
 - Ideal for presentations with confidential information
 
 ```bash
-# Create presentation locally
+# Create presentation locally (legacy)
 ./scripts/create-presentation.sh my-local-presentation
+# 🎯 Recommended:
+./scripts/manage-presentation.sh my-local-presentation
 cd presentations/my-local-presentation
 # Work remains local only
 ```
@@ -113,11 +126,14 @@ cd presentations/my-local-presentation
 - For team sharing or version control needs
 
 ```bash
-# Create as GitHub repository from the start
-./scripts/create-presentation.sh --github my-conference-2024
+# 🎯 Recommended: Unified manager (auto-detection)
+./scripts/manage-presentation.sh --github my-conference-2024
 
-# Create as public repository (GitHub Pages ready)
-./scripts/create-presentation.sh --github --public tech-talk-2024
+# Create as public repository
+./scripts/manage-presentation.sh --github --public tech-talk-2024
+
+# Legacy method (deprecated, automatically forwarded)
+./scripts/create-presentation.sh --github legacy-project
 ```
 
 See [presentations/README.md](presentations/README.md) for details.
@@ -165,6 +181,8 @@ Project-specific instructions are defined in these files:
 
 - [Setup Guide](docs/setup.en.md)
 - [Workflow](docs/workflow.en.md)
+- [Scripts Reference](docs/scripts-reference.en.md) - Details of create-presentation.sh, update-presentation.sh
+- [GitHub Pages Integration](docs/github-pages.en.md) - Publish presentations as websites
 - [Advanced Workflow](docs/advanced-workflow.en.md) - Research/analysis/ideation using AI instruction system
 - [Tips & Tricks](docs/tips.en.md)
 

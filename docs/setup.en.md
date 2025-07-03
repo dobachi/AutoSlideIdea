@@ -106,11 +106,11 @@ brew install --cask font-noto-sans-cjk
 ### Create Test Slides
 
 ```bash
-# Copy sample
-cp -r samples/demo-presentation test-presentation
+# 🎯 Recommended: Create test presentation with unified manager
+./scripts/manage-presentation.sh test-presentation
 
 # Generate PDF
-cd test-presentation
+cd presentations/test-presentation
 npm run pdf -- slides.md -o test.pdf
 # or
 npx marp slides.md -o test.pdf
@@ -118,6 +118,17 @@ npx marp slides.md -o test.pdf
 # View generated PDF
 open test.pdf  # macOS
 xdg-open test.pdf  # Linux
+```
+
+### Script Verification
+
+```bash
+# 🎯 Recommended: Check unified management script
+./scripts/manage-presentation.sh --help
+
+# Legacy scripts (automatically forwarded)
+./scripts/create-presentation.sh --help
+./scripts/update-presentation.sh --help
 ```
 
 ### Troubleshooting

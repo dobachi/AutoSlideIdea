@@ -2,20 +2,34 @@
 
 ## Basic Workflow
 
-### 1. Creating a New Presentation
+### 1. Creating and Managing Presentations
+
+🎯 **Recommended: Unified Management Script**
 
 ```bash
-# For local work (default)
-./scripts/create-presentation.sh my-presentation
+# Auto-detection mode (create if new, suggest update if exists)
+./scripts/manage-presentation.sh my-presentation
 
-# Create as GitHub repository
-./scripts/create-presentation.sh --github conference-2024
+# GitHub integration (create or update as needed)
+./scripts/manage-presentation.sh --github conference-2024
 
 # Full project (including research and analysis)
-./scripts/create-presentation.sh --full research-project
+./scripts/manage-presentation.sh --full research-project
 
 # Specify template
-./scripts/create-presentation.sh --template academic conference-talk
+./scripts/manage-presentation.sh --template academic conference-talk
+
+# Explicit modes
+./scripts/manage-presentation.sh --create my-new-presentation   # Create only
+./scripts/manage-presentation.sh --update existing-project     # Update only
+```
+
+📝 **Legacy Method (Deprecated)**
+
+```bash
+# Automatically forwarded to manage-presentation.sh
+./scripts/create-presentation.sh my-presentation
+./scripts/update-presentation.sh --add-github my-presentation
 ```
 
 **Important**: The presentations/ directory is `.gitignore`d, so created presentations won't be pushed to the AutoSlideIdea repository.
@@ -29,8 +43,11 @@
 # Create as GitHub repository (recommended)
 ./scripts/create-presentation.sh --github my-presentation
 
-# Create as public repository (GitHub Pages ready)
+# Create as public repository
 ./scripts/create-presentation.sh --github --public my-presentation
+
+# Create with GitHub Pages workflow
+./scripts/create-presentation.sh --github --workflow github-pages my-presentation
 ```
 
 #### Full Project Structure
@@ -141,6 +158,42 @@ on:
     branches: [main]
     paths:
       - 'presentations/**/*.md'
+```
+
+### 6. Unified Management Script Details
+
+`manage-presentation.sh` performs appropriate actions through auto-detection, but explicit options are also available.
+
+#### Auto-Detection Behavior
+
+```bash
+# Check existence → create new or suggest update
+./scripts/manage-presentation.sh my-presentation
+
+# GitHub integration (create if new, add if existing)
+./scripts/manage-presentation.sh --github existing-or-new-presentation
+```
+
+#### Explicit Operations
+
+```bash
+# Force create mode (fails if exists)
+./scripts/manage-presentation.sh --create new-presentation
+
+# Force update mode (fails if not exists)
+./scripts/manage-presentation.sh --update existing-presentation --workflow github-pages
+
+# Structure extension
+./scripts/manage-presentation.sh --add-assets --add-research my-presentation
+```
+
+#### Legacy Script Compatibility
+
+```bash
+# The following are automatically forwarded to manage-presentation.sh
+./scripts/update-presentation.sh --add-github my-presentation
+# ↓ Actual execution
+./scripts/manage-presentation.sh --update --add-github my-presentation
 ```
 
 ## Advanced Workflow
