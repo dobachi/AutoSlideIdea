@@ -269,6 +269,11 @@ git checkout conference-v1.0
    - プロンプトテンプレート
    - ワークフロー自動化
 
+4. **ブラウザベース化**
+   - GitHub Codespaces対応（.devcontainer設定）
+   - ワンクリックで環境構築不要
+   - どこからでもアクセス可能
+
 ### 長期的ビジョン
 
 1. **インタラクティブ要素**
@@ -285,3 +290,10 @@ git checkout conference-v1.0
    - 視聴時間分析
    - エンゲージメント測定
    - 改善提案AI
+
+4. **完全なWebアプリ化**
+   - ブラウザ内エディタ（CodeMirror/Monaco）
+   - リアルタイムプレビュー
+   - クラウド保存・共有機能
+   - PWA対応（オフライン編集）
+   - WebContainer APIでの完全なブラウザ内実行
