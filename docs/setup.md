@@ -16,17 +16,28 @@
 
 ## インストール手順
 
-### 1. Marp CLIのインストール
+### 1. 依存関係のインストール
 
 ```bash
-# npmを使用
-npm install -g @marp-team/marp-cli
-
-# またはyarnを使用
-yarn global add @marp-team/marp-cli
+# プロジェクトルートで実行
+cd AutoSlideIdea
+npm install
 
 # 確認
-marp --version
+npx marp --version
+```
+
+**メリット**：
+- グローバルインストール不要（権限問題なし）
+- プロジェクトごとにバージョン管理可能
+- `package.json`で依存関係を明確化
+
+#### グローバルインストール（オプション）
+
+システム全体で使いたい場合：
+
+```bash
+npm install -g @marp-team/marp-cli
 ```
 
 ### 2. プロジェクトのセットアップ
@@ -98,7 +109,9 @@ cp -r samples/demo-presentation test-presentation
 
 # PDFを生成
 cd test-presentation
-marp slides.md -o test.pdf
+npm run pdf -- slides.md -o test.pdf
+# または
+npx marp slides.md -o test.pdf
 
 # 生成されたPDFを確認
 open test.pdf  # macOS
@@ -110,14 +123,15 @@ xdg-open test.pdf  # Linux
 #### Marpが見つからない
 
 ```bash
-# PATHの確認
+# ローカルインストールの場合
+npx marp --version
+
+# またはnpmスクリプトを使用
+npm run marp -- --version
+
+# グローバルインストールの場合のPATH確認
 echo $PATH
-
-# npmのグローバルディレクトリを確認
 npm config get prefix
-
-# PATHに追加（.bashrcや.zshrcに記載）
-export PATH="$PATH:$(npm config get prefix)/bin"
 ```
 
 #### 日本語が文字化けする
@@ -136,7 +150,7 @@ section {
 
 ```bash
 # 圧縮オプションを使用
-marp slides.md -o output.pdf --pdf-notes --allow-local-files
+npx marp slides.md -o output.pdf --pdf-notes --allow-local-files
 ```
 
 ## 次のステップ

@@ -119,14 +119,17 @@ research-project/
 
 ```bash
 # PDF生成
-marp presentations/my-presentation/slides.md \
+npm run pdf -- presentations/my-presentation/slides.md \
   -o presentations/my-presentation/output.pdf \
   --theme ../config/marp/base.css
 
 # HTML生成（プレゼンモード）
-marp presentations/my-presentation/slides.md \
+npm run html -- presentations/my-presentation/slides.md \
   -o presentations/my-presentation/index.html \
   --theme ../config/marp/base.css
+
+# プレビューモード
+npm run preview -- presentations/my-presentation/slides.md
 ```
 
 #### GitHub Actionsでの自動ビルド
