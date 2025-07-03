@@ -5,14 +5,17 @@
 ### 1. プレゼンテーションの新規作成
 
 ```bash
-# シンプルなプレゼンテーション作成（ローカル作業）
-./scripts/new-presentation.sh my-presentation
+# ローカル作業用（デフォルト）
+./scripts/create-presentation.sh my-presentation
 
-# フルプロジェクトとして作成（調査・分析含む）
-./scripts/new-presentation.sh --full research-project
+# GitHubリポジトリとして作成
+./scripts/create-presentation.sh --github conference-2024
+
+# フルプロジェクト（調査・分析含む）
+./scripts/create-presentation.sh --full research-project
 
 # テンプレート指定
-./scripts/new-presentation.sh conference-talk academic
+./scripts/create-presentation.sh --template academic conference-talk
 ```
 
 **重要**: presentations/ディレクトリは`.gitignore`されているため、作成したプレゼンテーションはAutoSlideIdeaリポジトリにはプッシュされません。
@@ -23,8 +26,8 @@
 2. **個別リポジトリ化**: 共有やGitHub Actions連携が必要な場合
 
 ```bash
-# 個別リポジトリとして設定
-./scripts/setup-presentation-repo.sh --from-local presentations/my-presentation my-repo-name
+# 後からGitHubリポジトリ化する場合は、作業ディレクトリで手動でGit初期化
+# （今後、オプション追加予定）
 ```
 
 #### フルプロジェクトの構造
