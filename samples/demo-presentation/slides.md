@@ -80,72 +80,54 @@ AIツールを活用した効率的なプレゼンテーション作成方法の
 
 # ワークフロー
 
-```mermaid
-graph LR
-    A[アイデア] --> B[AI支援で構成作成]
-    B --> C[Markdownで記述]
-    C --> D[Marpでプレビュー]
-    D --> E[AI支援で改善]
-    E --> F[PDF出力]
-    F --> G[GitHub Actionsで自動化]
-```
+## 作成プロセス
+
+1. **アイデア** → AIツールに相談
+2. **構成作成** → AI支援で骨組み生成
+3. **Markdown記述** → シンプルな記法で執筆
+4. **プレビュー** → Marpでリアルタイム確認
+5. **改善** → AI支援で内容をブラッシュアップ
+6. **出力** → PDF/HTML形式で生成
+7. **自動化** → GitHub Actionsで配布
 
 ---
 
-# 実装例：システム構成図
+# 実装例：システム構成
 
-```mermaid
-graph TB
-    subgraph "開発環境"
-        A[AIツール\n(Claude Code/Gemini CLI)]
-        B[VSCode + Marp拡張]
-    end
-    
-    subgraph "バージョン管理"
-        C[Git/GitHub]
-        D[GitHub Actions]
-    end
-    
-    subgraph "出力"
-        E[PDF]
-        F[HTML]
-        G[PPTX]
-    end
-    
-    A --> B
-    B --> C
-    C --> D
-    D --> E
-    D --> F
-    D --> G
-```
+## 開発環境
+- **AIツール**: Claude Code / Gemini CLI
+- **エディタ**: VSCode + Marp拡張機能
+
+## バージョン管理
+- **リポジトリ**: Git/GitHub
+- **CI/CD**: GitHub Actions
+
+## 出力形式
+- **PDF**: プレゼン配布用
+- **HTML**: Web公開用
+- **PPTX**: PowerPoint互換
 
 ---
 
-# コード例：自動ビルド設定
+# 自動ビルド設定
 
-```yaml
-# .github/workflows/build-slides.yml
-name: Build Slides
+## GitHub Actionsワークフロー
 
-on:
-  push:
-    paths:
-      - 'presentations/**/*.md'
+### トリガー条件
+- Markdownファイルの変更時に自動実行
+- `presentations/**/*.md`へのプッシュを検知
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
-      - run: npm install -g @marp-team/marp-cli
-      - run: marp presentations/**/*.md --pdf
-      - uses: actions/upload-artifact@v3
-        with:
-          name: slides
-          path: presentations/**/*.pdf
-```
+### ビルドステップ
+1. **リポジトリのチェックアウト**
+2. **Node.js環境のセットアップ**
+3. **Marp CLIのインストール**
+4. **PDF変換の実行**
+5. **成果物のアップロード**
+
+### 利点
+- 手動ビルド不要
+- 常に最新版を配布
+- チーム全員が同じ環境でビルド
 
 ---
 
