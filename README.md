@@ -49,8 +49,7 @@ AutoSlideIdea/
 ├── config/                    # 設定ファイル
 │   └── marp/                 # Marp設定
 ├── presentations/             # 作成したプレゼンテーション
-├── package.json              # npm依存関係
-└── CONTRIBUTING.md           # 貢献ガイドライン
+└── package.json              # npm依存関係
 ```
 
 ## クイックスタート
@@ -209,6 +208,12 @@ AI指示書システムの豊富な機能を活用することで、単なるス
 
 ### リファレンス
 - [スクリプトリファレンス](docs/reference/scripts.md) - create-presentation.sh, update-presentation.shの詳細
+
+## プロジェクト情報
+
+- [コントリビューションガイド](docs/development/contributing.md) - プロジェクトへの貢献方法
+- [ロードマップ](docs/development/roadmap.md) - 今後の開発計画
+- [ドキュメント一覧](docs/) - すべてのドキュメント
 
 ## ライセンス
 

@@ -48,8 +48,7 @@ AutoSlideIdea/
 ├── config/                    # Configuration files
 │   └── marp/                 # Marp settings
 ├── presentations/             # Created presentations
-├── package.json              # npm dependencies
-└── CONTRIBUTING.md           # Contribution guidelines
+└── package.json              # npm dependencies
 ```
 
 ## Quick Start
@@ -189,6 +188,12 @@ Project-specific instructions are defined in these files:
 - [GitHub Pages Integration](docs/github-pages.en.md) - Publish presentations as websites ([Demo](https://dobachi.github.io/AutoSlideIdea/))
 - [Advanced Workflow](docs/advanced-workflow.en.md) - Research/analysis/ideation using AI instruction system
 - [Tips & Tricks](docs/tips.en.md)
+
+## Project Information
+
+- [Contribution Guidelines](docs/development/contributing.en.md) - How to contribute to the project
+- [Roadmap](docs/development/roadmap.en.md) - Future development plans
+- [Documentation Index](docs/) - All documentation
 
 ## License
 

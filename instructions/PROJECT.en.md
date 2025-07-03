@@ -30,7 +30,7 @@ It enables efficient slide creation using Marp (Markdown-based) with support fro
 ### Commit Message Guidelines
 
 **Important**: Do not include AI tool signatures (Claude, Co-Authored-By, etc.) in commit messages for this project.
-Instead, follow the format specified in CONTRIBUTING.md.
+Instead, follow the format specified in docs/development/contributing.md.
 
 ## Presentation Creation Support Guidelines
 
