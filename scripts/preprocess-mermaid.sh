@@ -48,7 +48,13 @@ while IFS= read -r line || [ -n "$line" ]; do
         
         # Mermaidで画像生成
         echo "  - ダイアグラム ${COUNTER} を生成中..."
-        npx mmdc -i "${TEMP_FILE}.mmd" -o "$IMAGE_FILE" -t default -b transparent
+        # CI環境では--puppeteerArgsでno-sandboxを指定
+        if [ -n "$CI" ]; then
+            npx mmdc -i "${TEMP_FILE}.mmd" -o "$IMAGE_FILE" -t default -b transparent \
+                --puppeteerArgs='--no-sandbox,--disable-setuid-sandbox'
+        else
+            npx mmdc -i "${TEMP_FILE}.mmd" -o "$IMAGE_FILE" -t default -b transparent
+        fi
         
         # Markdownに画像参照を追加
         echo "![Diagram ${COUNTER}](${IMAGE_FILE#$DIRNAME/})" >> "$TEMP_FILE"
