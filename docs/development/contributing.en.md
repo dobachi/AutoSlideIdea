@@ -1,6 +1,6 @@
 # Contribution Guidelines
 
-English | [日本語](CONTRIBUTING.md)
+[English](contributing.en.md) | [日本語](contributing.md)
 
 ## Code of Conduct
 

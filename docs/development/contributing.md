@@ -1,6 +1,6 @@
 # コントリビューションガイド
 
-[English](CONTRIBUTING.en.md) | 日本語
+[English](contributing.en.md) | 日本語
 
 ## コミットメッセージ
 

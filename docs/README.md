@@ -33,6 +33,9 @@ AutoSlideIdeaの各機能の詳細説明です。
 ### 🔧 開発 (Development)
 プロジェクトの開発に関する情報です。
 
+- **[コントリビューションガイド](development/contributing.md)** - プロジェクトへの貢献方法
+- **[ロードマップ](development/roadmap.md)** - 今後の開発計画
+- **[ローカライゼーション戦略](development/localization.md)** - 多言語対応の方針
 - **[ドキュメント再構成計画](development/REORGANIZATION_PLAN.md)** - ドキュメント構造の改善計画
 
 ## 🎯 目的別ガイド
