@@ -30,7 +30,7 @@ Marpを使用したMarkdownベースのスライド作成を、Claude CodeやGem
 ### コミットメッセージについて
 
 **重要**: このプロジェクトではコミットメッセージにAIツールの署名（Claude、Co-Authored-By等）を含めないでください。
-代わりに、CONTRIBUTING.mdに記載されたフォーマットに従ってください。
+代わりに、docs/development/contributing.mdに記載されたフォーマットに従ってください。
 
 ## プレゼンテーション作成支援の方針
 
