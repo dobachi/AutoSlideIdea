@@ -26,12 +26,30 @@ build/
 dist/
 
 # プレゼンテーション作業ファイル
-presentations/**/output/
-presentations/**/*.pdf
-presentations/**/*.pptx
-presentations/**/*.html
+# presentations/ディレクトリ全体を除外（ローカル作業用）
+presentations/
+# ただしREADMEは追跡
+!presentations/README.md
+
+# サンプルは追跡
 !samples/**/*.pdf
 !samples/**/*.html
+
+# 調査データ（大容量ファイル対策）
+presentations/**/research/data/*.csv
+presentations/**/research/data/*.xlsx
+presentations/**/research/data/*.json
+presentations/**/research/data/*.db
+presentations/**/research/data/*.sqlite
+# 分析出力は追跡する
+!presentations/**/research/analysis/*.png
+!presentations/**/research/analysis/*.jpg
+!presentations/**/research/analysis/*.svg
+
+# 一時的な作業ファイル
+presentations/**/ideation/drafts/*.tmp
+presentations/**/ideation/drafts/*.bak
+presentations/**/.~lock.*
 
 # エディタ設定
 .vscode/

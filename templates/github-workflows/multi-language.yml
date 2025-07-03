@@ -1,0 +1,164 @@
+# 多言語対応 GitHub Actions ワークフロー
+# 日本語・英語など複数言語のプレゼンテーションを同時ビルド
+
+name: Build Multi-Language Presentation
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'slides-*.md'
+      - 'ja/**'
+      - 'en/**'
+      - 'assets/**'
+      - '.github/workflows/*.yml'
+  workflow_dispatch:
+
+env:
+  LANGUAGES: 'ja en'  # サポートする言語
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install Marp CLI and fonts
+        run: |
+          npm install -g @marp-team/marp-cli
+          
+          # 多言語フォント
+          sudo apt-get update
+          sudo apt-get install -y \
+            fonts-noto-cjk \
+            fonts-noto-emoji \
+            fonts-noto \
+            fonts-noto-color-emoji
+          
+      - name: Create output directories
+        run: |
+          mkdir -p dist
+          for lang in $LANGUAGES; do
+            mkdir -p dist/$lang/{pdf,html}
+          done
+          
+      - name: Build presentations for each language
+        run: |
+          # 言語別ディレクトリがある場合
+          for lang in $LANGUAGES; do
+            if [ -d "$lang" ] && [ -f "$lang/slides.md" ]; then
+              echo "Building $lang version..."
+              marp "$lang/slides.md" --pdf --allow-local-files -o "dist/$lang/pdf/slides.pdf"
+              marp "$lang/slides.md" --html --allow-local-files -o "dist/$lang/html/index.html"
+              
+              # アセットをコピー
+              if [ -d "$lang/assets" ]; then
+                cp -r "$lang/assets" "dist/$lang/"
+              fi
+            fi
+          done
+          
+          # ルートレベルの言語別ファイル（slides-ja.md, slides-en.md など）
+          for lang in $LANGUAGES; do
+            if [ -f "slides-$lang.md" ]; then
+              echo "Building slides-$lang.md..."
+              marp "slides-$lang.md" --pdf --allow-local-files -o "dist/$lang/pdf/slides.pdf"
+              marp "slides-$lang.md" --html --allow-local-files -o "dist/$lang/html/index.html"
+            fi
+          done
+          
+          # 共通アセット
+          if [ -d assets ]; then
+            cp -r assets dist/
+          fi
+          
+      - name: Generate language selector page
+        run: |
+          cat > dist/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html>
+          <head>
+              <title>Presentation - Language Selection</title>
+              <meta charset="utf-8">
+              <style>
+                  body {
+                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+                      display: flex;
+                      justify-content: center;
+                      align-items: center;
+                      height: 100vh;
+                      margin: 0;
+                      background: #f5f5f5;
+                  }
+                  .container {
+                      text-align: center;
+                      background: white;
+                      padding: 40px;
+                      border-radius: 10px;
+                      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                  }
+                  h1 { color: #333; margin-bottom: 30px; }
+                  .languages {
+                      display: flex;
+                      gap: 20px;
+                      justify-content: center;
+                  }
+                  .lang-button {
+                      display: block;
+                      padding: 15px 30px;
+                      background: #3498db;
+                      color: white;
+                      text-decoration: none;
+                      border-radius: 5px;
+                      font-size: 18px;
+                      transition: background 0.3s;
+                  }
+                  .lang-button:hover {
+                      background: #2980b9;
+                  }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1>Select Language / 言語を選択</h1>
+                  <div class="languages">
+          EOF
+          
+          for lang in $LANGUAGES; do
+            if [ -d "dist/$lang" ]; then
+              case $lang in
+                ja) label="日本語" ;;
+                en) label="English" ;;
+                *) label="$lang" ;;
+              esac
+              echo "<a href=\"$lang/html/index.html\" class=\"lang-button\">$label</a>" >> dist/index.html
+            fi
+          done
+          
+          cat >> dist/index.html << 'EOF'
+                  </div>
+              </div>
+          </body>
+          </html>
+          EOF
+          
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: presentation-multilang-${{ github.sha }}
+          path: dist/
+          retention-days: 30
+          
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
