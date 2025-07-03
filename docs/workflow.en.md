@@ -2,6 +2,8 @@
 
 ## Basic Workflow
 
+> 💡 **Reference**: Check out the [demo site](https://dobachi.github.io/AutoSlideIdea/) for actual output examples
+
 ### 1. Creating and Managing Presentations
 
 🎯 **Recommended: Unified Management Script**

@@ -85,6 +85,8 @@ Main script for unified management of presentation creation and updates. Execute
 ./scripts/manage-presentation.sh --update --workflow github-pages existing-talk
 ```
 
+> 💡 **Live Example**: Check out the [AutoSlideIdea Demo Site](https://dobachi.github.io/AutoSlideIdea/) to see GitHub Pages output
+
 ## create-presentation.sh (Deprecated)
 
 Wrapper script maintained for compatibility. Automatically forwards to `manage-presentation.sh --create`.

@@ -6,6 +6,8 @@
 
 AutoSlideIdeaは、GitHub Pagesと統合してプレゼンテーションをWebサイトとして公開する機能を提供します。これにより、URLを共有するだけで誰でもプレゼンテーションにアクセスできるようになります。
 
+🎯 **[デモサイト](https://dobachi.github.io/AutoSlideIdea/)を見る** - 実際のGitHub Pages出力例
+
 ## 主な機能
 
 - **自動デプロイ**: mainブランチへのプッシュ時に自動的にWebサイトを更新

@@ -85,6 +85,8 @@
 ./scripts/manage-presentation.sh --update --workflow github-pages existing-talk
 ```
 
+> 💡 **実例**: [AutoSlideIdeaデモサイト](https://dobachi.github.io/AutoSlideIdea/)でGitHub Pages出力を確認
+
 ## create-presentation.sh（非推奨）
 
 互換性のため残されているwrapperスクリプトです。`manage-presentation.sh --create`に自動転送されます。

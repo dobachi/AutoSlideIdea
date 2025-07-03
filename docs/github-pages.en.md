@@ -6,6 +6,8 @@ English | [日本語](github-pages.md)
 
 AutoSlideIdea provides seamless integration with GitHub Pages to publish your presentations as websites. This allows anyone to access your presentations simply by sharing a URL.
 
+🎯 **[View Demo Site](https://dobachi.github.io/AutoSlideIdea/)** - See actual GitHub Pages output examples
+
 ## Key Features
 
 - **Automatic Deployment**: Automatically updates the website when pushing to the main branch
