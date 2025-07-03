@@ -5,7 +5,7 @@
 ### 1. プレゼンテーションの新規作成
 
 ```bash
-# シンプルなプレゼンテーション作成
+# シンプルなプレゼンテーション作成（ローカル作業）
 ./scripts/new-presentation.sh my-presentation
 
 # フルプロジェクトとして作成（調査・分析含む）
@@ -13,6 +13,18 @@
 
 # テンプレート指定
 ./scripts/new-presentation.sh conference-talk academic
+```
+
+**重要**: presentations/ディレクトリは`.gitignore`されているため、作成したプレゼンテーションはAutoSlideIdeaリポジトリにはプッシュされません。
+
+#### プレゼンテーションの管理方法
+
+1. **ローカル作業のまま**: 機密性が高い場合はそのまま作業
+2. **個別リポジトリ化**: 共有やGitHub Actions連携が必要な場合
+
+```bash
+# 個別リポジトリとして設定
+./scripts/setup-presentation-repo.sh --from-local presentations/my-presentation my-repo-name
 ```
 
 #### フルプロジェクトの構造
