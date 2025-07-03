@@ -37,6 +37,7 @@ footer: 'Mermaid Integration Demo - 2025'
 - **自動レイアウト**で美しい図表を生成
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'fontSize': '16px'}}}%%
 graph LR
     A[テキスト] --> B[Mermaid]
     B --> C[美しい図表]
@@ -49,6 +50,7 @@ graph LR
 ## システムアーキテクチャ
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'fontSize': '14px'}}}%%
 graph TD
     A[ユーザー] -->|HTTPリクエスト| B[ロードバランサー]
     B --> C[Webサーバー1]
@@ -67,6 +69,7 @@ graph TD
 ## API通信フロー
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'fontSize': '14px'}}}%%
 sequenceDiagram
     participant U as ユーザー
     participant F as フロントエンド
@@ -91,6 +94,7 @@ sequenceDiagram
 ## プロジェクトスケジュール
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'fontSize': '12px'}}}%%
 gantt
     title AIプレゼンテーションツール開発
     dateFormat  YYYY-MM-DD
@@ -177,12 +181,14 @@ stateDiagram-v2
 ```
 
 ---
+<!-- _class: cols-2 -->
 
 # 円グラフ
 
 ## 技術スタック構成
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'fontSize': '14px'}}}%%
 pie title プロジェクトの言語構成
     "JavaScript" : 45
     "Markdown" : 25
@@ -191,34 +197,37 @@ pie title プロジェクトの言語構成
     "その他" : 5
 ```
 
+### 特徴
+- 視覚的に割合を表現
+- カテゴリー別の比較が容易
+- 統計データの可視化に最適
+
 ---
+<!-- _class: cols-2 -->
 
-# より複雑な例
-
-## マイクロサービスアーキテクチャ
+# マイクロサービス
 
 ```mermaid
+%%{init: {'theme':'base', 'themeVariables': { 'fontSize': '12px'}}}%%
 graph TB
-    subgraph "フロントエンド層"
-        WEB[Webアプリ]
-        MOB[モバイルアプリ]
+    subgraph "Frontend"
+        WEB[Web]
+        MOB[Mobile]
     end
     
-    subgraph "API Gateway"
-        GW[Kong/nginx]
+    subgraph "Gateway"
+        GW[API GW]
     end
     
-    subgraph "マイクロサービス"
-        AUTH[認証サービス]
-        USER[ユーザーサービス]
-        PRES[プレゼンサービス]
-        MERM[Mermaidサービス]
+    subgraph "Services"
+        AUTH[Auth]
+        USER[User]
+        PRES[Slides]
     end
     
-    subgraph "データ層"
-        RDB[(PostgreSQL)]
-        CACHE[(Redis)]
-        S3[(オブジェクトストレージ)]
+    subgraph "Data"
+        DB[(DB)]
+        CACHE[(Cache)]
     end
     
     WEB --> GW
@@ -226,22 +235,22 @@ graph TB
     GW --> AUTH
     GW --> USER
     GW --> PRES
-    GW --> MERM
     
-    AUTH --> RDB
-    USER --> RDB
-    PRES --> RDB
-    PRES --> S3
-    MERM --> CACHE
+    AUTH --> DB
+    USER --> DB
+    PRES --> DB
+    AUTH --> CACHE
     
     style WEB fill:#e1f5fe
     style MOB fill:#e1f5fe
     style GW fill:#fff3e0
-    style AUTH fill:#f3e5f5
-    style USER fill:#f3e5f5
-    style PRES fill:#f3e5f5
-    style MERM fill:#f3e5f5
 ```
+
+### アーキテクチャの特徴
+- **スケーラビリティ**: 各サービスを独立してスケール
+- **疎結合**: サービス間の依存を最小化
+- **可用性**: 一部障害でも継続稼働
+- **開発効率**: チーム別の並行開発
 
 ---
 

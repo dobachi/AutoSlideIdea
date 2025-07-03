@@ -136,3 +136,29 @@ section::after {
   font-size: 20px;
   color: #7f8c8d;
 }
+
+/* 2カラムレイアウト */
+section.cols-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 30px;
+  align-items: start;
+}
+
+section.cols-2 > h1,
+section.cols-2 > h2 {
+  grid-column: 1 / -1;
+  margin-bottom: 10px;
+}
+
+section.cols-2 > *:not(h1):not(h2) {
+  margin: 0;
+}
+
+/* Mermaid図のサイズ調整 */
+section img[alt*="mermaid"] {
+  max-width: 100%;
+  max-height: 500px;
+  object-fit: contain;
+}
