@@ -7,6 +7,9 @@ on:
       - 'samples/**'
       - 'presentations/**'
       - '.github/workflows/demo-site.yml'
+      - 'scripts/**'
+      - 'config/**'
+      - 'puppeteer-config.json'
   workflow_dispatch:
 
 permissions:
@@ -62,6 +65,8 @@ jobs:
               --allow-local-files \
               --theme config/marp/base.css \
               -o _site/slides/demo.html
+            # 静的表示用に変換
+            ./scripts/generate-static-html.sh _site/slides/demo.html
             npx marp samples/demo-presentation/slides.md \
               --pdf \
               --allow-local-files \
@@ -83,6 +88,8 @@ jobs:
                 --allow-local-files \
                 --theme config/marp/base.css \
                 -o _site/slides/mermaid-demo.html
+              # 静的表示用に変換
+              ./scripts/generate-static-html.sh _site/slides/mermaid-demo.html
               npx marp samples/mermaid-demo/slides-processed.md \
                 --pdf \
                 --allow-local-files \
