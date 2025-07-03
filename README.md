@@ -58,14 +58,15 @@ AutoSlideIdea/
 
 2. **新規プレゼンテーション作成**
    ```bash
-   # シンプルなプレゼンテーション
-   ./scripts/new-presentation.sh my-presentation
+   # ローカル作業用（デフォルト）
+   ./scripts/create-presentation.sh my-presentation
    
-   # 調査・分析を含むフルプロジェクト
-   ./scripts/new-presentation.sh --full research-project
+   # GitHubリポジトリとして作成
+   ./scripts/create-presentation.sh --github conference-2024
    
-   # テンプレート指定
-   ./scripts/new-presentation.sh conference-talk academic
+   # フルプロジェクト（調査・分析含む）
+   ./scripts/create-presentation.sh --full research-project
+   ./scripts/create-presentation.sh --github --full --public big-conference
    ```
 
 3. **AI支援でコンテンツ作成**
@@ -89,7 +90,7 @@ presentations/ディレクトリは`.gitignore`で除外されているため、
 
 ```bash
 # ローカルでプレゼンテーション作成
-./scripts/new-presentation.sh my-local-presentation
+./scripts/create-presentation.sh my-local-presentation
 cd presentations/my-local-presentation
 # 作業はローカルのみで完結
 ```
@@ -100,11 +101,11 @@ cd presentations/my-local-presentation
 - チーム共有やバージョン管理が必要な場合
 
 ```bash
-# 個別リポジトリとして初期化
-./scripts/setup-presentation-repo.sh my-conference-2024
+# 最初からGitHubリポジトリとして作成
+./scripts/create-presentation.sh --github my-conference-2024
 
-# 既存のローカルプレゼンテーションをリポジトリ化
-./scripts/setup-presentation-repo.sh --from-local presentations/my-talk my-talk-repo
+# パブリックリポジトリとして作成（GitHub Pages対応）
+./scripts/create-presentation.sh --github --public tech-talk-2024
 ```
 
 詳細は[presentations/README.md](presentations/README.md)を参照してください。
