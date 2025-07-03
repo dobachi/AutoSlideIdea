@@ -192,12 +192,23 @@ AI指示書システムの豊富な機能を活用することで、単なるス
 
 ## 詳細ドキュメント
 
-- [セットアップガイド](docs/setup.md)
-- [作業フロー](docs/workflow.md)
-- [スクリプトリファレンス](docs/scripts-reference.md) - create-presentation.sh, update-presentation.shの詳細
-- [GitHub Pages連携](docs/github-pages.md) - プレゼンテーションをWebサイトとして公開（[デモ](https://dobachi.github.io/AutoSlideIdea/)）
-- [高度なワークフロー](docs/advanced-workflow.md) - AI指示書システムを活用した調査・分析・アイデア創出
-- [Tips & Tricks](docs/tips.md)
+- 📚 **[ドキュメントホーム](docs/)** - すべてのドキュメントの目次
+
+### はじめに
+- [セットアップガイド](docs/getting-started/setup.md)
+- [基本ワークフロー](docs/getting-started/basic-workflow.md)
+
+### ガイド
+- [高度なワークフロー](docs/guides/advanced-workflow.md) - AI指示書システムを活用した調査・分析・アイデア創出
+- [Tips & Tricks](docs/guides/tips.md)
+
+### 機能
+- [GitHub Pages連携](docs/features/github-pages.md) - プレゼンテーションをWebサイトとして公開（[デモ](https://dobachi.github.io/AutoSlideIdea/)）
+- [CSSテーマ](docs/features/css-themes.md) - 情報量に応じた4種類のテーマ
+- [Mermaid統合](docs/features/mermaid.md) - フローチャートや図表の作成
+
+### リファレンス
+- [スクリプトリファレンス](docs/reference/scripts.md) - create-presentation.sh, update-presentation.shの詳細
 
 ## ライセンス
 
