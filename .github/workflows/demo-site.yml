@@ -57,8 +57,16 @@ jobs:
           
           # Demo presentation
           if [ -f samples/demo-presentation/slides.md ]; then
-            npx marp samples/demo-presentation/slides.md --html --allow-local-files -o _site/slides/demo.html
-            npx marp samples/demo-presentation/slides.md --pdf --allow-local-files -o _site/pdf/demo.pdf
+            npx marp samples/demo-presentation/slides.md \
+              --html \
+              --allow-local-files \
+              --theme config/marp/base.css \
+              -o _site/slides/demo.html
+            npx marp samples/demo-presentation/slides.md \
+              --pdf \
+              --allow-local-files \
+              --theme config/marp/base.css \
+              -o _site/pdf/demo.pdf
           fi
           
           # Build any test presentations (excluding .gitignored presentations/)
