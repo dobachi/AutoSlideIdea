@@ -1,0 +1,97 @@
+/* Marpコンパクトテーマ - 情報量が非常に多いスライド向け */
+
+/* base.cssを継承 */
+@import 'base';
+
+/* コンパクト用に文字サイズを大幅に調整 */
+section {
+  font-size: 20px;    /* 28px → 20px */
+  padding: 40px;      /* 70px → 40px */
+  line-height: 1.4;   /* 全体的に行間を詰める */
+}
+
+/* タイトルスライドは少し小さく */
+section.title h1 {
+  font-size: 42px;    /* 48px → 42px */
+  margin-bottom: 20px;
+}
+
+section.title h2 {
+  font-size: 28px;    /* 32px → 28px */
+}
+
+/* 見出しをコンパクトに */
+h1 {
+  font-size: 32px;    /* 42px → 32px */
+  margin-bottom: 15px;
+  padding-bottom: 8px;
+}
+
+h2 {
+  font-size: 26px;    /* 36px → 26px */
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+h3 {
+  font-size: 22px;    /* 30px → 22px */
+  margin-top: 10px;
+  margin-bottom: 8px;
+}
+
+/* リストをコンパクトに */
+ul, ol {
+  line-height: 1.4;
+  margin-left: 0.8em;
+  margin-top: 5px;
+  margin-bottom: 5px;
+}
+
+li {
+  margin-bottom: 0.2em;
+}
+
+/* コードブロックをコンパクトに */
+pre {
+  font-size: 16px;    /* 24px → 16px */
+  padding: 8px;       /* 15px → 8px */
+  margin: 10px 0;
+}
+
+code {
+  font-size: 0.85em;
+}
+
+/* 表をコンパクトに */
+table {
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+th, td {
+  padding: 5px 8px;   /* 12px → 5px 8px */
+}
+
+/* 段落の間隔を詰める */
+p {
+  margin: 8px 0;
+}
+
+/* 引用をコンパクトに */
+blockquote {
+  padding-left: 12px;
+  margin: 10px 0;
+  font-size: 18px;
+}
+
+/* フッターとページ番号を小さく */
+footer {
+  font-size: 16px;
+  bottom: 15px;
+}
+
+section::after {
+  font-size: 16px;
+  bottom: 15px;
+  right: 20px;
+}
