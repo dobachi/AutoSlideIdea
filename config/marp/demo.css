@@ -1,0 +1,76 @@
+/* Marpデモプレゼンテーション用スタイル（情報量が多いスライド向け） */
+
+/* base.cssを継承 */
+@import 'base';
+
+/* デモ用に文字サイズを調整 */
+section {
+  font-size: 24px;  /* 28px → 24px */
+  padding: 50px;    /* 70px → 50px */
+}
+
+/* タイトルスライドは元のサイズを維持 */
+section.title h1 {
+  font-size: 48px;
+}
+
+section.title h2 {
+  font-size: 32px;
+}
+
+/* 見出しを小さく */
+h1 {
+  font-size: 36px;  /* 42px → 36px */
+  margin-bottom: 20px;  /* 30px → 20px */
+}
+
+h2 {
+  font-size: 30px;  /* 36px → 30px */
+  margin-top: 20px;  /* 30px → 20px */
+}
+
+h3 {
+  font-size: 26px;  /* 30px → 26px */
+}
+
+/* リストの行間を詰める */
+ul, ol {
+  line-height: 1.6;  /* 1.8 → 1.6 */
+}
+
+li {
+  margin-bottom: 0.3em;  /* 0.5em → 0.3em */
+}
+
+/* コードブロックを小さく */
+pre {
+  font-size: 20px;  /* 24px → 20px */
+  padding: 10px;    /* 15px → 10px */
+}
+
+/* 表のパディングを減らす */
+th, td {
+  padding: 8px;  /* 12px → 8px */
+  font-size: 22px;
+}
+
+/* マージンを調整 */
+p {
+  margin: 10px 0;
+}
+
+/* 引用を小さく */
+blockquote {
+  padding-left: 15px;  /* 20px → 15px */
+  margin: 15px 0;      /* 20px → 15px */
+  font-size: 22px;
+}
+
+/* フッターとページ番号を小さく */
+footer {
+  font-size: 18px;  /* 20px → 18px */
+}
+
+section::after {
+  font-size: 18px;  /* 20px → 18px */
+}

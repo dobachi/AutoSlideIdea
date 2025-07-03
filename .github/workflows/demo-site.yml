@@ -64,7 +64,7 @@ jobs:
             npx marp samples/demo-presentation/slides.md \
               --html \
               --allow-local-files \
-              --theme config/marp/base.css \
+              --theme config/marp/demo.css \
               -o _site/slides/demo.html
             ./scripts/generate-static-html.sh _site/slides/demo.html
             
@@ -72,7 +72,7 @@ jobs:
             npx marp samples/demo-presentation/slides.md \
               --pdf \
               --allow-local-files \
-              --theme config/marp/base.css \
+              --theme config/marp/demo.css \
               -o _site/pdf/demo.pdf
           fi
           
