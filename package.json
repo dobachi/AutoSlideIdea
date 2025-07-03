@@ -1,0 +1,30 @@
+{
+  "name": "autoslideidea",
+  "version": "1.0.0",
+  "description": "AI-assisted presentation creation framework",
+  "scripts": {
+    "marp": "marp",
+    "build": "marp presentations/**/*.md --pdf --allow-local-files",
+    "preview": "marp --preview",
+    "new": "./scripts/create-presentation.sh",
+    "setup": "npm install && echo 'セットアップ完了！'",
+    "pdf": "marp --pdf --allow-local-files",
+    "html": "marp --html --allow-local-files",
+    "watch": "marp --watch"
+  },
+  "keywords": [
+    "marp",
+    "presentation",
+    "slides",
+    "markdown",
+    "ai-assisted"
+  ],
+  "author": "dobachi",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@marp-team/marp-cli": "^3.0.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

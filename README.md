@@ -45,12 +45,12 @@ AutoSlideIdea/
 
 1. **環境準備**
    ```bash
-   # Marpのインストール
-   npm install -g @marp-team/marp-cli
-   
    # リポジトリのクローン（サブモジュール含む）
    git clone --recursive https://github.com/your-username/AutoSlideIdea.git
    cd AutoSlideIdea
+   
+   # 依存関係のインストール（Marp CLI含む）
+   npm install
    
    # 既存のクローンにサブモジュールを追加する場合
    git submodule update --init --recursive
@@ -75,8 +75,14 @@ AutoSlideIdea/
 
 4. **ビルド**
    ```bash
-   # PDFを生成
-   marp presentations/my-presentation/slides.md -o presentations/my-presentation/output.pdf
+   # PDFを生成（npmスクリプト使用）
+   npm run pdf -- presentations/my-presentation/slides.md -o presentations/my-presentation/output.pdf
+   
+   # またはnpxを使用
+   npx marp presentations/my-presentation/slides.md -o presentations/my-presentation/output.pdf
+   
+   # プレビューモード
+   npm run preview -- presentations/my-presentation/slides.md
    ```
 
 ## プレゼンテーション管理
