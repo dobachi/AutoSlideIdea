@@ -1,3 +1,5 @@
+[English](css-themes.en.md) | 日本語
+
 # CSSテーマガイド
 
 AutoSlideIdeaでは、スライドの情報量に応じて4つのCSSテーマを用意しています。

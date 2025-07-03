@@ -1,3 +1,5 @@
+[English](mermaid.en.md) | 日本語
+
 # Mermaid図表統合ガイド
 
 ## 概要

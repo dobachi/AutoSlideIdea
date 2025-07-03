@@ -1,6 +1,6 @@
-# GitHub Pages連携ガイド
-
 [English](github-pages.en.md) | 日本語
+
+# GitHub Pages連携ガイド
 
 ## 概要
 

@@ -1,3 +1,5 @@
+[English](advanced-workflow.en.md) | 日本語
+
 # AI指示書システムを活用した高度なワークフロー
 
 ## 概要

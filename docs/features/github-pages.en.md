@@ -1,6 +1,6 @@
-# GitHub Pages Integration Guide
+[English](github-pages.en.md) | [日本語](github-pages.md)
 
-English | [日本語](github-pages.md)
+# GitHub Pages Integration Guide
 
 ## Overview
 

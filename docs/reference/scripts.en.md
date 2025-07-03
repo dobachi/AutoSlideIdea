@@ -1,6 +1,6 @@
-# Scripts Reference
+[English](scripts.en.md) | [日本語](scripts.md)
 
-English | [日本語](scripts-reference.md)
+# Scripts Reference
 
 ## 🎯 manage-presentation.sh (Recommended)
 

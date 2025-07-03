@@ -1,6 +1,6 @@
-# スクリプトリファレンス
+[English](scripts.en.md) | 日本語
 
-[English](scripts-reference.en.md) | 日本語
+# スクリプトリファレンス
 
 ## 🎯 manage-presentation.sh（推奨）
 

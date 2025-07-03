@@ -1,3 +1,5 @@
+[English](advanced-workflow.en.md) | [日本語](advanced-workflow.md)
+
 # Advanced Workflow Using AI Instruction System
 
 ## Overview
