@@ -1,1 +1,1 @@
-AI.md
+instructions/PROJECT.md

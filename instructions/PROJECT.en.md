@@ -1,11 +1,12 @@
 # AI Development Support Settings
 
-This project uses the AI instruction system in `.ai-instructions/`.
-At the start of a task, please load `.ai-instructions/instructions/en/system/ROOT_INSTRUCTION.md`.
+This project uses the AI instruction system in `instructions/ai_instruction_kits/`.
+At the start of a task, please load `instructions/ai_instruction_kits/instructions/en/system/ROOT_INSTRUCTION.md`.
 
 ## Project Settings
 - Language: English (en)
 - Checkpoint management: Enabled
+- Checkpoint script: scripts/checkpoint.sh
 - Log file: checkpoint.log
 
 ## Project Overview

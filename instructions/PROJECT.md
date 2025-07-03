@@ -1,11 +1,12 @@
 # AI開発支援設定
 
-このプロジェクトでは`.ai-instructions/`のAI指示書システムを使用します。
-タスク開始時は`.ai-instructions/instructions/ja/system/ROOT_INSTRUCTION.md`を読み込んでください。
+このプロジェクトでは`instructions/ai_instruction_kits/`のAI指示書システムを使用します。
+タスク開始時は`instructions/ai_instruction_kits/instructions/ja/system/ROOT_INSTRUCTION.md`を読み込んでください。
 
 ## プロジェクト設定
 - 言語: 日本語 (ja)
 - チェックポイント管理: 有効
+- チェックポイントスクリプト: scripts/checkpoint.sh
 - ログファイル: checkpoint.log
 
 ## プロジェクト概要
