@@ -9,7 +9,6 @@ on:
       - '.github/workflows/demo-site.yml'
       - 'scripts/**'
       - 'config/**'
-      - 'puppeteer-config.json'
   workflow_dispatch:
 
 permissions:
