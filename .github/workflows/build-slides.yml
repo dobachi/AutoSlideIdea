@@ -1,0 +1,92 @@
+name: Build Slides
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'presentations/**/*.md'
+      - 'templates/**/*.md'
+      - 'config/marp/**'
+  pull_request:
+    paths:
+      - 'presentations/**/*.md'
+      - 'templates/**/*.md'
+      - 'config/marp/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          
+      - name: Install Marp CLI
+        run: |
+          npm install -g @marp-team/marp-cli
+          marp --version
+          
+      - name: Install Japanese fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto-cjk
+          
+      - name: Create output directories
+        run: |
+          mkdir -p output/pdf
+          mkdir -p output/html
+          mkdir -p output/pptx
+          
+      - name: Build PDF slides
+        run: |
+          for md in $(find presentations -name "*.md" -type f); do
+            output_name=$(echo $md | sed 's/presentations\///' | sed 's/\.md$//')
+            echo "Building PDF: $md -> output/pdf/${output_name}.pdf"
+            marp "$md" \
+              --config-file config/marp/.marprc.yml \
+              --theme-set config/marp/ \
+              --pdf \
+              --allow-local-files \
+              -o "output/pdf/${output_name}.pdf"
+          done
+          
+      - name: Build HTML slides
+        run: |
+          for md in $(find presentations -name "*.md" -type f); do
+            output_name=$(echo $md | sed 's/presentations\///' | sed 's/\.md$//')
+            echo "Building HTML: $md -> output/html/${output_name}.html"
+            marp "$md" \
+              --config-file config/marp/.marprc.yml \
+              --theme-set config/marp/ \
+              --html \
+              --allow-local-files \
+              -o "output/html/${output_name}.html"
+          done
+          
+      - name: Upload PDF artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: slides-pdf
+          path: output/pdf/**/*.pdf
+          retention-days: 30
+          
+      - name: Upload HTML artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: slides-html
+          path: output/html/**/*.html
+          retention-days: 30
+          
+      - name: Deploy to GitHub Pages (main branch only)
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./output/html
+          destination_dir: slides

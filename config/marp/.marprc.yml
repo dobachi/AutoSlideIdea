@@ -1,0 +1,44 @@
+# Marp CLI設定ファイル
+
+# 基本設定
+allowLocalFiles: true
+html: true
+pdf: true
+
+# テーマ設定
+theme: base
+themeSet:
+  - ./base.css
+
+# PDF出力設定
+pdfOutlines: true
+pdfOutlinePages: true
+
+# エンジン設定
+engine: '@marp-team/marp-core'
+
+# オプション
+options:
+  # マークダウン拡張機能
+  markdown:
+    breaks: true
+    html: true
+    linkify: true
+    typographer: true
+  
+  # PDF設定
+  pdf:
+    displayHeaderFooter: true
+    format: A4
+    landscape: false
+    margin:
+      top: 1.5cm
+      right: 1cm
+      bottom: 1.5cm
+      left: 1cm
+    printBackground: true
+
+# プレゼンター設定
+bespoke:
+  progress: true
+  touch: true
