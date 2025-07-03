@@ -33,6 +33,9 @@ Technical details and references.
 ### 🔧 Development
 Information about project development.
 
+- **[Contribution Guidelines](development/contributing.md)** - How to contribute to the project
+- **[Roadmap](development/roadmap.md)** - Future development plans
+- **[Localization Strategy](development/localization.md)** - Multilingual support policy
 - **[Documentation Reorganization Plan](development/REORGANIZATION_PLAN.md)** - Plans for improving documentation structure
 
 ## 🎯 Purpose-Based Guides

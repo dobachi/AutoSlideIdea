@@ -1,6 +1,6 @@
 # AutoSlideIdea ロードマップ
 
-[English](ROADMAP.en.md) | 日本語
+[English](roadmap.en.md) | 日本語
 
 ## 完了した機能 ✅
 

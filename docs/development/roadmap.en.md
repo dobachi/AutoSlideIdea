@@ -1,6 +1,6 @@
 # AutoSlideIdea Roadmap
 
-English | [日本語](ROADMAP.md)
+[English](roadmap.en.md) | [日本語](roadmap.md)
 
 ## Completed Features ✅
 
