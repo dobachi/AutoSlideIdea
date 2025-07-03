@@ -78,6 +78,37 @@ AutoSlideIdea/
    marp presentations/my-presentation/slides.md -o presentations/my-presentation/output.pdf
    ```
 
+## プレゼンテーション管理
+
+presentations/ディレクトリは`.gitignore`で除外されているため、以下の2つの方法で管理できます：
+
+### 1. ローカル作業（機密性重視）
+- presentations/内で直接作業
+- AutoSlideIdeaリポジトリにはプッシュされない
+- 機密情報を含むプレゼンテーションに最適
+
+```bash
+# ローカルでプレゼンテーション作成
+./scripts/new-presentation.sh my-local-presentation
+cd presentations/my-local-presentation
+# 作業はローカルのみで完結
+```
+
+### 2. 個別リポジトリ管理（共有・CI/CD対応）
+- 独立したGitリポジトリとして管理
+- GitHub Actions自動ビルド対応
+- チーム共有やバージョン管理が必要な場合
+
+```bash
+# 個別リポジトリとして初期化
+./scripts/setup-presentation-repo.sh my-conference-2024
+
+# 既存のローカルプレゼンテーションをリポジトリ化
+./scripts/setup-presentation-repo.sh --from-local presentations/my-talk my-talk-repo
+```
+
+詳細は[presentations/README.md](presentations/README.md)を参照してください。
+
 ## AI指示書システムについて
 
 このプロジェクトは[AI指示書システム](https://github.com/dobachi/AI_Instruction_Sheet)をサブモジュールとして使用しています。
