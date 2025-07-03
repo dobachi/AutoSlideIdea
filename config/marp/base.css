@@ -1,0 +1,138 @@
+/* Marp基本スタイル設定 */
+
+/* テーマ定義 */
+@theme base;
+
+/* 基本フォント設定 */
+section {
+  font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
+  font-size: 28px;
+  padding: 70px;
+}
+
+/* タイトルスライド */
+section.title {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+section.title h1 {
+  font-size: 48px;
+  margin-bottom: 30px;
+  color: #2c3e50;
+}
+
+section.title h2 {
+  font-size: 32px;
+  color: #7f8c8d;
+}
+
+/* 見出し */
+h1 {
+  color: #2c3e50;
+  font-size: 42px;
+  border-bottom: 3px solid #3498db;
+  padding-bottom: 10px;
+  margin-bottom: 30px;
+}
+
+h2 {
+  color: #34495e;
+  font-size: 36px;
+  margin-top: 30px;
+}
+
+h3 {
+  color: #7f8c8d;
+  font-size: 30px;
+}
+
+/* リスト */
+ul, ol {
+  margin-left: 1em;
+  line-height: 1.8;
+}
+
+li {
+  margin-bottom: 0.5em;
+}
+
+/* コードブロック */
+pre {
+  background-color: #f4f4f4;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  padding: 15px;
+  font-size: 24px;
+  overflow-x: auto;
+}
+
+code {
+  background-color: #f4f4f4;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* 表 */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 20px 0;
+}
+
+th, td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+th {
+  background-color: #3498db;
+  color: white;
+  font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* 画像 */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+/* 引用 */
+blockquote {
+  border-left: 5px solid #3498db;
+  padding-left: 20px;
+  margin: 20px 0;
+  color: #555;
+  font-style: italic;
+}
+
+/* フッター */
+footer {
+  position: absolute;
+  bottom: 20px;
+  left: 70px;
+  right: 70px;
+  font-size: 20px;
+  color: #7f8c8d;
+  text-align: center;
+}
+
+/* ページ番号 */
+section::after {
+  content: attr(data-marpit-pagination) ' / ' attr(data-marpit-pagination-total);
+  position: absolute;
+  bottom: 20px;
+  right: 30px;
+  font-size: 20px;
+  color: #7f8c8d;
+}
