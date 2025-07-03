@@ -107,9 +107,9 @@ def example():
 
 ```bash
 # ~/.bashrc または ~/.zshrc に追加
-alias marp-pdf='marp --pdf --allow-local-files'
-alias marp-preview='marp --preview'
-alias new-slide='~/AutoSlideIdea/scripts/new-presentation.sh'
+alias marp-pdf='npx marp --pdf --allow-local-files'
+alias marp-preview='npx marp --preview'
+alias new-slide='~/AutoSlideIdea/scripts/create-presentation.sh'
 ```
 
 #### VSCodeスニペット
