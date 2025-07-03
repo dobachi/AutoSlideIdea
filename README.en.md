@@ -1,5 +1,7 @@
 # AI-Assisted Presentation Creation Guide
 
+English | [日本語](README.md)
+
 ## Overview
 
 This project provides a methodology and toolset for efficiently creating presentation materials using AI tools such as Claude Code and Gemini CLI.
