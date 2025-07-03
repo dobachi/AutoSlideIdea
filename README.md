@@ -8,6 +8,7 @@
 
 - **Markdownベースのスライド作成**: Marpを使用したシンプルなスライド作成
 - **AI支援コンテンツ生成**: Claude Code/Gemini CLIによる構成案・内容生成
+- **AI指示書システム**: サブモジュールによる高度なAI制御
 - **自動ビルド**: GitHub Actionsによる自動PDF生成
 - **バージョン管理**: Gitによる変更履歴管理
 
@@ -16,6 +17,10 @@
 ```
 AutoSlideIdea/
 ├── README.md                  # このファイル
+├── AI.md                      # AI向けプロジェクト指示書
+├── CLAUDE.md                  # Claude Code用シンボリックリンク
+├── .ai-instructions/          # AI指示書システム（サブモジュール）
+│   └── instructions/          # 詳細な指示書群
 ├── docs/                      # ドキュメント
 │   ├── setup.md              # セットアップガイド
 │   ├── workflow.md           # 作業フロー
@@ -31,8 +36,9 @@ AutoSlideIdea/
 │   └── new-presentation.sh   # 新規作成スクリプト
 ├── .github/                   # GitHub設定
 │   └── workflows/            # GitHub Actions
-└── config/                    # 設定ファイル
-    └── marp/                 # Marp設定
+├── config/                    # 設定ファイル
+│   └── marp/                 # Marp設定
+└── presentations/             # 作成したプレゼンテーション
 ```
 
 ## クイックスタート
@@ -42,9 +48,12 @@ AutoSlideIdea/
    # Marpのインストール
    npm install -g @marp-team/marp-cli
    
-   # リポジトリのクローン
-   git clone https://github.com/your-username/AutoSlideIdea.git
+   # リポジトリのクローン（サブモジュール含む）
+   git clone --recursive https://github.com/your-username/AutoSlideIdea.git
    cd AutoSlideIdea
+   
+   # 既存のクローンにサブモジュールを追加する場合
+   git submodule update --init --recursive
    ```
 
 2. **新規プレゼンテーション作成**
@@ -65,6 +74,24 @@ AutoSlideIdea/
    # PDFを生成
    marp presentations/my-presentation/slides.md -o presentations/my-presentation/output.pdf
    ```
+
+## AI指示書システムについて
+
+このプロジェクトは[AI指示書システム](https://github.com/dobachi/AI_Instruction_Sheet)をサブモジュールとして使用しています。
+
+### 特徴
+
+- **体系的な指示管理**: プロジェクト固有の指示を`.ai-instructions/`で管理
+- **チェックポイント機能**: 作業進捗を自動的に記録
+- **多言語対応**: 日本語・英語の指示書を提供
+- **再利用可能**: 他のプロジェクトでも同じシステムを活用可能
+
+### カスタマイズ
+
+プロジェクト固有の指示は以下のファイルで定義されています：
+
+- `AI.md` - プレゼン作成に特化したAI向け指示
+- `CLAUDE.md` - Claude Code用（AI.mdへのシンボリックリンク）
 
 ## 詳細ドキュメント
 
