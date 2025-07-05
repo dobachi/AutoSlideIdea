@@ -16,6 +16,7 @@ PROJECT_ROOT=$(cd "$(dirname "$0")/.." && pwd)
 SLIDEFLOW_DIR="$(cd "$(dirname "$0")" && pwd)"
 
 # ライブラリの読み込み
+source "$SLIDEFLOW_DIR/lib/i18n.sh"
 source "$SLIDEFLOW_DIR/lib/ai_helper.sh"
 source "$SLIDEFLOW_DIR/lib/project.sh"
 source "$SLIDEFLOW_DIR/lib/ai_instruction_system.sh"
@@ -24,22 +25,22 @@ source "$SLIDEFLOW_DIR/lib/interactive_ai.sh"
 # ヘルプメッセージ
 show_help() {
     cat << EOF
-SlideFlow - Markdownベースのプレゼンテーション管理ツール
+$(msg "sf.title")
 
-使い方:
+$(msg "sf.usage"):
     slideflow <command> [options] [path]
 
-コマンド:
-    new <name>          新しいプレゼンテーションを作成
-    preview [path]      プレゼンテーションをプレビュー
-    ai [options] [path] AI支援（デフォルト：対話的フェーズ支援）
-    build [format] [path] プレゼンテーションをビルド
-    info [path]         プレゼンテーション情報を表示
-    list                利用可能なテンプレートを表示
-    instructions        AI指示書システムの状況確認
-    help                このヘルプを表示
+$(msg "sf.commands"):
+    new <name>          $(msg "cmd.new.desc")
+    preview [path]      $(msg "cmd.preview.desc")
+    ai [options] [path] $(msg "cmd.ai.desc")
+    build [format] [path] $(msg "cmd.build.desc")
+    info [path]         $(msg "cmd.info.desc")
+    list                $(msg "cmd.list.desc")
+    instructions        $(msg "cmd.instructions.desc")
+    help                $(msg "cmd.help.desc")
 
-例:
+$(msg "sf.examples"):
     slideflow new my-presentation
     slideflow preview presentations/my-presentation
     slideflow ai presentations/my-presentation
@@ -48,13 +49,13 @@ SlideFlow - Markdownベースのプレゼンテーション管理ツール
     slideflow build pdf presentations/my-presentation
     slideflow info .
 
-AI支援オプション:
-    ai [path]                     対話的フェーズ支援
-    ai --quick <type> [path]      簡易支援（tech/business/academic）
-    ai --phase <phase> [path]     特定フェーズ（planning/research/design/creation/review）
-    ai --continue [path]          前回セッション継続
+$(msg "sf.options"):
+    ai [path]                     $(msg "ai.option.interactive")
+    ai --quick <type> [path]      $(msg "ai.option.quick")
+    ai --phase <phase> [path]     $(msg "ai.option.phase")
+    ai --continue [path]          $(msg "ai.option.continue")
 
-注: [path]を省略した場合は現在のディレクトリが使用されます
+$(msg "note.path_omitted")
 
 EOF
 }
@@ -64,20 +65,20 @@ cmd_new() {
     local name="${1:-}"
     
     if [[ -z "$name" ]]; then
-        echo -e "${YELLOW}エラー: プレゼンテーション名を指定してください${NC}"
-        echo "使い方: slideflow new <name>"
+        echo -e "${YELLOW}$(msg "error.name_required")${NC}"
+        echo "$(msg "error.usage_new")"
         exit 1
     fi
     
     # 既存のスクリプトを利用
-    echo -e "${BLUE}📝 プレゼンテーションを作成中...${NC}"
+    echo -e "${BLUE}📝 $(msg "info.creating")${NC}"
     
     # テンプレートオプションを正しく処理
     local template="${TEMPLATE:-basic}"
     "$PROJECT_ROOT/scripts/manage-presentation.sh" "$name" --template "$template"
     
-    echo -e "${GREEN}✅ 作成完了！${NC}"
-    echo -e "次のステップ:"
+    echo -e "${GREEN}✅ $(msg "success.created")${NC}"
+    echo -e "$(msg "success.next_steps")"
     echo -e "  cd presentations/$name"
     echo -e "  slideflow preview"
 }
@@ -96,7 +97,7 @@ cmd_preview() {
     # 指定されたパスに移動してプレビュー
     (
         cd "$path" || {
-            echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+            echo -e "${YELLOW}$(msg "error.dir_not_found" "$path")${NC}"
             exit 1
         }
         start_preview_server "$port"
@@ -108,7 +109,7 @@ cmd_ai() {
     local first_arg="${1:-}"
     local path="."
     
-    echo -e "${BLUE}🤖 AI支援モード${NC}"
+    echo -e "${BLUE}🤖 $(msg "ai.support_mode")${NC}"
     echo ""
     
     # 引数解析
@@ -119,7 +120,7 @@ cmd_ai() {
             path="${3:-.}"
             (
                 cd "$path" || {
-                    echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+                    echo -e "${YELLOW}$(msg "error.dir_not_found" "$path")${NC}"
                     exit 1
                 }
                 cmd_ai_quick "$situation"
@@ -131,7 +132,7 @@ cmd_ai() {
             path="${3:-.}"
             (
                 cd "$path" || {
-                    echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+                    echo -e "${YELLOW}$(msg "error.dir_not_found" "$path")${NC}"
                     exit 1
                 }
                 main_interactive "phase" "$phase"
@@ -142,7 +143,7 @@ cmd_ai() {
             path="${2:-.}"
             (
                 cd "$path" || {
-                    echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+                    echo -e "${YELLOW}$(msg "error.dir_not_found" "$path")${NC}"
                     exit 1
                 }
                 main_interactive "continue"
@@ -153,7 +154,7 @@ cmd_ai() {
             path="${2:-.}"
             (
                 cd "$path" || {
-                    echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+                    echo -e "${YELLOW}$(msg "error.dir_not_found" "$path")${NC}"
                     exit 1
                 }
                 cmd_ai_quick "$first_arg"
@@ -161,12 +162,12 @@ cmd_ai() {
             ;;
         "")
             # デフォルト：対話的フェーズ支援
-            echo -e "${CYAN}対話的フェーズ支援を開始します${NC}"
-            echo -e "${YELLOW}ヒント: 簡易支援が必要な場合は 'slideflow ai --quick <type>' を使用してください${NC}"
+            echo -e "${CYAN}$(msg "ai.starting_interactive")${NC}"
+            echo -e "${YELLOW}$(msg "ai.hint_quick")${NC}"
             echo ""
             (
                 cd "$path" || {
-                    echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+                    echo -e "${YELLOW}$(msg "error.dir_not_found" "$path")${NC}"
                     exit 1
                 }
                 main_interactive "start"
@@ -176,19 +177,19 @@ cmd_ai() {
             # パスが指定された場合
             if [[ -d "$first_arg" ]]; then
                 path="$first_arg"
-                echo -e "${CYAN}対話的フェーズ支援を開始します${NC}"
-                echo -e "${YELLOW}作業ディレクトリ: $path${NC}"
+                echo -e "${CYAN}$(msg "ai.starting_interactive")${NC}"
+                echo -e "${YELLOW}$(msg "ai.working_dir" "$path")${NC}"
                 echo ""
                 (
                     cd "$path" || {
-                        echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+                        echo -e "${YELLOW}$(msg "error.dir_not_found" "$path")${NC}"
                         exit 1
                     }
                     main_interactive "start"
                 )
             else
-                echo -e "${YELLOW}不明なオプションまたは無効なパス: $first_arg${NC}"
-                echo "使用方法: slideflow ai [--quick <type>|--phase <phase>|--continue] [path]"
+                echo -e "${YELLOW}$(msg "ai.unknown_option" "$first_arg")${NC}"
+                echo "$(msg "ai.usage_ai")"
                 return 1
             fi
             ;;
@@ -263,7 +264,7 @@ cmd_ai_quick() {
             echo -e "${GREEN}${tools[0]}を使用します...${NC}"
             execute_ai_command "${tools[0]}" "$prompt"
         else
-            echo -n "使用するツールを選択してください (1-${#tools[@]}, Enter=1): "
+            echo -n "$(msg "info.select_tool" "${#tools[@]}")"
             read -r tool_choice
             
             local selected_index="${tool_choice:-1}"
@@ -271,7 +272,7 @@ cmd_ai_quick() {
                 local selected_tool="${tools[$((selected_index-1))]}"
                 execute_ai_command "$selected_tool" "$prompt"
             else
-                echo -e "${YELLOW}無効な選択です。クリップボードにコピーします。${NC}"
+                echo -e "${YELLOW}$(msg "error.invalid_selection")${NC}"
                 copy_to_clipboard "$prompt"
             fi
         fi
@@ -280,7 +281,7 @@ cmd_ai_quick() {
     fi
     
     echo ""
-    echo -e "${GREEN}簡易AI支援が完了しました！${NC}"
+    echo -e "${GREEN}$(msg "info.quick_support_complete")${NC}"
 }
 
 # ビルドコマンド
@@ -294,25 +295,25 @@ cmd_build() {
         format="html"
     fi
     
-    echo -e "${BLUE}📦 プレゼンテーションをビルド中...${NC}"
+    echo -e "${BLUE}📦 $(msg "info.building")${NC}"
     
     # 指定されたパスで実行
     (
         cd "$path" || {
-            echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+            echo -e "${YELLOW}$(msg "error.dir_not_found" "$path")${NC}"
             exit 1
         }
         
         # slides.mdの存在確認
         if [[ ! -f "slides.md" ]]; then
-            echo -e "${YELLOW}エラー: slides.mdが見つかりません${NC}"
-            echo "プレゼンテーションディレクトリを確認してください: $path"
+            echo -e "${YELLOW}$(msg "error.no_slides")${NC}"
+            echo "$(msg "error.check_dir" "$path")"
             exit 1
         fi
     
     case "$format" in
         html)
-            echo -e "${BLUE}HTMLとしてビルド中...${NC}"
+            echo -e "${BLUE}$(msg "info.building_as" "HTML")${NC}"
             # 現在のディレクトリを保存
             local current_dir="$(pwd)"
             # npxを使ってMarpでHTMLを生成
@@ -322,20 +323,20 @@ cmd_build() {
             echo -e "${GREEN}✅ slides.htmlを生成しました${NC}"
             ;;
         pdf)
-            echo -e "${BLUE}PDFとしてビルド中...${NC}"
+            echo -e "${BLUE}$(msg "info.building_as" "PDF")${NC}"
             local current_dir="$(pwd)"
             (cd "$PROJECT_ROOT" && npx @marp-team/marp-cli "$current_dir/slides.md" -o "$current_dir/slides.pdf" --pdf --allow-local-files)
             echo -e "${GREEN}✅ slides.pdfを生成しました${NC}"
             ;;
         pptx)
-            echo -e "${BLUE}PowerPointとしてビルド中...${NC}"
+            echo -e "${BLUE}$(msg "info.building_as" "PowerPoint")${NC}"
             local current_dir="$(pwd)"
             (cd "$PROJECT_ROOT" && npx @marp-team/marp-cli "$current_dir/slides.md" -o "$current_dir/slides.pptx" --pptx --allow-local-files)
             echo -e "${GREEN}✅ slides.pptxを生成しました${NC}"
             ;;
         *)
-            echo -e "${YELLOW}エラー: 未対応のフォーマット '$format'${NC}"
-            echo "対応フォーマット: html, pdf, pptx"
+            echo -e "${YELLOW}$(msg "error.unsupported_format" "$format")${NC}"
+            echo "$(msg "error.supported_formats")"
             exit 1
             ;;
     esac
@@ -346,37 +347,37 @@ cmd_build() {
 cmd_info() {
     local path="${1:-.}"
     
-    echo -e "${BLUE}📊 プレゼンテーション情報${NC}"
+    echo -e "${BLUE}📊 $(msg "info.presentation_info")${NC}"
     echo ""
     
     # 指定されたパスで実行
     (
         cd "$path" || {
-            echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+            echo -e "${YELLOW}$(msg "error.dir_not_found" "$path")${NC}"
             exit 1
         }
         
         # slides.mdの存在確認
         if [[ ! -f "slides.md" ]]; then
-            echo -e "${YELLOW}エラー: slides.mdが見つかりません${NC}"
-            echo "プレゼンテーションディレクトリを確認してください: $path"
+            echo -e "${YELLOW}$(msg "error.no_slides")${NC}"
+            echo "$(msg "error.check_dir" "$path")"
             exit 1
         fi
     
     # 基本情報
-    echo -e "${GREEN}ファイル情報:${NC}"
-    echo "  パス: $(pwd)/slides.md"
-    echo "  サイズ: $(wc -c < slides.md) バイト"
-    echo "  最終更新: $(date -r slides.md '+%Y-%m-%d %H:%M:%S')"
+    echo -e "${GREEN}$(msg "info.file_info")${NC}"
+    echo "  $(msg "info.path"): $(pwd)/slides.md"
+    echo "  $(msg "info.size"): $(wc -c < slides.md) $(msg "misc.bytes")"
+    echo "  $(msg "info.last_update"): $(date -r slides.md '+%Y-%m-%d %H:%M:%S')"
     echo ""
     
     # スライド数
     local slide_count=$(grep -c '^---$' slides.md || echo 0)
-    echo -e "${GREEN}スライド数:${NC} $((slide_count + 1))"
+    echo -e "${GREEN}$(msg "info.slides_count"):${NC} $((slide_count + 1))"
     echo ""
     
     # メタデータ抽出
-    echo -e "${GREEN}メタデータ:${NC}"
+    echo -e "${GREEN}$(msg "info.metadata")${NC}"
     local in_frontmatter=false
     while IFS= read -r line; do
         if [[ "$line" == "---" ]]; then
@@ -395,7 +396,7 @@ cmd_info() {
     echo ""
     
     # 生成物の確認
-    echo -e "${GREEN}生成済みファイル:${NC}"
+    echo -e "${GREEN}$(msg "info.generated_files")${NC}"
     [[ -f "slides.html" ]] && echo "  ✓ slides.html ($(date -r slides.html '+%Y-%m-%d %H:%M:%S'))"
     [[ -f "slides.pdf" ]] && echo "  ✓ slides.pdf ($(date -r slides.pdf '+%Y-%m-%d %H:%M:%S'))"
     [[ -f "slides.pptx" ]] && echo "  ✓ slides.pptx ($(date -r slides.pptx '+%Y-%m-%d %H:%M:%S'))"
@@ -404,13 +405,13 @@ cmd_info() {
 
 # テンプレート一覧表示
 cmd_list() {
-    echo -e "${BLUE}📋 利用可能なテンプレート${NC}"
+    echo -e "${BLUE}📋 $(msg "info.available_templates")${NC}"
     echo ""
     
     local templates_dir="$PROJECT_ROOT/templates"
     
     if [[ ! -d "$templates_dir" ]]; then
-        echo -e "${YELLOW}テンプレートディレクトリが見つかりません${NC}"
+        echo -e "${YELLOW}$(msg "error.template_dir_not_found")${NC}"
         exit 1
     fi
     
@@ -427,7 +428,7 @@ cmd_list() {
             
             # 機能一覧
             if grep -q '^features:' "$template/template.yaml"; then
-                echo "  機能:"
+                echo "  $(msg "info.features")"
                 sed -n '/^features:/,/^[^ ]/p' "$template/template.yaml" | grep '^  - ' | sed 's/^  /    /'
             fi
             
@@ -435,7 +436,7 @@ cmd_list() {
         fi
     done
     
-    echo -e "${CYAN}使用方法:${NC}"
+    echo -e "${CYAN}$(msg "info.usage_template")${NC}"
     echo "  slideflow new <name> --template <template-name>"
 }
 
@@ -470,7 +471,7 @@ main() {
             show_help
             ;;
         *)
-            echo -e "${YELLOW}エラー: 不明なコマンド '$command'${NC}"
+            echo -e "${YELLOW}$(msg "error.unknown_command" "$command")${NC}"
             show_help
             exit 1
             ;;
