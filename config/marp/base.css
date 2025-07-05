@@ -8,6 +8,8 @@ section {
   font-family: 'Noto Sans JP', 'Hiragino Kaku Gothic ProN', sans-serif;
   font-size: 28px;
   padding: 70px;
+  background-color: white;
+  color: #333;
 }
 
 /* タイトルスライド */
