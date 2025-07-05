@@ -1,0 +1,18 @@
+name: "full-project"
+display_name: "フルプロジェクトテンプレート"
+description: "調査・分析・アイデア創出を含む包括的なプレゼンテーション開発テンプレートです"
+features:
+  - 調査フェーズ管理
+  - データ分析ワークフロー
+  - アイデア創出支援
+  - 複数フェーズの統合管理
+  - 進捗管理機能
+tags:
+  - comprehensive
+  - research
+  - analysis
+  - ideation
+directory_structure:
+  - research/
+  - ideation/
+  - assets/

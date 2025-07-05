@@ -1,0 +1,11 @@
+name: "basic"
+display_name: "基本テンプレート"
+description: "汎用的なプレゼンテーション用の基本構成です"
+features:
+  - シンプルな構成
+  - カスタマイズしやすい
+  - 初心者向け
+tags:
+  - general
+  - simple
+  - starter

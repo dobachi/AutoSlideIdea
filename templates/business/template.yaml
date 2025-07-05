@@ -1,0 +1,12 @@
+name: "business"
+display_name: "ビジネステンプレート"
+description: "企業内でのプロポーザル、事業提案、経営報告用のMarpテンプレートです"
+features:
+  - プロフェッショナルなデザイン
+  - グラフ・チャート対応
+  - エグゼクティブサマリー
+  - アクションアイテム
+tags:
+  - business
+  - corporate
+  - proposal

@@ -30,8 +30,19 @@ AutoSlideIdea/
 ├── README.md                  # このファイル
 ├── AI.md                      # AI向けプロジェクト指示書
 ├── CLAUDE.md                  # Claude Code用シンボリックリンク
-├── .ai-instructions/          # AI指示書システム（サブモジュール）
-│   └── instructions/          # 詳細な指示書群
+├── slideflow/                 # SlideFlow統合プレゼンテーション管理システム
+│   ├── slideflow.sh          # メインコマンド（AI統合、フェーズ管理）
+│   ├── lib/                  # ライブラリ群
+│   │   ├── ai_helper.sh      # AI支援機能
+│   │   ├── interactive_ai.sh # 対話的AI支援
+│   │   ├── ai_instruction_system.sh # AI指示書統合
+│   │   └── project.sh        # プロジェクト管理
+│   ├── instructions/         # フェーズ別指示書
+│   │   ├── phases/          # プレゼンテーション作成フェーズ
+│   │   └── situations/      # シチュエーション別指示
+│   └── README.md            # SlideFlow詳細ドキュメント
+├── instructions/              # AI指示書システム（高品質プロンプト）
+│   └── ai_instruction_kits/  # 専門指示書パッケージ
 ├── docs/                      # ドキュメント
 │   ├── setup.md              # セットアップガイド
 │   ├── workflow.md           # 作業フロー
@@ -74,47 +85,45 @@ AutoSlideIdea/
    git submodule update --init --recursive
    ```
 
-2. **プレゼンテーション作成・管理**
+2. **SlideFlowで統合プレゼンテーション管理**
    ```bash
-   # 🎯 推奨：統合管理スクリプト（自動判定）
+   # 🎯 新推奨：SlideFlow統合システム
+   ./slideflow/slideflow.sh new my-presentation
+   
+   # AI統合の対話的支援（フェーズ管理対応）
+   ./slideflow/slideflow.sh ai
+   
+   # 簡易AI支援
+   ./slideflow/slideflow.sh ai --quick tech
+   
+   # 特定フェーズの支援
+   ./slideflow/slideflow.sh ai --phase planning
+   
+   # プレビューとビルド
+   ./slideflow/slideflow.sh preview
+   ./slideflow/slideflow.sh build pdf
+   
+   # 🔧 従来方式：スクリプト直接実行
    ./scripts/manage-presentation.sh my-presentation
-   
-   # GitHub連携（新規なら作成、既存なら追加）
    ./scripts/manage-presentation.sh --github conference-2024
-   
-   # フルプロジェクト構造
-   ./scripts/manage-presentation.sh --full research-project
-   
-   # GitHub Pages対応
-   ./scripts/manage-presentation.sh --github --workflow github-pages my-web-presentation
-   
-   # 明示的な新規作成（既存の場合はエラー）
-   ./scripts/manage-presentation.sh --create --github new-project
-   
-   # 明示的な更新（存在しない場合はエラー）  
-   ./scripts/manage-presentation.sh --update --workflow github-pages existing-project
    ```
 
 3. **AI支援でコンテンツ作成**
-   - AIツール（Claude Code、Gemini CLIなど）を使用
+   - **SlideFlow推奨**: 対話的フェーズ管理でステップバイステップ支援
+   - **従来方式**: AIツール（Claude Code、Gemini CLIなど）を直接使用
    - プロンプト例: "presentations/my-presentation/slides.md にAIに関する5枚のスライドを作成してください"
 
 4. **ビルド**
    ```bash
-   # HTMLを生成（プレゼンテーションモード）
-   npm run html -- presentations/my-presentation/slides.md -o presentations/my-presentation/output.html
+   # 🎯 SlideFlow推奨（統合コマンド）
+   ./slideflow/slideflow.sh build html
+   ./slideflow/slideflow.sh build pdf
+   ./slideflow/slideflow.sh build pptx
+   ./slideflow/slideflow.sh preview
    
-   # 白背景のHTMLを生成
+   # 🔧 従来方式（直接実行）
    npm run html -- presentations/my-presentation/slides.md -o presentations/my-presentation/output.html
-   ./scripts/generate-static-html.sh presentations/my-presentation/output.html
-   
-   # PDFを生成
    npm run pdf -- presentations/my-presentation/slides.md -o presentations/my-presentation/output.pdf
-   
-   # テーマを指定してビルド（情報量に応じて選択）
-   npx marp presentations/my-presentation/slides.md --theme config/marp/compact.css -o output.html
-   
-   # プレビューモード（ライブリロード）
    npm run preview -- presentations/my-presentation/slides.md
    ```
 
@@ -128,10 +137,13 @@ presentations/ディレクトリは`.gitignore`で除外されているため、
 - 機密情報を含むプレゼンテーションに最適
 
 ```bash
-# ローカルでプレゼンテーション作成
-./scripts/create-presentation.sh my-local-presentation
+# 🎯 SlideFlow推奨（ローカル作業）
+./slideflow/slideflow.sh new my-local-presentation
 cd presentations/my-local-presentation
-# 作業はローカルのみで完結
+./slideflow/slideflow.sh ai  # AI支援でコンテンツ作成
+
+# 🔧 従来方式
+./scripts/create-presentation.sh my-local-presentation
 ```
 
 ### 2. 個別リポジトリ管理（共有・CI/CD対応）
@@ -155,16 +167,22 @@ cd presentations/my-local-presentation
 
 詳細は[presentations/README.md](presentations/README.md)を参照してください。
 
-## AI指示書システムについて
+## SlideFlow: 次世代プレゼンテーション作成システム
 
-このプロジェクトは[AI指示書システム](https://github.com/dobachi/AI_Instruction_Sheet)をサブモジュールとして使用しています。
+SlideFlowは、従来のスクリプトベースアプローチを統合し、AI支援を中核とした包括的なプレゼンテーション管理システムです。
 
-### 特徴
+### 主な特徴
 
-- **体系的な指示管理**: プロジェクト固有の指示を`.ai-instructions/`で管理
-- **チェックポイント機能**: 作業進捗を自動的に記録
-- **多言語対応**: 日本語・英語の指示書を提供
-- **再利用可能**: 他のプロジェクトでも同じシステムを活用可能
+- **フェーズ管理**: プレゼンテーション作成の各段階（企画→調査→設計→作成→レビュー）を体系的にサポート
+- **対話的AI支援**: 各フェーズに最適化された専門的AI指示書との対話
+- **セッション管理**: 作業進捗の継続的な追跡と再開機能
+- **テンプレートシステム**: 用途別の豊富なテンプレート（学術、ビジネス、技術等）
+- **マルチフォーマット**: HTML、PDF、PowerPoint等への一括変換
+
+### 詳細情報
+
+- [SlideFlow詳細ドキュメント](slideflow/README.md) - 機能一覧、API、使用例
+- [AI指示書システム](instructions/ai_instruction_kits/) - 高品質プロンプトパッケージ
 
 ### 高度な活用方法
 
