@@ -1,0 +1,12 @@
+name: "academic"
+display_name: "学術発表テンプレート"
+description: "学会、セミナー、研究発表用のMarpテンプレートです"
+features:
+  - 学術的なデザイン
+  - 参考文献セクション
+  - 図表番号管理
+  - 数式表示対応
+tags:
+  - academic
+  - research
+  - conference
