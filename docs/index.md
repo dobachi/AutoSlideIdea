@@ -9,7 +9,7 @@ title: AutoSlideIdea - AI支援プレゼンテーション作成ガイド
 
 ## 🚀 クイックナビゲーション
 
-[はじめに](getting-started.md) | [使い方ガイド](user-guide.md) | [SlideFlow](slideflow.md) | [APIリファレンス](api.md) | [貢献方法](contributing.md)
+[セットアップ](getting-started/setup.md) | [基本ワークフロー](getting-started/basic-workflow.md) | [高度な使い方](guides/advanced-workflow.md) | [貢献方法](development/contributing.md)
 
 ---
 
@@ -75,25 +75,23 @@ npm install
 ## 📚 ドキュメント
 
 ### Getting Started
-- [セットアップガイド](setup.md)
-- [基本的な使い方](basic-workflow.md)
-- [最初のプレゼンテーション](getting-started.md)
+- [セットアップガイド](getting-started/setup.md)
+- [基本的な使い方](getting-started/basic-workflow.md)
 
 ### ユーザーガイド
-- [Markdownでのスライド作成](user-guide.md#markdown)
-- [テーマの使い方](css-themes.md)
-- [Mermaid図表の活用](mermaid.md)
-- [エクスポート機能](user-guide.md#export)
+- [Markdownでのスライド作成](guides/tips.md)
+- [テーマの使い方](features/css-themes.md)
+- [Mermaid図表の活用](features/mermaid.md)
+- [GitHub Pages連携](features/github-pages.md)
 
 ### 高度な機能
-- [SlideFlow統合システム](slideflow.md)
-- [AI指示書システム](advanced-workflow.md)
-- [GitHub Actions設定](github-pages.md)
+- [SlideFlow統合システム](development/slideflow-plan.md)
+- [AI指示書システム](guides/advanced-workflow.md)
 
 ### 開発者向け
-- [コントリビューションガイド](contributing.md)
-- [APIリファレンス](api.md)
-- [開発ロードマップ](roadmap.md)
+- [コントリビューションガイド](development/contributing.md)
+- [APIリファレンス](reference/scripts.md)
+- [開発ロードマップ](development/roadmap.md)
 
 ## 🤝 コミュニティ
 
