@@ -1,14 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
-    <meta charset="utf-8">
-    <title>AutoSlideIdea - Redirecting...</title>
-    <meta http-equiv="refresh" content="0; url=docs/">
-    <script>
-        window.location.href = "docs/";
-    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoSlideIdea - AI支援プレゼンテーション作成ツール</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 { color: #2E86AB; }
+        h2 { color: #A23B72; }
+        a { color: #F18F01; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #2E86AB;
+            color: white;
+            border-radius: 5px;
+            margin: 5px;
+        }
+        .button:hover {
+            background-color: #1d5577;
+            text-decoration: none;
+        }
+    </style>
 </head>
 <body>
-    <p>Redirecting to documentation... If not redirected, <a href="docs/">click here</a>.</p>
+    <h1>AutoSlideIdea</h1>
+    <p><strong>Markdownベースのシンプルなプレゼンテーション作成ツール</strong></p>
+    
+    <h2>🎯 プロジェクト概要</h2>
+    <p>AutoSlideIdeaは、Markdownベースのシンプルさを追求し、AI支援機能を活用して効率的にプレゼンテーション資料を作成するためのツールセットです。</p>
+    
+    <h2>✨ 主な機能</h2>
+    <ul>
+        <li>📝 Markdownでスライド作成</li>
+        <li>🤖 AI支援によるコンテンツ生成</li>
+        <li>🎨 4種類のテーマ（base, academic, business, minimal）</li>
+        <li>📊 Mermaid図表の自動変換</li>
+        <li>🚀 GitHub Actions自動ビルド</li>
+        <li>📦 PDF/PowerPoint/HTML出力</li>
+    </ul>
+    
+    <h2>📚 ドキュメント</h2>
+    <p><a href="docs/" class="button">ドキュメントサイトへ</a></p>
+    
+    <h2>🚀 クイックスタート</h2>
+    <pre><code># リポジトリのクローン
+git clone --recursive https://github.com/dobachi/AutoSlideIdea.git
+cd AutoSlideIdea
+
+# 依存関係のインストール
+npm install
+
+# 最初のプレゼンテーション作成
+./slideflow/slideflow.sh new my-presentation</code></pre>
+    
+    <h2>🔗 リンク</h2>
+    <ul>
+        <li><a href="https://github.com/dobachi/AutoSlideIdea">GitHub リポジトリ</a></li>
+        <li><a href="https://dobachi.github.io/AutoSlideIdea/samples/demo-presentation/slides.html">デモプレゼンテーション</a></li>
+        <li><a href="docs/">詳細ドキュメント</a></li>
+    </ul>
+    
+    <hr>
+    <p><small>© 2024 AutoSlideIdea. MIT License.</small></p>
 </body>
 </html>
