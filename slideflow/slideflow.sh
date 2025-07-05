@@ -27,32 +27,34 @@ show_help() {
 SlideFlow - Markdownベースのプレゼンテーション管理ツール
 
 使い方:
-    slideflow <command> [options]
+    slideflow <command> [options] [path]
 
 コマンド:
-    new <name>     新しいプレゼンテーションを作成
-    preview        プレゼンテーションをプレビュー
-    ai [options]   AI支援（デフォルト：対話的フェーズ支援）
-    build          プレゼンテーションをビルド
-    info           プレゼンテーション情報を表示
-    list           利用可能なテンプレートを表示
-    instructions   AI指示書システムの状況確認
-    help           このヘルプを表示
+    new <name>          新しいプレゼンテーションを作成
+    preview [path]      プレゼンテーションをプレビュー
+    ai [options] [path] AI支援（デフォルト：対話的フェーズ支援）
+    build [format] [path] プレゼンテーションをビルド
+    info [path]         プレゼンテーション情報を表示
+    list                利用可能なテンプレートを表示
+    instructions        AI指示書システムの状況確認
+    help                このヘルプを表示
 
 例:
     slideflow new my-presentation
-    slideflow preview
-    slideflow ai                    # 対話的フェーズ支援（デフォルト）
-    slideflow ai --quick tech       # 簡易支援（技術プレゼンテーション）
-    slideflow ai --phase planning   # 特定フェーズの支援
-    slideflow build pdf
-    slideflow info
+    slideflow preview presentations/my-presentation
+    slideflow ai presentations/my-presentation
+    slideflow ai --quick tech .
+    slideflow ai --phase planning presentations/conference-2024
+    slideflow build pdf presentations/my-presentation
+    slideflow info .
 
 AI支援オプション:
-    ai                       対話的フェーズ支援
-    ai --quick <type>        簡易支援（tech/business/academic）
-    ai --phase <phase>       特定フェーズ（planning/research/design/creation/review）
-    ai --continue            前回セッション継続
+    ai [path]                     対話的フェーズ支援
+    ai --quick <type> [path]      簡易支援（tech/business/academic）
+    ai --phase <phase> [path]     特定フェーズ（planning/research/design/creation/review）
+    ai --continue [path]          前回セッション継続
+
+注: [path]を省略した場合は現在のディレクトリが使用されます
 
 EOF
 }
@@ -82,13 +84,29 @@ cmd_new() {
 
 # プレビューサーバー起動
 cmd_preview() {
-    local port="${1:-8000}"
-    start_preview_server "$port"
+    local path="${1:-.}"
+    local port="${2:-8000}"
+    
+    # パスが数字の場合は、従来の互換性のためポート番号として扱う
+    if [[ "$path" =~ ^[0-9]+$ ]]; then
+        port="$path"
+        path="."
+    fi
+    
+    # 指定されたパスに移動してプレビュー
+    (
+        cd "$path" || {
+            echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+            exit 1
+        }
+        start_preview_server "$port"
+    )
 }
 
 # AI支援（統合版）
 cmd_ai() {
     local first_arg="${1:-}"
+    local path="."
     
     echo -e "${BLUE}🤖 AI支援モード${NC}"
     echo ""
@@ -98,32 +116,81 @@ cmd_ai() {
         --quick)
             # 簡易モード
             local situation="${2:-}"
-            cmd_ai_quick "$situation"
+            path="${3:-.}"
+            (
+                cd "$path" || {
+                    echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+                    exit 1
+                }
+                cmd_ai_quick "$situation"
+            )
             ;;
         --phase)
             # 特定フェーズ
             local phase="${2:-}"
-            main_interactive "phase" "$phase"
+            path="${3:-.}"
+            (
+                cd "$path" || {
+                    echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+                    exit 1
+                }
+                main_interactive "phase" "$phase"
+            )
             ;;
         --continue)
             # セッション継続
-            main_interactive "continue"
+            path="${2:-.}"
+            (
+                cd "$path" || {
+                    echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+                    exit 1
+                }
+                main_interactive "continue"
+            )
             ;;
         tech|business|academic)
             # 後方互換性：直接タイプ指定
-            cmd_ai_quick "$first_arg"
+            path="${2:-.}"
+            (
+                cd "$path" || {
+                    echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+                    exit 1
+                }
+                cmd_ai_quick "$first_arg"
+            )
             ;;
         "")
             # デフォルト：対話的フェーズ支援
             echo -e "${CYAN}対話的フェーズ支援を開始します${NC}"
             echo -e "${YELLOW}ヒント: 簡易支援が必要な場合は 'slideflow ai --quick <type>' を使用してください${NC}"
             echo ""
-            main_interactive "start"
+            (
+                cd "$path" || {
+                    echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+                    exit 1
+                }
+                main_interactive "start"
+            )
             ;;
         *)
-            echo -e "${YELLOW}不明なオプション: $first_arg${NC}"
-            echo "使用方法: slideflow ai [--quick <type>|--phase <phase>|--continue]"
-            return 1
+            # パスが指定された場合
+            if [[ -d "$first_arg" ]]; then
+                path="$first_arg"
+                echo -e "${CYAN}対話的フェーズ支援を開始します${NC}"
+                echo -e "${YELLOW}作業ディレクトリ: $path${NC}"
+                echo ""
+                (
+                    cd "$path" || {
+                        echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+                        exit 1
+                    }
+                    main_interactive "start"
+                )
+            else
+                echo -e "${YELLOW}不明なオプションまたは無効なパス: $first_arg${NC}"
+                echo "使用方法: slideflow ai [--quick <type>|--phase <phase>|--continue] [path]"
+                return 1
+            fi
             ;;
     esac
 }
@@ -219,15 +286,29 @@ cmd_ai_quick() {
 # ビルドコマンド
 cmd_build() {
     local format="${1:-html}"
+    local path="${2:-.}"
+    
+    # フォーマットがパスの場合（引数が1つの場合）
+    if [[ -d "$format" ]]; then
+        path="$format"
+        format="html"
+    fi
     
     echo -e "${BLUE}📦 プレゼンテーションをビルド中...${NC}"
     
-    # slides.mdの存在確認
-    if [[ ! -f "slides.md" ]]; then
-        echo -e "${YELLOW}エラー: slides.mdが見つかりません${NC}"
-        echo "プレゼンテーションディレクトリで実行してください"
-        exit 1
-    fi
+    # 指定されたパスで実行
+    (
+        cd "$path" || {
+            echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+            exit 1
+        }
+        
+        # slides.mdの存在確認
+        if [[ ! -f "slides.md" ]]; then
+            echo -e "${YELLOW}エラー: slides.mdが見つかりません${NC}"
+            echo "プレゼンテーションディレクトリを確認してください: $path"
+            exit 1
+        fi
     
     case "$format" in
         html)
@@ -258,19 +339,29 @@ cmd_build() {
             exit 1
             ;;
     esac
+    )
 }
 
 # プレゼンテーション情報表示
 cmd_info() {
+    local path="${1:-.}"
+    
     echo -e "${BLUE}📊 プレゼンテーション情報${NC}"
     echo ""
     
-    # slides.mdの存在確認
-    if [[ ! -f "slides.md" ]]; then
-        echo -e "${YELLOW}エラー: slides.mdが見つかりません${NC}"
-        echo "プレゼンテーションディレクトリで実行してください"
-        exit 1
-    fi
+    # 指定されたパスで実行
+    (
+        cd "$path" || {
+            echo -e "${YELLOW}エラー: ディレクトリが見つかりません: $path${NC}"
+            exit 1
+        }
+        
+        # slides.mdの存在確認
+        if [[ ! -f "slides.md" ]]; then
+            echo -e "${YELLOW}エラー: slides.mdが見つかりません${NC}"
+            echo "プレゼンテーションディレクトリを確認してください: $path"
+            exit 1
+        fi
     
     # 基本情報
     echo -e "${GREEN}ファイル情報:${NC}"
@@ -308,6 +399,7 @@ cmd_info() {
     [[ -f "slides.html" ]] && echo "  ✓ slides.html ($(date -r slides.html '+%Y-%m-%d %H:%M:%S'))"
     [[ -f "slides.pdf" ]] && echo "  ✓ slides.pdf ($(date -r slides.pdf '+%Y-%m-%d %H:%M:%S'))"
     [[ -f "slides.pptx" ]] && echo "  ✓ slides.pptx ($(date -r slides.pptx '+%Y-%m-%d %H:%M:%S'))"
+    )
 }
 
 # テンプレート一覧表示
