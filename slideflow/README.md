@@ -1,5 +1,7 @@
 # SlideFlow - Phase 0 (超最小MVP)
 
+[🇬🇧 English Version](README.en.md)
+
 ## 概要
 
 SlideFlowは、Markdownベースのシンプルさを追求したプレゼンテーション管理ツールです。
@@ -17,6 +19,23 @@ chmod +x slideflow.sh
 
 # 3. パスを通す（オプション）
 export PATH="$PATH:$(pwd)"
+```
+
+## 言語設定
+
+SlideFlowは日本語と英語に対応しています。環境変数`LANG`または`SLIDEFLOW_LANG`で言語を指定できます。
+
+```bash
+# 英語で使用
+export LANG=en_US.UTF-8
+./slideflow.sh help
+
+# 日本語で使用（デフォルト）
+export LANG=ja_JP.UTF-8
+./slideflow.sh help
+
+# 一時的に言語を変更
+LANG=en slideflow.sh help
 ```
 
 ## 使い方
