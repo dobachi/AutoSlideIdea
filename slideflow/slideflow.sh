@@ -348,7 +348,58 @@ cmd_build() {
 cmd_info() {
     local path="${1:-.}"
     
+    # ファイルかディレクトリかを判定
+    if [[ -f "$path" ]]; then
+        # ファイルが指定された場合
+        if [[ "$(basename "$path")" == "slides.md" ]]; then
+            path="$(cd "$(dirname "$path")" && pwd)"
+        else
+            echo -e "${YELLOW}$(msg "error.not_presentation_file")${NC}"
+            return 1
+        fi
+    elif [[ -d "$path" ]]; then
+        # ディレクトリが指定された場合
+        # パスを絶対パスに変換
+        if [[ ! "$path" = /* ]]; then
+            path="$(cd "$path" 2>/dev/null && pwd)" || path="$(pwd)/$path"
+        fi
+        
+        # slides.mdを探す
+        if [[ -f "$path/slides.md" ]]; then
+            # 直下にslides.mdがある場合
+            path="$path"
+        else
+            # サブディレクトリからslides.mdを探す
+            local found_slide=""
+            while IFS= read -r -d '' slide; do
+                if [[ -z "$found_slide" ]]; then
+                    found_slide="$(dirname "$slide")"
+                else
+                    # 複数見つかった場合
+                    echo -e "${YELLOW}$(msg "info.multiple_presentations")${NC}"
+                    echo "$(msg "info.please_specify"):"
+                    find "$path" -name "slides.md" -type f | while read -r s; do
+                        echo "  $(dirname "$s")"
+                    done
+                    return 1
+                fi
+            done < <(find "$path" -name "slides.md" -type f -print0)
+            
+            if [[ -n "$found_slide" ]]; then
+                path="$found_slide"
+            else
+                echo -e "${YELLOW}$(msg "error.no_slides")${NC}"
+                echo "$(msg "error.check_dir" "$path")"
+                return 1
+            fi
+        fi
+    else
+        echo -e "${YELLOW}$(msg "error.path_not_found" "$path")${NC}"
+        return 1
+    fi
+    
     echo -e "${BLUE}📊 $(msg "info.presentation_info")${NC}"
+    echo -e "${CYAN}$(msg "info.path"): $path${NC}"
     echo ""
     
     # 指定されたパスで実行
@@ -358,10 +409,9 @@ cmd_info() {
             exit 1
         }
         
-        # slides.mdの存在確認
+        # slides.mdの存在確認（念のため）
         if [[ ! -f "slides.md" ]]; then
             echo -e "${YELLOW}$(msg "error.no_slides")${NC}"
-            echo "$(msg "error.check_dir" "$path")"
             exit 1
         fi
     

@@ -44,6 +44,8 @@ MESSAGES=(
     ["error.check_dir"]="Please check the presentation directory: %1"
     ["error.template_dir_not_found"]="Template directory not found"
     ["error.supported_formats"]="Supported formats: html, pdf, pptx"
+    ["error.path_not_found"]="Path not found: %1"
+    ["error.not_presentation_file"]="Not a presentation file"
     
     # Success messages
     ["success.created"]="Created successfully!"
@@ -78,6 +80,8 @@ MESSAGES=(
     ["info.features"]="Features:"
     ["info.usage_template"]="Usage:"
     ["info.open_presentation"]="Open presentation:"
+    ["info.multiple_presentations"]="Multiple presentations found"
+    ["info.please_specify"]="Please specify one of the following"
     
     # Prompts
     ["prompt.select_template"]="Please select a template"

@@ -44,6 +44,8 @@ MESSAGES=(
     ["error.check_dir"]="プレゼンテーションディレクトリを確認してください: %1"
     ["error.template_dir_not_found"]="テンプレートディレクトリが見つかりません"
     ["error.supported_formats"]="対応フォーマット: html, pdf, pptx"
+    ["error.path_not_found"]="パスが見つかりません: %1"
+    ["error.not_presentation_file"]="プレゼンテーションファイルではありません"
     
     # 成功メッセージ
     ["success.created"]="作成完了！"
@@ -78,6 +80,8 @@ MESSAGES=(
     ["info.features"]="機能:"
     ["info.usage_template"]="使用方法:"
     ["info.open_presentation"]="プレゼンテーションを開く:"
+    ["info.multiple_presentations"]="複数のプレゼンテーションが見つかりました"
+    ["info.please_specify"]="以下のいずれかを指定してください"
     
     # プロンプト
     ["prompt.select_template"]="テンプレートを選択してください"
