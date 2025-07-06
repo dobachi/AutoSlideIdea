@@ -52,17 +52,43 @@ cd ../presentations/my-presentation
 # Open http://localhost:8000 in your browser
 ```
 
-### Display AI assistance instructions
+### List existing presentations
 
 ```bash
+# Default (presentations directory)
+./slideflow.sh list
+
+# Search specific directory
+./slideflow.sh list /path/to/directory
+./slideflow.sh list .
+```
+
+### List available templates
+
+```bash
+./slideflow.sh templates
+```
+
+### AI assistance
+
+```bash
+# Interactive phase support
 ./slideflow.sh ai
+
+# Quick support
+./slideflow.sh ai --quick tech
 ```
 
 ## Command List
 
 - `new <name>` - Create a new presentation
-- `preview` - Preview presentation (run in the directory containing slides.md)
-- `ai` - Display AI assistance instructions
+- `preview [path]` - Preview presentation
+- `ai [options] [path]` - AI assistance
+- `build [format] [path]` - Build presentation
+- `info [path]` - Show presentation information
+- `list [path]` - List existing presentations
+- `templates` - List available templates
+- `instructions` - Check AI instruction system status
 - `help` - Show help
 
 ## Features

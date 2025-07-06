@@ -36,7 +36,8 @@ $(msg "sf.commands"):
     ai [options] [path] $(msg "cmd.ai.desc")
     build [format] [path] $(msg "cmd.build.desc")
     info [path]         $(msg "cmd.info.desc")
-    list                $(msg "cmd.list.desc")
+    list [path]         $(msg "cmd.list.desc")
+    templates           $(msg "cmd.templates.desc")
     instructions        $(msg "cmd.instructions.desc")
     help                $(msg "cmd.help.desc")
 
@@ -403,8 +404,92 @@ cmd_info() {
     )
 }
 
-# テンプレート一覧表示
+# 既存プレゼンテーション一覧表示
 cmd_list() {
+    local search_dir="${1:-$PROJECT_ROOT/presentations}"
+    
+    # パスを絶対パスに変換
+    if [[ ! "$search_dir" = /* ]]; then
+        search_dir="$(cd "$search_dir" 2>/dev/null && pwd)" || search_dir="$(pwd)/$search_dir"
+    fi
+    
+    echo -e "${BLUE}📋 $(msg "info.existing_presentations")${NC}"
+    echo -e "${CYAN}$(msg "info.path"): $search_dir${NC}"
+    echo ""
+    
+    local found=false
+    
+    if [[ ! -d "$search_dir" ]]; then
+        echo -e "${YELLOW}$(msg "error.dir_not_found" "$search_dir")${NC}"
+        return 1
+    fi
+    
+    # プレゼンテーション一覧を表示 (再帰的に検索)
+    local presentation
+    while IFS= read -r -d '' presentation; do
+        found=true
+        # 相対パスで表示
+        local rel_path="${presentation#$search_dir/}"
+        local name=$(basename "$presentation")
+        
+        # ディレクトリがネストされている場合はパスも表示
+        if [[ "$rel_path" != "$name" ]]; then
+            echo -e "${GREEN}$rel_path${NC}"
+        else
+            echo -e "${GREEN}$name${NC}"
+        fi
+            
+            # slides.mdからメタデータを取得
+            local title=""
+            local description=""
+            local in_frontmatter=false
+            while IFS= read -r line; do
+                if [[ "$line" == "---" ]]; then
+                    if [[ "$in_frontmatter" == false ]]; then
+                        in_frontmatter=true
+                        continue
+                    else
+                        break
+                    fi
+                fi
+                if [[ "$in_frontmatter" == true ]]; then
+                    if [[ "$line" =~ ^title:\ *(.*)$ ]]; then
+                        title="${BASH_REMATCH[1]}"
+                        title="${title//\"/}"
+                    elif [[ "$line" =~ ^description:\ *(.*)$ ]]; then
+                        description="${BASH_REMATCH[1]}"
+                        description="${description//\"/}"
+                    fi
+                fi
+            done < "$presentation/slides.md"
+            
+            [[ -n "$title" ]] && echo "  $(msg "info.title"): $title"
+            [[ -n "$description" ]] && echo "  $(msg "info.description"): $description"
+            
+            # 最終更新日時
+            local last_update=$(date -r "$presentation/slides.md" '+%Y-%m-%d %H:%M')
+            echo "  $(msg "info.last_update"): $last_update"
+            echo ""
+    done < <(find "$search_dir" -name "slides.md" -type f -print0 | xargs -0 dirname | sort -u | tr '\n' '\0')
+    
+    if [[ "$found" == false ]]; then
+        echo -e "${YELLOW}$(msg "info.no_presentations")${NC}"
+        echo ""
+        echo -e "$(msg "info.create_first")"
+        echo "  slideflow new my-first-presentation"
+    else
+        echo -e "${CYAN}$(msg "info.open_presentation")${NC}"
+        if [[ "$search_dir" == "$PROJECT_ROOT/presentations" ]]; then
+            echo "  cd presentations/<name>"
+        else
+            echo "  cd <presentation-path>"
+        fi
+        echo "  slideflow preview"
+    fi
+}
+
+# テンプレート一覧表示
+cmd_templates() {
     echo -e "${BLUE}📋 $(msg "info.available_templates")${NC}"
     echo ""
     
@@ -463,6 +548,9 @@ main() {
             ;;
         list)
             cmd_list "$@"
+            ;;
+        templates)
+            cmd_templates "$@"
             ;;
         instructions)
             list_available_instructions

@@ -54,17 +54,43 @@ cd ../presentations/my-presentation
 # ブラウザで http://localhost:8000 を開く
 ```
 
-### AI支援用の指示書を表示
+### 作成済みプレゼンテーションを一覧表示
 
 ```bash
+# デフォルト（presentationsディレクトリ）
+./slideflow.sh list
+
+# 特定のディレクトリを検索
+./slideflow.sh list /path/to/directory
+./slideflow.sh list .
+```
+
+### 利用可能なテンプレートを表示
+
+```bash
+./slideflow.sh templates
+```
+
+### AI支援
+
+```bash
+# 対話的フェーズ支援
 ./slideflow.sh ai
+
+# クイック支援
+./slideflow.sh ai --quick tech
 ```
 
 ## コマンド一覧
 
 - `new <name>` - 新しいプレゼンテーションを作成
-- `preview` - プレゼンテーションをプレビュー（slides.mdがあるディレクトリで実行）
-- `ai` - AI支援用の指示書を表示
+- `preview [path]` - プレゼンテーションをプレビュー
+- `ai [options] [path]` - AI支援
+- `build [format] [path]` - プレゼンテーションをビルド
+- `info [path]` - プレゼンテーション情報を表示
+- `list [path]` - 作成済みプレゼンテーションを一覧表示
+- `templates` - 利用可能なテンプレートを表示
+- `instructions` - AI指示書システムの状況確認
 - `help` - ヘルプを表示
 
 ## 特徴

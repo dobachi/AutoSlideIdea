@@ -22,7 +22,8 @@ MESSAGES=(
     ["cmd.ai.desc"]="AI支援（デフォルト：対話的フェーズ支援）"
     ["cmd.build.desc"]="プレゼンテーションをビルド"
     ["cmd.info.desc"]="プレゼンテーション情報を表示"
-    ["cmd.list.desc"]="利用可能なテンプレートを表示"
+    ["cmd.list.desc"]="作成済みプレゼンテーションを一覧表示"
+    ["cmd.templates.desc"]="利用可能なテンプレートを表示"
     ["cmd.instructions.desc"]="AI指示書システムの状況確認"
     ["cmd.help.desc"]="このヘルプを表示"
     
@@ -71,8 +72,12 @@ MESSAGES=(
     ["info.metadata"]="メタデータ:"
     ["info.generated_files"]="生成済みファイル:"
     ["info.available_templates"]="利用可能なテンプレート"
+    ["info.existing_presentations"]="作成済みプレゼンテーション"
+    ["info.no_presentations"]="プレゼンテーションが見つかりません"
+    ["info.create_first"]="最初のプレゼンテーションを作成:"
     ["info.features"]="機能:"
     ["info.usage_template"]="使用方法:"
+    ["info.open_presentation"]="プレゼンテーションを開く:"
     
     # プロンプト
     ["prompt.select_template"]="テンプレートを選択してください"

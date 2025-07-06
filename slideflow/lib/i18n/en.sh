@@ -22,7 +22,8 @@ MESSAGES=(
     ["cmd.ai.desc"]="AI assistance (default: interactive phase support)"
     ["cmd.build.desc"]="Build presentation"
     ["cmd.info.desc"]="Show presentation information"
-    ["cmd.list.desc"]="List available templates"
+    ["cmd.list.desc"]="List existing presentations"
+    ["cmd.templates.desc"]="List available templates"
     ["cmd.instructions.desc"]="Check AI instruction system status"
     ["cmd.help.desc"]="Show this help"
     
@@ -71,8 +72,12 @@ MESSAGES=(
     ["info.metadata"]="Metadata:"
     ["info.generated_files"]="Generated files:"
     ["info.available_templates"]="Available templates"
+    ["info.existing_presentations"]="Existing presentations"
+    ["info.no_presentations"]="No presentations found"
+    ["info.create_first"]="Create your first presentation:"
     ["info.features"]="Features:"
     ["info.usage_template"]="Usage:"
+    ["info.open_presentation"]="Open presentation:"
     
     # Prompts
     ["prompt.select_template"]="Please select a template"

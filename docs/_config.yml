@@ -48,5 +48,7 @@ exclude:
   - "*.log"
   - "JEKYLL_*.md"
   - "planning/"
+  - "archive/"
   - "Gemfile"
   - "Gemfile.lock"
+  - "README*.md"
