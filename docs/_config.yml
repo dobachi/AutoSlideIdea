@@ -4,8 +4,8 @@ description: Markdownベースのシンプルなプレゼンテーション作�
 baseurl: "/AutoSlideIdea"
 url: "https://dobachi.github.io/AutoSlideIdea"
 
-# テーマ（GitHub Pages標準テーマから開始）
-theme: jekyll-theme-cayman
+# テーマ（Just the Docs - ドキュメントサイト専用テーマ）
+remote_theme: just-the-docs/just-the-docs@v0.5.0
 
 # 言語設定
 lang: ja
@@ -21,8 +21,32 @@ kramdown:
   syntax_highlighter: rouge
   input: GFM
 
+# Just the Docsの設定
+search_enabled: true
+search:
+  heading_level: 2
+  previews: 3
+  preview_words_before: 5
+  preview_words_after: 10
+  tokenizer_separator: /[\s\-/]+/
+  rel_url: true
+  button: false
+
+# ヘッダーのリンク
+aux_links:
+  "GitHub":
+    - "//github.com/dobachi/AutoSlideIdea"
+
+# フッター設定
+footer_content: "Copyright &copy; 2024 AutoSlideIdea. <a href=\"https://github.com/dobachi/AutoSlideIdea/blob/main/LICENSE\">MIT license.</a>"
+
+# カラースキーム
+color_scheme: light
+
 # 除外ファイル
 exclude:
   - "*.log"
   - "JEKYLL_*.md"
   - "planning/"
+  - "Gemfile"
+  - "Gemfile.lock"

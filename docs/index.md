@@ -1,7 +1,9 @@
 ---
-layout: default
-title: AutoSlideIdea Documentation
-lang: ja
+layout: home
+title: ホーム
+nav_order: 1
+description: "Markdownベースのシンプルなプレゼンテーション作成ツール"
+permalink: /
 ---
 
 # AutoSlideIdea Documentation

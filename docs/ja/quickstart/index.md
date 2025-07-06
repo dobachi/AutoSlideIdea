@@ -1,7 +1,8 @@
 ---
 layout: default
 title: クイックスタート
-lang: ja
+nav_order: 2
+parent: はじめに
 ---
 
 # クイックスタート
