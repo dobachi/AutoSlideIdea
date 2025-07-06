@@ -130,6 +130,10 @@ MIT License
 
 dobachi
 
+## Development Documents
+
+- [Command System Design Considerations](/docs/slideflow/COMMAND_DESIGN.md) - Detailed command design and improvement proposals (Japanese)
+
 ## Related Projects
 
 - [AI_Instruction_Kits](https://github.com/dobachi/AI_Instruction_Kits) - AI instruction management system

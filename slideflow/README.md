@@ -108,6 +108,10 @@ cd ../presentations/my-presentation
   - AutoSlideIdeaのスクリプト群
 - **サイズ**: 約100行
 
+## 開発ドキュメント
+
+- [コマンド体系の設計考察](/docs/slideflow/COMMAND_DESIGN.md) - コマンド設計の詳細と改善提案
+
 ## 今後の計画
 
 これはPhase 0（超最小MVP）です。今後の開発計画：
