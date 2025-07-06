@@ -230,6 +230,16 @@ research_ai_search() {
     # クエリの保存
     echo "$query" > "$session_dir/query.txt"
     
+    # メタデータの保存
+    cat > "$session_dir/metadata.json" << EOF
+{
+  "query": "$query",
+  "timestamp": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "session_id": "$session_name",
+  "status": "pending"
+}
+EOF
+    
     # AI指示の作成
     local ai_prompt="「$query」について調査してください。
 
@@ -409,10 +419,12 @@ research_ai_search() {
         echo -e "${GREEN}✅ AI検索が完了し、結果を保存しました${NC}"
         echo -e "保存先: $session_dir/summary.md"
         
-        # ステータスを更新
-        local temp_file=$(mktemp)
-        jq '.status = "completed"' "$session_dir/metadata.json" > "$temp_file"
-        mv "$temp_file" "$session_dir/metadata.json"
+        # ステータスを更新（metadata.jsonが存在する場合のみ）
+        if [ -f "$session_dir/metadata.json" ]; then
+            local temp_file=$(mktemp)
+            jq '.status = "completed"' "$session_dir/metadata.json" > "$temp_file"
+            mv "$temp_file" "$session_dir/metadata.json"
+        fi
         
         # サマリーの更新
         update_research_summary "$presentation_path"
@@ -652,10 +664,12 @@ $(cat "$file_path" 2>/dev/null | head -5000)
         echo -e "${GREEN}✅ ドキュメント分析が完了し、結果を保存しました${NC}"
         echo -e "保存先: $session_dir/analysis.md"
         
-        # ステータスを更新
-        local temp_file=$(mktemp)
-        jq '.status = "completed"' "$session_dir/metadata.json" > "$temp_file"
-        mv "$temp_file" "$session_dir/metadata.json"
+        # ステータスを更新（metadata.jsonが存在する場合のみ）
+        if [ -f "$session_dir/metadata.json" ]; then
+            local temp_file=$(mktemp)
+            jq '.status = "completed"' "$session_dir/metadata.json" > "$temp_file"
+            mv "$temp_file" "$session_dir/metadata.json"
+        fi
         
         # サマリーの更新
         update_research_summary "$presentation_path"
