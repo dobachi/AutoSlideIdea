@@ -433,13 +433,13 @@ if [ "$OPERATION_MODE" = "create" ]; then
         echo ""
         echo "Next steps:"
         echo "1. Edit slides: cd $(basename "$WORK_DIR") && code slides.md"
-        echo "2. Build: npx marp slides.md -o output.pdf"
+        echo "2. Build: slideflow build pdf"
     else
         echo "📁 作成場所: $WORK_DIR"
         echo ""
         echo "次のステップ:"
         echo "1. スライドを編集: cd $(basename "$WORK_DIR") && code slides.md"
-        echo "2. ビルド: npx marp slides.md -o output.pdf"
+        echo "2. ビルド: slideflow build pdf"
     fi
 else
     echo ""
