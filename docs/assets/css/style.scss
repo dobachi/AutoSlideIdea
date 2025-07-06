@@ -1,7 +1,8 @@
 ---
 ---
 
-@import "{{ site.theme }}";
+// Just the Docsテーマでは@import文は不要
+// カスタムスタイルのみを定義
 
 // 言語選択セクションのスタイル
 .language-selector {
