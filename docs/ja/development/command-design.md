@@ -2,7 +2,8 @@
 layout: default
 title: SlideFlowコマンド設計
 nav_order: 6
-parent: 日本語
+parent: 開発者向け
+grand_parent: 日本語
 ---
 
 # SlideFlow コマンド体系の設計考察

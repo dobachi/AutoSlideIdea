@@ -2,7 +2,8 @@
 layout: default
 title: ドキュメント構造分析レポート
 nav_order: 5
-parent: 日本語
+parent: 開発者向け
+grand_parent: 日本語
 ---
 
 # AutoSlideIdea Documentation Structure Analysis Report
