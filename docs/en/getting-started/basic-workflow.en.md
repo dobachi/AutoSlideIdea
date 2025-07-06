@@ -1,10 +1,15 @@
-[English](basic-workflow.en.md) | [日本語](basic-workflow.md)
+---
+layout: default
+title: Basic Workflow
+nav_order: 4
+parent: Getting Started
+---
 
-# Workflow
+# Basic Workflow
 
 ## Basic Workflow
 
-> 💡 **Reference**: Check out the [demo site](https://dobachi.github.io/AutoSlideIdea/) for actual output examples
+> 💡 **Reference**: Check out the [sample presentations](../../demos/sample-presentation/) for actual output examples
 
 ### 1. Creating and Managing Presentations
 

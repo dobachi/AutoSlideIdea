@@ -1,4 +1,9 @@
-[English](setup.en.md) | [日本語](setup.md)
+---
+layout: default
+title: Setup Guide
+nav_order: 2
+parent: Getting Started
+---
 
 # Setup Guide
 
