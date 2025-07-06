@@ -1,54 +1,79 @@
 ---
 layout: home
-title: ホーム
+title: AutoSlideIdea
 nav_order: 1
-description: "Markdownベースのシンプルなプレゼンテーション作成ツール"
+description: "A simple Markdown-based presentation creation tool / Markdownベースのシンプルなプレゼンテーション作成ツール"
 permalink: /
 ---
 
-# AutoSlideIdea Documentation
+# AutoSlideIdea
 
-Markdownベースのシンプルなプレゼンテーション作成ツール
+<div class="language-selector" style="text-align: center; margin: 3em 0;">
+  <h2>Select Language / 言語を選択</h2>
+  
+  <div style="display: flex; justify-content: center; gap: 2em; flex-wrap: wrap; margin-top: 2em;">
+    <a href="{{ site.baseurl }}/ja/" class="language-card" style="
+      display: block;
+      padding: 2em 3em;
+      border: 2px solid #e1e4e8;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      background: #f6f8fa;
+      min-width: 200px;
+      text-align: center;
+    ">
+      <h3 style="margin: 0 0 0.5em 0; color: #24292e;">🇯🇵 日本語</h3>
+      <p style="margin: 0; color: #586069;">日本語版ドキュメント</p>
+    </a>
+    
+    <a href="{{ site.baseurl }}/en/" class="language-card" style="
+      display: block;
+      padding: 2em 3em;
+      border: 2px solid #e1e4e8;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: all 0.3s ease;
+      background: #f6f8fa;
+      min-width: 200px;
+      text-align: center;
+    ">
+      <h3 style="margin: 0 0 0.5em 0; color: #24292e;">🇬🇧 English</h3>
+      <p style="margin: 0; color: #586069;">English Documentation</p>
+    </a>
+  </div>
+</div>
 
-## クイックリンク
+<style>
+.language-card:hover {
+  border-color: #0366d6 !important;
+  box-shadow: 0 4px 12px rgba(3, 102, 214, 0.1);
+  transform: translateY(-2px);
+}
+</style>
 
-- [クイックスタート]({{ site.baseurl }}/ja/quickstart/)
-- [インストール]({{ site.baseurl }}/ja/getting-started/installation)
-- [ユーザーガイド]({{ site.baseurl }}/ja/user-guide/)
+---
 
-## 特徴
+## About AutoSlideIdea
 
-- 📝 **Markdownでスライド作成** - シンプルな記法で美しいプレゼンテーション
-- 🤖 **AI支援機能** - SlideFlowによる効率的な作成支援
-- 🎨 **豊富なテーマ** - ビジネスからアカデミックまで対応
-- 📊 **Mermaid図表対応** - フローチャートやグラフを簡単作成
-- 🚀 **GitHub Pages連携** - オンラインで簡単に公開
-- 🔧 **カスタマイズ可能** - CSSで自由にデザイン調整
+AutoSlideIdea is a powerful yet simple tool for creating professional presentations using Markdown. It combines the simplicity of Markdown syntax with the robust features of Marp, enhanced by the SlideFlow framework for an optimized workflow.
 
-## プロジェクトについて
+AutoSlideIdeaは、Markdownを使用してプロフェッショナルなプレゼンテーションを作成するための強力でシンプルなツールです。Markdownの簡潔さとMarpの強力な機能を組み合わせ、SlideFlowフレームワークによって最適化されたワークフローを提供します。
 
-AutoSlideIdeaは、エンジニアやデザイナー、ビジネスパーソンが効率的にプレゼンテーションを作成できるツールです。Markdownの簡潔さとMarpの強力な機能を組み合わせ、SlideFlowによる統合管理でワークフローを最適化します。
+### Key Features / 主な機能
 
-### 主な用途
+- 📝 **Markdown-based** - Simple syntax for beautiful presentations
+- 🤖 **AI-assisted** - Efficient creation support with SlideFlow
+- 🎨 **Rich themes** - From business to academic styles
+- 📊 **Mermaid diagrams** - Easy flowcharts and graphs
+- 🚀 **GitHub Pages** - Simple online publishing
+- 🔧 **Customizable** - Free design adjustment with CSS
 
-- 技術カンファレンスでの発表
-- 社内プレゼンテーション
-- 教育・研修資料
-- プロジェクト提案書
-- 研究発表
+---
 
-## はじめ方
-
-1. **5分で始める** → [クイックスタート]({{ site.baseurl }}/ja/quickstart/)
-2. **詳しく学ぶ** → [ユーザーガイド]({{ site.baseurl }}/ja/user-guide/)
-3. **機能を知る** → [機能一覧]({{ site.baseurl }}/ja/features/)
-
-## コミュニティ
-
-- [GitHub Issues](https://github.com/dobachi/AutoSlideIdea/issues) - バグ報告や機能要望
-- [Discussions](https://github.com/dobachi/AutoSlideIdea/discussions) - 質問や議論
-- [Contributing]({{ site.baseurl }}/ja/development/contributing/) - 貢献方法
-
-## ライセンス
-
-MIT License - 詳細は[LICENSE](https://github.com/dobachi/AutoSlideIdea/blob/main/LICENSE)を参照
+<div style="text-align: center; margin-top: 3em;">
+  <p style="color: #586069;">
+    <a href="https://github.com/dobachi/AutoSlideIdea" style="color: #0366d6;">GitHub Repository</a> | 
+    <a href="https://github.com/dobachi/AutoSlideIdea/blob/main/LICENSE" style="color: #0366d6;">MIT License</a>
+  </p>
+</div>
