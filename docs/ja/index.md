@@ -10,51 +10,30 @@ permalink: /ja/
 
 Markdownベースのシンプルなプレゼンテーション作成ツール
 
-<div style="background: #f6f8fa; border-left: 4px solid #0366d6; padding: 1em; margin: 2em 0;">
-  <p style="margin: 0;">
+<div class="language-banner">
+  <p>
     <strong>🌐 Language:</strong> 
-    <a href="{{ site.baseurl }}/" style="margin-left: 1em;">English</a> | 
+    <a href="{{ site.baseurl }}/">English</a> | 
     <strong>日本語</strong>
   </p>
 </div>
 
 ## 🚀 クイックスタート
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5em; margin: 2em 0;">
-  <a href="{{ site.baseurl }}/ja/quickstart/" style="
-    display: block;
-    padding: 1.5em;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: all 0.2s ease;
-  ">
-    <h3 style="margin: 0 0 0.5em 0; color: #24292e;">⚡ クイックスタート</h3>
-    <p style="margin: 0; color: #586069;">5分で始めるAutoSlideIdea</p>
+<div class="quick-start-cards">
+  <a href="{{ site.baseurl }}/ja/quickstart/" class="card">
+    <h3>⚡ クイックスタート</h3>
+    <p>5分で始めるAutoSlideIdea</p>
   </a>
   
-  <a href="{{ site.baseurl }}/ja/getting-started/installation" style="
-    display: block;
-    padding: 1.5em;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: all 0.2s ease;
-  ">
-    <h3 style="margin: 0 0 0.5em 0; color: #24292e;">📦 インストール</h3>
-    <p style="margin: 0; color: #586069;">詳細なセットアップ手順</p>
+  <a href="{{ site.baseurl }}/ja/getting-started/installation" class="card">
+    <h3>📦 インストール</h3>
+    <p>詳細なセットアップ手順</p>
   </a>
   
-  <a href="{{ site.baseurl }}/ja/user-guide/" style="
-    display: block;
-    padding: 1.5em;
-    border: 1px solid #e1e4e8;
-    border-radius: 6px;
-    text-decoration: none;
-    transition: all 0.2s ease;
-  ">
-    <h3 style="margin: 0 0 0.5em 0; color: #24292e;">📖 ユーザーガイド</h3>
-    <p style="margin: 0; color: #586069;">基本的な使い方から応用まで</p>
+  <a href="{{ site.baseurl }}/ja/user-guide/" class="card">
+    <h3>📖 ユーザーガイド</h3>
+    <p>基本的な使い方から応用まで</p>
   </a>
 </div>
 
@@ -84,33 +63,33 @@ Markdownベースのシンプルなプレゼンテーション作成ツール
 
 ## ✨ 特徴
 
-<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1em; margin: 2em 0;">
-  <div style="padding: 1em;">
+<div class="features-grid">
+  <div class="feature-item">
     <h3>📝 Markdownでスライド作成</h3>
     <p>シンプルな記法で美しいプレゼンテーション</p>
   </div>
   
-  <div style="padding: 1em;">
+  <div class="feature-item">
     <h3>🤖 AI支援機能</h3>
     <p>SlideFlowによる効率的な作成支援</p>
   </div>
   
-  <div style="padding: 1em;">
+  <div class="feature-item">
     <h3>🎨 豊富なテーマ</h3>
     <p>ビジネスからアカデミックまで対応</p>
   </div>
   
-  <div style="padding: 1em;">
+  <div class="feature-item">
     <h3>📊 Mermaid図表対応</h3>
     <p>フローチャートやグラフを簡単作成</p>
   </div>
   
-  <div style="padding: 1em;">
+  <div class="feature-item">
     <h3>🚀 GitHub Pages連携</h3>
     <p>オンラインで簡単に公開</p>
   </div>
   
-  <div style="padding: 1em;">
+  <div class="feature-item">
     <h3>🔧 カスタマイズ可能</h3>
     <p>CSSで自由にデザイン調整</p>
   </div>
@@ -133,14 +112,3 @@ Markdownベースのシンプルなプレゼンテーション作成ツール
 ## 📄 ライセンス
 
 MIT License - 詳細は[LICENSE](https://github.com/dobachi/AutoSlideIdea/blob/main/LICENSE)を参照
-
-<style>
-a[style*="display: block"] {
-  color: inherit !important;
-}
-a[style*="display: block"]:hover {
-  border-color: #0366d6 !important;
-  box-shadow: 0 2px 8px rgba(3, 102, 214, 0.1);
-  transform: translateY(-1px);
-}
-</style>
