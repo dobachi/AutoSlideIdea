@@ -3,6 +3,7 @@ layout: default
 title: インストール
 nav_order: 1
 parent: 日本語
+nav_exclude: true
 ---
 
 # インストールガイド

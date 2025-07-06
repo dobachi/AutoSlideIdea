@@ -3,6 +3,7 @@ layout: default
 title: Setup Guide
 nav_order: 2
 parent: English
+nav_exclude: true
 ---
 
 # Setup Guide

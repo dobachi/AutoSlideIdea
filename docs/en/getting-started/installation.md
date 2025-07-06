@@ -3,6 +3,7 @@ layout: default
 title: Installation
 nav_order: 1
 parent: English
+nav_exclude: true
 ---
 
 # Installation Guide

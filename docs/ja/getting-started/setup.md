@@ -3,6 +3,7 @@ layout: default
 title: セットアップ詳細
 nav_order: 3
 parent: 日本語
+nav_exclude: true
 ---
 
 # セットアップガイド

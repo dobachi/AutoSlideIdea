@@ -235,12 +235,21 @@ research_ai_search() {
     # 1. Claude
     if command -v claude >/dev/null 2>&1; then
         echo -e "${CYAN}claudeコマンドを使用してAI検索を実行します...${NC}"
-        result=$(timeout 60 claude "$ai_prompt" 2>/dev/null)
-        if [ $? -eq 0 ] && [ -n "$result" ]; then
-            echo "$result" > "$session_dir/summary.md"
+        # Claude Codeは--printオプションが必要
+        local claude_output=$(timeout 30 claude --print "$ai_prompt" 2>&1)
+        local claude_exit_code=$?
+        
+        if [ $claude_exit_code -eq 0 ] && [ -n "$claude_output" ]; then
+            echo "$claude_output" > "$session_dir/summary.md"
             ai_executed=true
+            echo -e "${GREEN}✅ Claude検索完了${NC}"
         else
-            echo -e "${YELLOW}⚠️  claudeコマンドの実行に失敗しました${NC}"
+            if [ $claude_exit_code -eq 124 ]; then
+                echo -e "${YELLOW}⚠️  claudeコマンドがタイムアウトしました (30秒)${NC}"
+            else
+                echo -e "${YELLOW}⚠️  claudeコマンドの実行に失敗しました (exit code: $claude_exit_code)${NC}"
+                echo -e "${YELLOW}     エラー出力: ${claude_output:0:100}${NC}"
+            fi
         fi
     fi
     
@@ -470,10 +479,20 @@ $(cat "$file_path" 2>/dev/null | head -5000)
     # 1. Claude
     if command -v claude >/dev/null 2>&1; then
         echo -e "${CYAN}claudeコマンドを使用してドキュメント分析を実行します...${NC}"
-        result=$(timeout 60 claude "$full_prompt" 2>/dev/null)
-        if [ $? -eq 0 ] && [ -n "$result" ]; then
-            echo "$result" > "$session_dir/analysis.md"
+        # Claude Codeは--printオプションが必要
+        local claude_output=$(timeout 30 claude --print "$full_prompt" 2>&1)
+        local claude_exit_code=$?
+        
+        if [ $claude_exit_code -eq 0 ] && [ -n "$claude_output" ]; then
+            echo "$claude_output" > "$session_dir/analysis.md"
             ai_executed=true
+            echo -e "${GREEN}✅ Claude分析完了${NC}"
+        else
+            if [ $claude_exit_code -eq 124 ]; then
+                echo -e "${YELLOW}⚠️  claudeコマンドがタイムアウトしました (30秒)${NC}"
+            else
+                echo -e "${YELLOW}⚠️  claudeコマンドの実行に失敗しました (exit code: $claude_exit_code)${NC}"
+            fi
         fi
     fi
     

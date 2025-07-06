@@ -3,6 +3,7 @@ layout: default
 title: 基本的なワークフロー
 nav_order: 4
 parent: 日本語
+nav_exclude: true
 ---
 
 # 基本的なワークフロー
