@@ -28,6 +28,9 @@ dist/
 
 # プレゼンテーション作業ファイル
 # presentations/ディレクトリ全体を除外（ローカル作業用）
+
+# テスト用のresearchディレクトリ
+/research/
 presentations/
 # ただしREADMEは追跡
 !presentations/README.md
