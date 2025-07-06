@@ -10,7 +10,7 @@ grand_parent: 日本語
 
 作成日: 2025-07-06
 
-## 現在のコマンド体系
+## 現在のコマンド体系（2025年1月更新）
 
 ### 基本構造
 ```
@@ -20,7 +20,7 @@ slideflow <command> [options] [path]
 ### コマンド一覧
 - `new <name>` - 新しいプレゼンテーションを作成
 - `preview [path]` - プレゼンテーションをプレビュー
-- `ai [options] [path]` - AI支援（デフォルト：対話的フェーズ支援）
+- `ai [options] [path]` - AI支援（包括的支援）
 - `build [format] [path]` - プレゼンテーションをビルド
 - `info [path]` - プレゼンテーション情報を表示
 - `list [path]` - 作成済みプレゼンテーションを一覧表示
@@ -28,11 +28,25 @@ slideflow <command> [options] [path]
 - `instructions` - AI指示書システムの状況確認
 - `help` - ヘルプを表示
 
-### AIコマンドのオプション
+### AIコマンドの階層構造
+
+#### 包括的AI支援（`ai`コマンド）
 - `ai [path]` - 対話的フェーズ支援
 - `ai --quick <type> [path]` - 簡易支援（tech/business/academic）
 - `ai --phase <phase> [path]` - 特定フェーズ（planning/research/design/creation/review）
 - `ai --continue [path]` - 前回セッション継続
+- `ai deep-research` - 深層調査専門機能へ
+
+#### AI深層調査機能（`ai deep-research`サブコマンド）
+- `ai deep-research init` - 調査環境初期化
+- `ai deep-research search [options] "query"` - AI Web検索
+  - `--auto`, `-a` - 自動実行モード（デフォルト：インタラクティブ）
+  - `--timeout`, `-t <秒>` - タイムアウト設定（デフォルト：300秒）
+- `ai deep-research analyze <file>` - ドキュメント分析
+- `ai deep-research add-note "content"` - メモ追加
+- `ai deep-research add-source URL` - ソース追加
+- `ai deep-research list` - 調査内容一覧
+- `ai deep-research summary` - サマリー表示
 
 ## 現状の評価
 

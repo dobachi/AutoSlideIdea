@@ -109,9 +109,38 @@ AutoSlideIdea/
    ```
 
 3. **AI支援でコンテンツ作成**
-   - **SlideFlow推奨**: 対話的フェーズ管理でステップバイステップ支援
-   - **従来方式**: AIツール（Claude Code、Gemini CLIなど）を直接使用
-   - プロンプト例: "presentations/my-presentation/slides.md にAIに関する5枚のスライドを作成してください"
+   
+   **包括的AI支援（プレゼンテーション作成全体）**
+   ```bash
+   # 対話的フェーズ支援（推奨）
+   ./slideflow/slideflow.sh ai
+   
+   # クイック作成
+   ./slideflow/slideflow.sh ai --quick tech    # 技術系
+   ./slideflow/slideflow.sh ai --quick business # ビジネス系
+   
+   # 特定フェーズ支援
+   ./slideflow/slideflow.sh ai --phase planning  # 計画フェーズ
+   ./slideflow/slideflow.sh ai --phase creation  # 作成フェーズ
+   ```
+   
+   **AI深層調査機能（調査特化）**
+   ```bash
+   # 調査環境初期化
+   ./slideflow/slideflow.sh ai deep-research init
+   
+   # AI Web検索（デフォルト：インタラクティブ）
+   ./slideflow/slideflow.sh ai deep-research search "生成AIの最新動向"
+   ./slideflow/slideflow.sh ai deep-research search --auto "AI技術"  # 自動実行
+   ./slideflow/slideflow.sh ai deep-research search -t 600 "詳細調査" # 10分タイムアウト
+   
+   # ドキュメント分析
+   ./slideflow/slideflow.sh ai deep-research analyze paper.pdf
+   
+   # 調査メモ・ソース管理
+   ./slideflow/slideflow.sh ai deep-research add-note "重要な発見"
+   ./slideflow/slideflow.sh ai deep-research add-source "https://example.com"
+   ```
 
 4. **ビルド**
    ```bash

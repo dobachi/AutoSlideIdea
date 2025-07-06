@@ -70,7 +70,50 @@ function greet(name) {
 - `---` （3つのハイフン）で新しいスライドを開始
 - 各スライドは独立したページとして表示
 
-## 3. プレビューの確認
+## 3. AI支援機能の活用
+
+### 包括的AI支援
+
+```bash
+# 対話的にプレゼンテーション全体を作成
+./slideflow/slideflow.sh ai
+
+# クイック作成（タイプ別）
+./slideflow/slideflow.sh ai --quick tech     # 技術系
+./slideflow/slideflow.sh ai --quick business  # ビジネス系
+./slideflow/slideflow.sh ai --quick academic  # 学術系
+
+# 特定フェーズの支援
+./slideflow/slideflow.sh ai --phase planning  # 計画
+./slideflow/slideflow.sh ai --phase research  # 調査
+./slideflow/slideflow.sh ai --phase design    # 設計
+./slideflow/slideflow.sh ai --phase creation  # 作成
+./slideflow/slideflow.sh ai --phase review    # レビュー
+```
+
+### AI深層調査機能
+
+プレゼンテーション作成前の詳細な調査に特化：
+
+```bash
+# 調査環境の初期化
+cd presentations/my-presentation
+./slideflow/slideflow.sh ai deep-research init
+
+# Web検索（インタラクティブモード）
+./slideflow/slideflow.sh ai deep-research search "調査したいトピック"
+
+# 自動検索（バックグラウンド実行）
+./slideflow/slideflow.sh ai deep-research search --auto "AI技術動向"
+
+# タイムアウト設定（詳細調査用）
+./slideflow/slideflow.sh ai deep-research search -t 600 "詳細な技術調査"
+
+# ドキュメント分析
+./slideflow/slideflow.sh ai deep-research analyze paper.pdf
+```
+
+## 4. プレビュー
 
 ### ローカルサーバーでのプレビュー
 
@@ -89,7 +132,7 @@ function greet(name) {
 - ファイルを編集すると自動的にブラウザが更新されます
 - 即座に変更を確認できます
 
-## 4. ビルドとエクスポート
+## 5. ビルドとエクスポート
 
 ### HTMLファイルの生成
 
@@ -108,7 +151,7 @@ npm run pdf -- presentations/my-presentation/slides.md \
   -o presentations/my-presentation/output/slides.pdf
 ```
 
-## 5. よく使うテクニック
+## 6. よく使うテクニック
 
 ### 画像の挿入
 

@@ -158,6 +158,8 @@ EOF
 research_ai_search() {
     local query="$1"
     local presentation_path="${2:-.}"
+    local interactive_mode="${3:-true}"  # デフォルトをインタラクティブモードに
+    local timeout_seconds="${SLIDEFLOW_AI_TIMEOUT:-300}"  # 環境変数からタイムアウトを取得
     local research_dir="$presentation_path/research"
     
     # ディレクトリの確認
@@ -173,55 +175,44 @@ research_ai_search() {
     # セッションディレクトリの作成
     local session_name="$(date +%Y-%m-%d-%H%M%S)-web-search"
     local session_dir="$research_dir/ai-research/$session_name"
-    mkdir -p "$session_dir"
+    mkdir -p "$session_dir"/{raw-results,analysis,sources}
     
     # クエリの保存
     echo "$query" > "$session_dir/query.txt"
     
     # AI指示の作成
-    local ai_prompt="以下のクエリについてWeb検索を行い、関連情報を調査してください。
-調査結果は必ず $session_dir/summary.md に保存してください。
+    local ai_prompt="「$query」について調査してください。
 
-クエリ: $query
+以下の手順で実行してください：
+1. WebSearchまたはWebFetchツールを使って情報を収集
+2. 調査結果を以下の形式でまとめる
+3. 結果を $session_dir/summary.md に保存
 
-調査タスク:
-1. Web検索を実行して関連情報を収集
-2. 各情報源のURLとアクセス日時を記録
-3. 重要な情報を要約
-4. 以下の形式で $session_dir/summary.md に保存
+# 調査結果
 
-必須フォーマット:
-\`\`\`markdown
-# AI調査結果
+## 概要
+- クエリ: $query
+- 日時: $(date "+%Y-%m-%d %H:%M")
 
-## 調査概要
-- **クエリ**: $query
-- **実行日時**: $(date "+%Y年%m月%d日 %H:%M:%S")
-- **使用AI**: [使用したAIツール名]
-
-## 調査結果サマリー
-1. [主要な発見1]
-2. [主要な発見2]
-3. [主要な発見3]
+## 主要な発見
+1. [具体的な発見1]
+2. [具体的な発見2] 
+3. [具体的な発見3]
 
 ## 詳細情報
+### [情報源1のタイトル]
+- URL: [実際のURL]
+- 要約: [内容の要約]
 
-### 情報源1: [タイトル]
-- **URL**: [実際のURL]
-- **アクセス日時**: [日時]
-- **要約**: [内容の要約]
+### [情報源2のタイトル]  
+- URL: [実際のURL]
+- 要約: [内容の要約]
 
-### 情報源2: [タイトル]
-- **URL**: [実際のURL]
-- **アクセス日時**: [日時]
-- **要約**: [内容の要約]
+## 引用元
+- [記事タイトル1](URL1)
+- [記事タイトル2](URL2)
 
-## 引用元一覧
-- [タイトル1](URL1) - アクセス日: [日付]
-- [タイトル2](URL2) - アクセス日: [日付]
-\`\`\`
-
-また、各情報源の詳細な内容を $session_dir/raw-results/ ディレクトリに source-001.md, source-002.md として保存してください。"
+重要: WebSearchツールで実際の情報を検索し、具体的な内容を記載してください。"
     
     # プロンプトファイルの保存
     echo "$ai_prompt" > "$session_dir/ai-prompt.txt"
@@ -235,20 +226,58 @@ research_ai_search() {
     # 1. Claude
     if command -v claude >/dev/null 2>&1; then
         echo -e "${CYAN}claudeコマンドを使用してAI検索を実行します...${NC}"
-        # Claude Codeは--printオプションが必要
-        local claude_output=$(timeout 30 claude --print "$ai_prompt" 2>&1)
-        local claude_exit_code=$?
         
-        if [ $claude_exit_code -eq 0 ] && [ -n "$claude_output" ]; then
-            echo "$claude_output" > "$session_dir/summary.md"
+        # デバッグ: 実行コマンドを表示
+        echo -e "${BLUE}実行コマンド: claude --print \"<プロンプト>\"${NC}"
+        echo -e "${BLUE}プロンプト長: ${#ai_prompt} 文字${NC}"
+        
+        # プロンプトを一時ファイルに保存（デバッグ用）
+        echo "$ai_prompt" > "$session_dir/claude-prompt.txt"
+        echo -e "${BLUE}プロンプトを保存: $session_dir/claude-prompt.txt${NC}"
+        
+        # インタラクティブモードかどうかで処理を分岐
+        if [ "$interactive_mode" = "true" ]; then
+            echo -e "${BLUE}🎯 インタラクティブモードでClaudeを起動します${NC}"
+            echo -e "${YELLOW}Claude Codeが開きます。作業が完了したら終了してください。${NC}"
+            echo -e "${YELLOW}プロンプト: 上記の調査を実行し、結果をsummary.mdに保存してください${NC}"
+            echo ""
+            
+            # インタラクティブモードで実行（タイムアウトなし）
+            claude "$ai_prompt" --add-dir "$session_dir" --allowedTools "Write Read Edit WebFetch WebSearch Bash(mkdir:*) Bash(touch:*)"
+            local claude_exit_code=$?
+        else
+            # 従来の自動実行モード
+            local claude_cmd="claude --print \"$ai_prompt\" --add-dir \"$session_dir\" --allowedTools \"Write Read Edit WebFetch WebSearch Bash(mkdir:*) Bash(touch:*)\""
+            echo -e "${BLUE}実際のコマンド: $claude_cmd${NC}"
+            echo -e "${CYAN}Claudeを実行中... (タイムアウト: ${timeout_seconds}秒)${NC}"
+            timeout "$timeout_seconds" claude --print "$ai_prompt" --add-dir "$session_dir" --allowedTools "Write Read Edit WebFetch WebSearch Bash(mkdir:*) Bash(touch:*)" > "$session_dir/claude_output.txt" 2>&1
+            local claude_exit_code=$?
+        fi
+        
+        echo -e "${CYAN}Exit code: $claude_exit_code${NC}"
+        
+        # 出力を確認
+        if [ -f "$session_dir/claude_output.txt" ]; then
+            local output_size=$(wc -c < "$session_dir/claude_output.txt")
+            echo -e "${CYAN}Claude出力サイズ: ${output_size} バイト${NC}"
+            if [ $output_size -gt 0 ]; then
+                echo -e "${CYAN}出力の最初の200文字:${NC}"
+                head -c 200 "$session_dir/claude_output.txt"
+                echo ""
+            fi
+        fi
+        
+        # ファイルが作成されたかチェック
+        if [ -f "$session_dir/summary.md" ]; then
             ai_executed=true
-            echo -e "${GREEN}✅ Claude検索完了${NC}"
+            echo -e "${GREEN}✅ Claude検索完了 - summary.mdが作成されました${NC}"
         else
             if [ $claude_exit_code -eq 124 ]; then
-                echo -e "${YELLOW}⚠️  claudeコマンドがタイムアウトしました (30秒)${NC}"
+                echo -e "${YELLOW}⚠️  claudeコマンドがタイムアウトしました (${timeout_seconds}秒)${NC}"
+            elif [ $claude_exit_code -eq 0 ]; then
+                echo -e "${YELLOW}⚠️  claudeコマンドは成功しましたが、summary.mdが作成されませんでした${NC}"
             else
                 echo -e "${YELLOW}⚠️  claudeコマンドの実行に失敗しました (exit code: $claude_exit_code)${NC}"
-                echo -e "${YELLOW}     エラー出力: ${claude_output:0:100}${NC}"
             fi
         fi
     fi
@@ -256,7 +285,7 @@ research_ai_search() {
     # 2. Gemini
     if [ "$ai_executed" = false ] && command -v gemini >/dev/null 2>&1; then
         echo -e "${CYAN}geminiコマンドを使用してAI検索を実行します...${NC}"
-        result=$(timeout 60 gemini "$ai_prompt" 2>/dev/null)
+        result=$(timeout "$timeout_seconds" gemini "$ai_prompt" 2>/dev/null)
         if [ $? -eq 0 ] && [ -n "$result" ]; then
             echo "$result" > "$session_dir/summary.md"
             ai_executed=true
@@ -268,7 +297,7 @@ research_ai_search() {
     # 3. llm
     if [ "$ai_executed" = false ] && command -v llm >/dev/null 2>&1; then
         echo -e "${CYAN}llmコマンドを使用してAI検索を実行します...${NC}"
-        result=$(timeout 60 llm "$ai_prompt" 2>/dev/null)
+        result=$(timeout "$timeout_seconds" llm "$ai_prompt" 2>/dev/null)
         if [ $? -eq 0 ] && [ -n "$result" ]; then
             echo "$result" > "$session_dir/summary.md"
             ai_executed=true
@@ -281,7 +310,7 @@ research_ai_search() {
     if [ "$ai_executed" = false ] && command -v ollama >/dev/null 2>&1; then
         echo -e "${CYAN}ollamaを使用してAI検索を実行します...${NC}"
         # Ollamaは少し異なる形式
-        result=$(timeout 60 ollama run llama2 "$ai_prompt" 2>/dev/null)
+        result=$(timeout "$timeout_seconds" ollama run llama2 "$ai_prompt" 2>/dev/null)
         if [ $? -eq 0 ] && [ -n "$result" ]; then
             echo "$result" > "$session_dir/summary.md"
             ai_executed=true
@@ -293,7 +322,7 @@ research_ai_search() {
     # 5. Continue (VS Code Extension CLI)
     if [ "$ai_executed" = false ] && command -v continue >/dev/null 2>&1; then
         echo -e "${CYAN}continueコマンドを使用してAI検索を実行します...${NC}"
-        result=$(timeout 60 continue ask "$ai_prompt" 2>/dev/null)
+        result=$(timeout "$timeout_seconds" continue ask "$ai_prompt" 2>/dev/null)
         if [ $? -eq 0 ] && [ -n "$result" ]; then
             echo "$result" > "$session_dir/summary.md"
             ai_executed=true
@@ -306,7 +335,7 @@ research_ai_search() {
     if [ "$ai_executed" = false ] && command -v aider >/dev/null 2>&1; then
         echo -e "${CYAN}aiderを使用してAI検索を実行します...${NC}"
         # aiderは一時ファイル経由で実行
-        echo "$ai_prompt" | timeout 60 aider --no-git --yes --message-file - 2>/dev/null > "$session_dir/summary.md"
+        echo "$ai_prompt" | timeout "$timeout_seconds" aider --no-git --yes --message-file - 2>/dev/null > "$session_dir/summary.md"
         if [ $? -eq 0 ] && [ -s "$session_dir/summary.md" ]; then
             ai_executed=true
         else
@@ -317,7 +346,7 @@ research_ai_search() {
     # 7. GitHub Copilot CLI
     if [ "$ai_executed" = false ] && command -v gh >/dev/null 2>&1 && gh copilot --version >/dev/null 2>&1; then
         echo -e "${CYAN}GitHub Copilot CLIを使用してAI検索を実行します...${NC}"
-        result=$(timeout 60 gh copilot suggest "$ai_prompt" 2>/dev/null)
+        result=$(timeout "$timeout_seconds" gh copilot suggest "$ai_prompt" 2>/dev/null)
         if [ $? -eq 0 ] && [ -n "$result" ]; then
             echo "$result" > "$session_dir/summary.md"
             ai_executed=true
@@ -480,16 +509,24 @@ $(cat "$file_path" 2>/dev/null | head -5000)
     if command -v claude >/dev/null 2>&1; then
         echo -e "${CYAN}claudeコマンドを使用してドキュメント分析を実行します...${NC}"
         # Claude Codeは--printオプションが必要
-        local claude_output=$(timeout 30 claude --print "$full_prompt" 2>&1)
+        # 研究に必要な最小限のツールのみを許可
+        # --printを使用し、バックグラウンドで実行
+        (timeout "$timeout_seconds" claude --print "$full_prompt" --add-dir "$session_dir" --allowedTools "Write Read Edit WebFetch WebSearch Bash(mkdir:*) Bash(touch:*)" > /dev/null 2>&1) &
+        local claude_pid=$!
+        
+        # プロセスの終了を待つ
+        wait $claude_pid
         local claude_exit_code=$?
         
-        if [ $claude_exit_code -eq 0 ] && [ -n "$claude_output" ]; then
-            echo "$claude_output" > "$session_dir/analysis.md"
+        # ファイルが作成されたかチェック
+        if [ -f "$session_dir/analysis.md" ]; then
             ai_executed=true
-            echo -e "${GREEN}✅ Claude分析完了${NC}"
+            echo -e "${GREEN}✅ Claude分析完了 - analysis.mdが作成されました${NC}"
         else
             if [ $claude_exit_code -eq 124 ]; then
-                echo -e "${YELLOW}⚠️  claudeコマンドがタイムアウトしました (30秒)${NC}"
+                echo -e "${YELLOW}⚠️  claudeコマンドがタイムアウトしました (${timeout_seconds}秒)${NC}"
+            elif [ $claude_exit_code -eq 0 ]; then
+                echo -e "${YELLOW}⚠️  claudeコマンドは成功しましたが、analysis.mdが作成されませんでした${NC}"
             else
                 echo -e "${YELLOW}⚠️  claudeコマンドの実行に失敗しました (exit code: $claude_exit_code)${NC}"
             fi
@@ -499,7 +536,7 @@ $(cat "$file_path" 2>/dev/null | head -5000)
     # 2. Gemini
     if [ "$ai_executed" = false ] && command -v gemini >/dev/null 2>&1; then
         echo -e "${CYAN}geminiコマンドを使用してドキュメント分析を実行します...${NC}"
-        result=$(timeout 60 gemini "$full_prompt" 2>/dev/null)
+        result=$(timeout "$timeout_seconds" gemini "$full_prompt" 2>/dev/null)
         if [ $? -eq 0 ] && [ -n "$result" ]; then
             echo "$result" > "$session_dir/analysis.md"
             ai_executed=true
@@ -509,7 +546,7 @@ $(cat "$file_path" 2>/dev/null | head -5000)
     # 3. llm
     if [ "$ai_executed" = false ] && command -v llm >/dev/null 2>&1; then
         echo -e "${CYAN}llmコマンドを使用してドキュメント分析を実行します...${NC}"
-        result=$(timeout 60 llm "$full_prompt" 2>/dev/null)
+        result=$(timeout "$timeout_seconds" llm "$full_prompt" 2>/dev/null)
         if [ $? -eq 0 ] && [ -n "$result" ]; then
             echo "$result" > "$session_dir/analysis.md"
             ai_executed=true
@@ -519,7 +556,7 @@ $(cat "$file_path" 2>/dev/null | head -5000)
     # 4. Ollama
     if [ "$ai_executed" = false ] && command -v ollama >/dev/null 2>&1; then
         echo -e "${CYAN}ollamaを使用してドキュメント分析を実行します...${NC}"
-        result=$(timeout 60 ollama run llama2 "$full_prompt" 2>/dev/null)
+        result=$(timeout "$timeout_seconds" ollama run llama2 "$full_prompt" 2>/dev/null)
         if [ $? -eq 0 ] && [ -n "$result" ]; then
             echo "$result" > "$session_dir/analysis.md"
             ai_executed=true
@@ -529,7 +566,7 @@ $(cat "$file_path" 2>/dev/null | head -5000)
     # 5. Continue
     if [ "$ai_executed" = false ] && command -v continue >/dev/null 2>&1; then
         echo -e "${CYAN}continueコマンドを使用してドキュメント分析を実行します...${NC}"
-        result=$(timeout 60 continue ask "$full_prompt" 2>/dev/null)
+        result=$(timeout "$timeout_seconds" continue ask "$full_prompt" 2>/dev/null)
         if [ $? -eq 0 ] && [ -n "$result" ]; then
             echo "$result" > "$session_dir/analysis.md"
             ai_executed=true
@@ -539,7 +576,7 @@ $(cat "$file_path" 2>/dev/null | head -5000)
     # 6. aider
     if [ "$ai_executed" = false ] && command -v aider >/dev/null 2>&1; then
         echo -e "${CYAN}aiderを使用してドキュメント分析を実行します...${NC}"
-        echo "$full_prompt" | timeout 60 aider --no-git --yes --message-file - 2>/dev/null > "$session_dir/analysis.md"
+        echo "$full_prompt" | timeout "$timeout_seconds" aider --no-git --yes --message-file - 2>/dev/null > "$session_dir/analysis.md"
         if [ $? -eq 0 ] && [ -s "$session_dir/analysis.md" ]; then
             ai_executed=true
         fi
@@ -548,7 +585,7 @@ $(cat "$file_path" 2>/dev/null | head -5000)
     # 7. GitHub Copilot CLI
     if [ "$ai_executed" = false ] && command -v gh >/dev/null 2>&1 && gh copilot --version >/dev/null 2>&1; then
         echo -e "${CYAN}GitHub Copilot CLIを使用してドキュメント分析を実行します...${NC}"
-        result=$(timeout 60 gh copilot suggest "$full_prompt" 2>/dev/null)
+        result=$(timeout "$timeout_seconds" gh copilot suggest "$full_prompt" 2>/dev/null)
         if [ $? -eq 0 ] && [ -n "$result" ]; then
             echo "$result" > "$session_dir/analysis.md"
             ai_executed=true

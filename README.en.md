@@ -90,8 +90,38 @@ AutoSlideIdea/
    ```
 
 3. **AI-Assisted Content Creation**
-   - Use AI tools (Claude Code, Gemini CLI, etc.)
-   - Example prompt: "Create 5 slides about AI in presentations/my-presentation/slides.md"
+   
+   **Comprehensive AI Support (Full Presentation Creation)**
+   ```bash
+   # Interactive phase support (recommended)
+   ./slideflow/slideflow.sh ai
+   
+   # Quick creation
+   ./slideflow/slideflow.sh ai --quick tech     # Technical
+   ./slideflow/slideflow.sh ai --quick business # Business
+   
+   # Phase-specific support
+   ./slideflow/slideflow.sh ai --phase planning  # Planning phase
+   ./slideflow/slideflow.sh ai --phase creation  # Creation phase
+   ```
+   
+   **AI Deep Research (Research-focused)**
+   ```bash
+   # Initialize research environment
+   ./slideflow/slideflow.sh ai deep-research init
+   
+   # AI Web search (default: interactive)
+   ./slideflow/slideflow.sh ai deep-research search "latest AI trends"
+   ./slideflow/slideflow.sh ai deep-research search --auto "AI tech"    # Auto mode
+   ./slideflow/slideflow.sh ai deep-research search -t 600 "detailed"  # 10min timeout
+   
+   # Document analysis
+   ./slideflow/slideflow.sh ai deep-research analyze paper.pdf
+   
+   # Research management
+   ./slideflow/slideflow.sh ai deep-research add-note "important finding"
+   ./slideflow/slideflow.sh ai deep-research add-source "https://example.com"
+   ```
 
 4. **Build**
    ```bash

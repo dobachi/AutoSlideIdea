@@ -51,7 +51,6 @@ $(msg "sf.commands"):
     phases              $(msg "cmd.phases.desc")
     instructions        $(msg "cmd.instructions.desc")
     config              $(msg "cmd.config.desc")
-    research [cmd] [path] $(msg "cmd.research.desc")
     help                $(msg "cmd.help.desc")
 
 $(msg "sf.examples"):
@@ -70,6 +69,7 @@ $(msg "sf.options"):
     ai --quick <type> [path]      $(msg "ai.option.quick")
     ai --phase <phase> [path]     $(msg "ai.option.phase")
     ai --continue [path]          $(msg "ai.option.continue")
+    ai deep-research              $(msg "ai.option.deep-research")
 
 $(msg "note.path_omitted")
 
@@ -185,6 +185,11 @@ cmd_ai() {
                 main_interactive "continue"
             )
             ;;
+        deep-research)
+            # 深層調査モード
+            shift  # "deep-research"を除去
+            cmd_research "$@"
+            ;;
         tech|business|academic)
             # 後方互換性：直接タイプ指定
             path="${2:-.}"
@@ -225,7 +230,13 @@ cmd_ai() {
                 )
             else
                 echo -e "${YELLOW}$(msg "ai.unknown_option" "$first_arg")${NC}"
-                echo "$(msg "ai.usage_ai")"
+                echo ""
+                echo "使用法:"
+                echo "  slideflow ai                     # 対話的フェーズ支援"
+                echo "  slideflow ai --quick <type>      # 簡易支援 (tech/business/academic)"
+                echo "  slideflow ai --phase <phase>     # 特定フェーズ支援"
+                echo "  slideflow ai --continue          # 前回のセッション継続"
+                echo "  slideflow ai deep-research       # 深層調査モード"
                 return 1
             fi
             ;;
@@ -645,12 +656,63 @@ cmd_research() {
             research_interactive "$@"
             ;;
         ai-search|search)
+            # デフォルト値
+            local interactive_flag=true
+            local timeout_seconds=300
+            
+            # オプション解析
+            while [[ "$1" =~ ^- ]]; do
+                case "$1" in
+                    --auto|-a)
+                        interactive_flag=false
+                        shift
+                        ;;
+                    --timeout|-t)
+                        shift
+                        if [[ "$1" =~ ^[0-9]+$ ]]; then
+                            timeout_seconds="$1"
+                            shift
+                        else
+                            echo -e "${YELLOW}⚠️  --timeoutには数値を指定してください${NC}"
+                            exit 1
+                        fi
+                        ;;
+                    *)
+                        echo -e "${YELLOW}⚠️  不明なオプション: $1${NC}"
+                        exit 1
+                        ;;
+                esac
+            done
+            
             if [ -z "$1" ]; then
                 echo -e "${YELLOW}検索クエリを指定してください${NC}"
-                echo "使用法: slideflow research ai-search \"クエリ\" [path]"
+                echo "使用法: slideflow research ai-search [オプション] \"クエリ\" [path]"
+                echo ""
+                echo "オプション:"
+                echo "  --auto, -a           自動実行モード（デフォルト：インタラクティブ）"
+                echo "  --timeout, -t <秒>   タイムアウト時間（デフォルト：300秒）"
+                echo ""
+                echo "例:"
+                echo "  slideflow research ai-search \"AI技術\"                    # インタラクティブモード"
+                echo "  slideflow research ai-search --auto \"AI技術\"             # 自動実行モード"
+                echo "  slideflow research ai-search -t 600 \"AI技術\"             # タイムアウト10分"
+                echo "  slideflow research ai-search --auto -t 120 \"AI技術\"      # 自動実行、2分タイムアウト"
                 exit 1
             fi
-            research_ai_search "$@"
+            
+            local query="$1"
+            local path="${2:-.}"
+            
+            # パスが指定されていない場合、現在のディレクトリがプレゼンテーションかチェック
+            if [ "$path" = "." ] && [ ! -f "./slides.md" ]; then
+                echo -e "${YELLOW}⚠️  現在のディレクトリはプレゼンテーションディレクトリではありません${NC}"
+                echo "ヒント: プレゼンテーションディレクトリを指定するか、プレゼンテーションディレクトリ内で実行してください"
+                echo "例: slideflow research ai-search \"$query\" /path/to/presentation"
+                exit 1
+            fi
+            
+            # 環境変数でタイムアウトを渡す
+            SLIDEFLOW_AI_TIMEOUT="$timeout_seconds" research_ai_search "$query" "$path" "$interactive_flag"
             ;;
         ai-analyze|analyze)
             if [ -z "$1" ]; then
@@ -661,10 +723,10 @@ cmd_research() {
             research_ai_analyze "$@"
             ;;
         ""|help|--help|-h)
-            echo -e "${BLUE}📚 SlideFlow Research - 調査フェーズサポート${NC}"
+            echo -e "${BLUE}🔍 SlideFlow AI Deep Research - 深層調査専門機能${NC}"
             echo ""
             echo "使用法:"
-            echo "  slideflow research <subcommand> [options] [path]"
+            echo "  slideflow ai deep-research <subcommand> [options] [path]"
             echo ""
             echo "サブコマンド:"
             echo "  init [path]              調査ディレクトリを初期化"
@@ -672,19 +734,22 @@ cmd_research() {
             echo "  add-source URL [path]    ソース情報を追加"
             echo "  list [path]              調査内容を一覧表示"
             echo "  summary [path]           調査サマリーを表示"
-            echo "  ai-search \"クエリ\" [path] AI Web検索を実行"
-            echo "  ai-analyze <file> [path] AIドキュメント分析を実行"
+            echo "  ai-search [オプション] \"クエリ\" [path] AI Web検索を実行"
+            echo "    --auto, -a               自動実行モード（デフォルト：インタラクティブ）"
+            echo "    --timeout, -t <秒>       タイムアウト時間（デフォルト：300秒）"
+            echo "  ai-analyze <file> [path]   AIドキュメント分析を実行"
             echo "  interactive [path]       インタラクティブモード"
             echo ""
             echo "例:"
-            echo "  slideflow research init"
-            echo "  slideflow research add-note \"重要な発見：AIの活用方法\""
-            echo "  slideflow research add-source \"https://example.com/article\""
-            echo "  slideflow research interactive"
+            echo "  slideflow ai deep-research init"
+            echo "  slideflow ai deep-research add-note \"重要な発見：AIの活用方法\""
+            echo "  slideflow ai deep-research add-source \"https://example.com/article\""
+            echo "  slideflow ai deep-research search \"生成AIの最新動向\""
+            echo "  slideflow ai deep-research search -t 600 \"機械学習アルゴリズム\""
             ;;
         *)
             echo -e "${YELLOW}不明なサブコマンド: $subcommand${NC}"
-            echo "ヘルプを表示: slideflow research help"
+            echo "ヘルプを表示: slideflow ai deep-research help"
             exit 1
             ;;
     esac
@@ -831,9 +896,6 @@ main() {
             ;;
         config)
             cmd_config "$@"
-            ;;
-        research)
-            cmd_research "$@"
             ;;
         help|--help|-h)
             show_help

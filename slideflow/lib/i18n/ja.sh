@@ -36,6 +36,7 @@ MESSAGES=(
     ["ai.option.quick"]="簡易支援（tech/business/academic）"
     ["ai.option.phase"]="特定フェーズ（planning/research/design/creation/review）"
     ["ai.option.continue"]="前回セッション継続"
+    ["ai.option.deep-research"]="深層調査専門機能"
     
     # エラーメッセージ
     ["error.cannot_create_dir"]="エラー: ディレクトリを作成できません: %1"

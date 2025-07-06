@@ -88,3 +88,7 @@ instructions/ai_instruction_kits/
 # SlideFlow関連
 .slideflow_session/
 test-presentations/
+
+# Research data files
+research/sources/data/*.csv
+research/sources/data/*.xlsx

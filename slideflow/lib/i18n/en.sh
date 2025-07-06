@@ -36,6 +36,7 @@ MESSAGES=(
     ["ai.option.quick"]="Quick support (tech/business/academic)"
     ["ai.option.phase"]="Specific phase (planning/research/design/creation/review)"
     ["ai.option.continue"]="Continue previous session"
+    ["ai.option.deep-research"]="Deep research specialized features"
     
     # Error messages
     ["error.cannot_create_dir"]="Error: Cannot create directory: %1"

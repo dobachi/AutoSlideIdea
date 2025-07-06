@@ -70,7 +70,50 @@ function greet(name) {
 - Use `---` (three hyphens) to start a new slide
 - Each slide is displayed as an independent page
 
-## 3. Preview
+## 3. AI-Assisted Features
+
+### Comprehensive AI Support
+
+```bash
+# Interactive full presentation creation
+./slideflow/slideflow.sh ai
+
+# Quick creation by type
+./slideflow/slideflow.sh ai --quick tech     # Technical
+./slideflow/slideflow.sh ai --quick business  # Business
+./slideflow/slideflow.sh ai --quick academic  # Academic
+
+# Phase-specific support
+./slideflow/slideflow.sh ai --phase planning  # Planning
+./slideflow/slideflow.sh ai --phase research  # Research
+./slideflow/slideflow.sh ai --phase design    # Design
+./slideflow/slideflow.sh ai --phase creation  # Creation
+./slideflow/slideflow.sh ai --phase review    # Review
+```
+
+### AI Deep Research Features
+
+Specialized for detailed research before presentation creation:
+
+```bash
+# Initialize research environment
+cd presentations/my-presentation
+./slideflow/slideflow.sh ai deep-research init
+
+# Web search (interactive mode)
+./slideflow/slideflow.sh ai deep-research search "topic to research"
+
+# Automatic search (background execution)
+./slideflow/slideflow.sh ai deep-research search --auto "AI trends"
+
+# Timeout setting (for detailed research)
+./slideflow/slideflow.sh ai deep-research search -t 600 "detailed tech research"
+
+# Document analysis
+./slideflow/slideflow.sh ai deep-research analyze paper.pdf
+```
+
+## 5. Preview
 
 ### Local Server Preview
 
@@ -89,7 +132,7 @@ Open `http://localhost:8000` in your browser to view the preview
 - Browser automatically updates when files are edited
 - See changes instantly
 
-## 4. Build and Export
+## 5. Build and Export
 
 ### Generate HTML Files
 
@@ -108,7 +151,7 @@ npm run pdf -- presentations/my-presentation/slides.md \
   -o presentations/my-presentation/output/slides.pdf
 ```
 
-## 5. Common Techniques
+## 6. Common Techniques
 
 ### Inserting Images
 
