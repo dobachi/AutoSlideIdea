@@ -1,3 +1,10 @@
+---
+layout: default
+title: SlideFlowコマンド設計
+nav_order: 6
+parent: 日本語
+---
+
 # SlideFlow コマンド体系の設計考察
 
 作成日: 2025-07-06
