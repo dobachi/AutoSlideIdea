@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Features
-nav_order: 30
+nav_order: 5
 has_children: true
 parent: English
 ---

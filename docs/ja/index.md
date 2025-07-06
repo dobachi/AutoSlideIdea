@@ -39,27 +39,33 @@ Markdownベースのシンプルなプレゼンテーション作成ツール
 
 ## 📚 ドキュメント
 
-### 入門
-- [セットアップ]({{ site.baseurl }}/ja/getting-started/setup) - 初期設定
-- [基本ワークフロー]({{ site.baseurl }}/ja/getting-started/basic-workflow) - 基本的な作業手順
-- [インストール]({{ site.baseurl }}/ja/getting-started/installation) - 環境構築
+### ユーザーガイド
+- [基本的な使い方]({{ site.baseurl }}/ja/user-guide/basic-usage) - AutoSlideIdeaの基本操作
+- [Markdown記法]({{ site.baseurl }}/ja/user-guide/markdown-syntax) - スライド作成のための記法
+- [テーマの使い方]({{ site.baseurl }}/ja/user-guide/themes) - デザインテーマの適用
 
 ### ガイド
 - [高度なワークフロー]({{ site.baseurl }}/ja/guides/advanced-workflow) - 上級者向け機能
-- [Tips集]({{ site.baseurl }}/ja/guides/tips) - 便利な使い方
+- [Tips集]({{ site.baseurl }}/ja/guides/tips) - 便利な使い方とベストプラクティス
 
 ### 機能
 - [CSSテーマ]({{ site.baseurl }}/ja/features/css-themes) - デザインカスタマイズ
-- [Mermaid図表]({{ site.baseurl }}/ja/features/mermaid) - 図表の作成
-- [GitHub Pages]({{ site.baseurl }}/ja/features/github-pages) - オンライン公開
+- [Mermaid図表]({{ site.baseurl }}/ja/features/mermaid) - フローチャートと図表の作成
+- [GitHub Pages]({{ site.baseurl }}/ja/features/github-pages) - オンライン公開とホスティング
 
 ### リファレンス
-- [API仕様]({{ site.baseurl }}/ja/reference/api-reference) - 技術仕様
+- [API仕様]({{ site.baseurl }}/ja/reference/api-reference) - プログラムからの利用方法
+- [コマンドリファレンス]({{ site.baseurl }}/ja/reference/) - SlideFlowコマンドの詳細
 
-### 開発
-- [貢献方法]({{ site.baseurl }}/ja/development/contributing) - プロジェクトへの参加
-- [ローカライゼーション]({{ site.baseurl }}/ja/development/localization) - 翻訳について
-- [ロードマップ]({{ site.baseurl }}/ja/development/roadmap) - 今後の計画
+### 開発者向け
+- [貢献方法]({{ site.baseurl }}/ja/development/contributing) - プロジェクトへの参加方法
+- [ローカライゼーション]({{ site.baseurl }}/ja/development/localization) - 翻訳とローカライズ
+- [ロードマップ]({{ site.baseurl }}/ja/development/roadmap) - 今後の開発計画
+- [ドキュメント構造分析]({{ site.baseurl }}/ja/development/structure-analysis) - サイト構造の詳細
+- [SlideFlowコマンド設計]({{ site.baseurl }}/ja/development/command-design) - コマンド体系の設計
+
+### デモ・サンプル
+- [サンプルプレゼンテーション]({{ site.baseurl }}/ja/demos/) - 実際の作成例と出力結果
 
 ## ✨ 特徴
 

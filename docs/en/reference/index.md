@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Reference
-nav_order: 60
+nav_order: 6
 has_children: true
 parent: English
 ---

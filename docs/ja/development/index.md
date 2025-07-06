@@ -2,7 +2,7 @@
 layout: default
 title: 開発者向け
 parent: 日本語
-nav_order: 6
+nav_order: 7
 has_children: true
 ---
 

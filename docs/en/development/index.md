@@ -1,7 +1,7 @@
 ---
 layout: default
 title: For Developers
-nav_order: 16
+nav_order: 7
 has_children: true
 parent: English
 ---

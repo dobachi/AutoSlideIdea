@@ -39,26 +39,30 @@ A simple Markdown-based presentation creation tool
 
 ## 📚 Documentation
 
-### Getting Started
-- [Setup]({{ site.baseurl }}/en/getting-started/setup) - Initial configuration
-- [Basic Workflow]({{ site.baseurl }}/en/getting-started/basic-workflow) - Essential procedures
-- [Installation]({{ site.baseurl }}/en/getting-started/installation) - Environment setup
+### User Guide
+- [Basic Usage]({{ site.baseurl }}/en/user-guide/basic-usage) - Essential AutoSlideIdea operations
+- [Markdown Syntax]({{ site.baseurl }}/en/user-guide/markdown-syntax) - Presentation-specific markup
+- [Using Themes]({{ site.baseurl }}/en/user-guide/themes) - Applying design themes
 
 ### Guides
-- [Advanced Workflow]({{ site.baseurl }}/en/guides/advanced-workflow) - Advanced features
-- [Tips & Tricks]({{ site.baseurl }}/en/guides/tips) - Useful techniques
+- [Advanced Workflow]({{ site.baseurl }}/en/guides/advanced-workflow) - Advanced features and techniques
+- [Tips & Tricks]({{ site.baseurl }}/en/guides/tips) - Best practices and useful techniques
 
 ### Features
 - [CSS Themes]({{ site.baseurl }}/en/features/css-themes) - Design customization
-- [Mermaid Diagrams]({{ site.baseurl }}/en/features/mermaid) - Creating diagrams
-- [GitHub Pages]({{ site.baseurl }}/en/features/github-pages) - Online publishing
+- [Mermaid Diagrams]({{ site.baseurl }}/en/features/mermaid) - Creating flowcharts and diagrams
+- [GitHub Pages]({{ site.baseurl }}/en/features/github-pages) - Online publishing and hosting
 
 ### Reference
-- [API Reference]({{ site.baseurl }}/en/reference/api-reference) - Technical specifications
+- [API Reference]({{ site.baseurl }}/en/reference/api-reference) - Programming interface
+- [Command Reference]({{ site.baseurl }}/en/reference/) - SlideFlow command details
 
 ### Development
-- [Contributing]({{ site.baseurl }}/en/development/contributing) - How to contribute
-- [Roadmap]({{ site.baseurl }}/en/development/roadmap) - Future plans
+- [Contributing]({{ site.baseurl }}/en/development/contributing) - How to contribute to the project
+- [Roadmap]({{ site.baseurl }}/en/development/roadmap) - Future development plans
+
+### Demos & Samples
+- [Sample Presentations]({{ site.baseurl }}/en/demos/) - Example presentations and outputs
 
 ## ✨ Key Features
 
