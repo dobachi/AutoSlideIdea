@@ -1,6 +1,7 @@
 ---
 layout: default
 title: 開発者向け
+parent: 日本語
 nav_order: 6
 has_children: true
 ---

@@ -2,7 +2,7 @@
 layout: default
 title: 基本的なワークフロー
 nav_order: 4
-parent: はじめに
+parent: 日本語
 ---
 
 # 基本的なワークフロー

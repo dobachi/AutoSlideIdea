@@ -2,7 +2,7 @@
 layout: default
 title: セットアップ詳細
 nav_order: 3
-parent: はじめに
+parent: 日本語
 ---
 
 # セットアップガイド

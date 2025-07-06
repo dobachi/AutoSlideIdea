@@ -57,6 +57,32 @@ mkdir -p "$SESSION_DIR"/{raw-results,analysis}
 - summary.md: AI生成の要約
 - raw-results/: 各ソースの全文
 
+### AI自動実行オプション
+
+1. **AIコマンド対応**: 以下のコマンドがインストールされている場合は自動実行（優先順位順）
+   - `claude`: Anthropic CLI
+   - `gemini`: Google Generative AI CLI
+   - `llm`: 汎用LLMツール
+   - `ollama`: ローカルLLM
+2. **インタラクティブモード**: `slideflow research interactive`でAI結果を貼り付け
+3. **手動実行**: プロンプトをコピーしてAIツールで実行
+
+### 使用例
+
+```bash
+# AI Web検索（自動実行）
+slideflow research ai-search "生成AIの最新動向"
+
+# ドキュメント分析（自動実行）
+slideflow research ai-analyze document.pdf
+
+# インタラクティブモード
+slideflow research interactive
+research> ai-search AI活用事例
+research> ai-result
+[AI結果を貼り付け]
+```
+
 ## コミット時の注意事項
 - AIツール名（Claude等）をコミットメッセージに含めないでください
 - クリーンなコミットが必要な場合は `scripts/commit.sh` を使用してください

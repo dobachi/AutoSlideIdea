@@ -2,7 +2,7 @@
 layout: default
 title: クイックスタート
 nav_order: 2
-parent: はじめに
+parent: 日本語
 ---
 
 # クイックスタート

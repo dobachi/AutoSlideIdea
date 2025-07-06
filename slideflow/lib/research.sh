@@ -166,7 +166,7 @@ research_ai_search() {
         research_init "$presentation_path"
     fi
     
-    echo -e "${BLUE}🔍 AI Web検索プロンプトを生成します...${NC}"
+    echo -e "${BLUE}🔍 AI Web検索を実行します...${NC}"
     echo -e "クエリ: $query"
     echo ""
     
@@ -226,13 +226,67 @@ research_ai_search() {
     # プロンプトファイルの保存
     echo "$ai_prompt" > "$session_dir/ai-prompt.txt"
     
+    # 利用可能なAIコマンドを検索して自動実行
+    local ai_command=""
+    local ai_command_name=""
+    
+    # 優先順位: claude > gemini > llm > ollama
+    if command -v claude >/dev/null 2>&1; then
+        ai_command="claude"
+        ai_command_name="claude"
+    elif command -v gemini >/dev/null 2>&1; then
+        ai_command="gemini"
+        ai_command_name="gemini"
+    elif command -v llm >/dev/null 2>&1; then
+        ai_command="llm"
+        ai_command_name="llm"
+    elif command -v ollama >/dev/null 2>&1; then
+        # Ollamaの場合はモデル名を指定
+        ai_command="ollama run llama2"
+        ai_command_name="ollama"
+    fi
+    
+    if [ -n "$ai_command" ]; then
+        echo -e "${CYAN}${ai_command_name}コマンドを使用してAI検索を実行します...${NC}"
+        
+        # AIコマンドで実行（タイムアウト60秒）
+        local result=$(timeout 60 $ai_command "$ai_prompt" 2>/dev/null)
+        
+        if [ $? -eq 0 ] && [ -n "$result" ]; then
+            # 結果を保存
+            echo "$result" > "$session_dir/summary.md"
+            echo -e "${GREEN}✅ AI検索が完了し、結果を保存しました${NC}"
+            echo -e "保存先: $session_dir/summary.md"
+            
+            # ステータスを更新
+            local temp_file=$(mktemp)
+            jq '.status = "completed"' "$session_dir/metadata.json" > "$temp_file"
+            mv "$temp_file" "$session_dir/metadata.json"
+            
+            # サマリーの更新
+            update_research_summary "$presentation_path"
+            return 0
+        else
+            echo -e "${YELLOW}⚠️  ${ai_command_name}コマンドの実行に失敗しました${NC}"
+        fi
+    fi
+    
+    # llmコマンドが使えない場合は手動実行を促す
     echo -e "${GREEN}✅ AI検索プロンプトを作成しました${NC}"
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo "$ai_prompt"
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
-    echo -e "${YELLOW}👉 上記のプロンプトをAIツール（Claude Code、Cursor等）にコピーして実行してください${NC}"
-    echo -e "${YELLOW}   AIが調査結果を自動的に保存します: $session_dir${NC}"
+    echo -e "${YELLOW}👉 以下のいずれかの方法で実行してください:${NC}"
+    echo -e "${YELLOW}   1. 上記のプロンプトをAIツール（Claude Code、Cursor等）にコピー${NC}"
+    echo -e "${YELLOW}   2. AIコマンドをインストール:${NC}"
+    echo -e "${YELLOW}      - claude: pip install anthropic-cli${NC}"
+    echo -e "${YELLOW}      - gemini: pip install google-generativeai-cli${NC}"
+    echo -e "${YELLOW}      - llm: pip install llm${NC}"
+    echo -e "${YELLOW}      - ollama: https://ollama.ai${NC}"
+    echo -e "${YELLOW}   3. インタラクティブモードで結果を貼り付け: slideflow research interactive${NC}"
+    echo ""
+    echo -e "${YELLOW}AIが調査結果を保存する場所: $session_dir${NC}"
     echo ""
     
     # メタデータの保存
@@ -338,14 +392,76 @@ research_ai_analyze() {
     # プロンプトファイルの保存
     echo "$ai_prompt" > "$session_dir/ai-prompt.txt"
     
+    # 利用可能なAIコマンドを検索して自動実行
+    local ai_command=""
+    local ai_command_name=""
+    
+    # 優先順位: claude > gemini > llm > ollama
+    if command -v claude >/dev/null 2>&1; then
+        ai_command="claude"
+        ai_command_name="claude"
+    elif command -v gemini >/dev/null 2>&1; then
+        ai_command="gemini"
+        ai_command_name="gemini"
+    elif command -v llm >/dev/null 2>&1; then
+        ai_command="llm"
+        ai_command_name="llm"
+    elif command -v ollama >/dev/null 2>&1; then
+        # Ollamaの場合はモデル名を指定
+        ai_command="ollama run llama2"
+        ai_command_name="ollama"
+    fi
+    
+    if [ -n "$ai_command" ]; then
+        echo -e "${CYAN}${ai_command_name}コマンドを使用してドキュメント分析を実行します...${NC}"
+        
+        # ファイル内容を含めたプロンプトを作成
+        local full_prompt="$ai_prompt
+
+以下がファイルの内容です:
+---
+$(cat "$file_path" 2>/dev/null | head -5000)
+---"
+        
+        # AIコマンドで実行（タイムアウト60秒）
+        local result=$(timeout 60 $ai_command "$full_prompt" 2>/dev/null)
+        
+        if [ $? -eq 0 ] && [ -n "$result" ]; then
+            # 結果を保存
+            echo "$result" > "$session_dir/analysis.md"
+            echo -e "${GREEN}✅ ドキュメント分析が完了し、結果を保存しました${NC}"
+            echo -e "保存先: $session_dir/analysis.md"
+            
+            # ステータスを更新
+            local temp_file=$(mktemp)
+            jq '.status = "completed"' "$session_dir/metadata.json" > "$temp_file"
+            mv "$temp_file" "$session_dir/metadata.json"
+            
+            # サマリーの更新
+            update_research_summary "$presentation_path"
+            return 0
+        else
+            echo -e "${YELLOW}⚠️  ${ai_command_name}コマンドの実行に失敗しました${NC}"
+        fi
+    fi
+    
+    # llmコマンドが使えない場合は手動実行を促す
     echo -e "${GREEN}✅ AI分析プロンプトを作成しました${NC}"
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo "$ai_prompt"
     echo -e "${CYAN}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━${NC}"
     echo ""
-    echo -e "${YELLOW}👉 上記のプロンプトをAIツール（Claude Code、Cursor等）にコピーして実行してください${NC}"
-    echo -e "${YELLOW}   対象ファイル: $file_path${NC}"
-    echo -e "${YELLOW}   AIが分析結果を自動的に保存します: $session_dir${NC}"
+    echo -e "${YELLOW}👉 以下のいずれかの方法で実行してください:${NC}"
+    echo -e "${YELLOW}   1. 上記のプロンプトをAIツール（Claude Code、Cursor等）にコピー${NC}"
+    echo -e "${YELLOW}   2. AIコマンドをインストール:${NC}"
+    echo -e "${YELLOW}      - claude: pip install anthropic-cli${NC}"
+    echo -e "${YELLOW}      - gemini: pip install google-generativeai-cli${NC}"
+    echo -e "${YELLOW}      - llm: pip install llm${NC}"
+    echo -e "${YELLOW}      - ollama: https://ollama.ai${NC}"
+    echo -e "${YELLOW}   3. インタラクティブモードで結果を貼り付け: slideflow research interactive${NC}"
+    echo ""
+    echo -e "${YELLOW}対象ファイル: $file_path${NC}"
+    echo -e "${YELLOW}AIが分析結果を保存する場所: $session_dir${NC}"
     echo ""
     
     # メタデータの保存
@@ -460,6 +576,8 @@ research_interactive() {
     echo -e "利用可能なコマンド:"
     echo -e "  ${GREEN}note${NC} - メモを追加"
     echo -e "  ${GREEN}source${NC} - ソースを追加"
+    echo -e "  ${GREEN}ai-search${NC} - AI Web検索"
+    echo -e "  ${GREEN}ai-result${NC} - AI結果を貼り付け"
     echo -e "  ${GREEN}list${NC} - 調査内容一覧"
     echo -e "  ${GREEN}summary${NC} - サマリーを表示"
     echo -e "  ${GREEN}exit${NC} - 終了"
@@ -487,6 +605,39 @@ research_interactive() {
                 fi
                 research_add_source "$source_url" "$presentation_path"
                 ;;
+            ai-search)
+                if [ -z "$args" ]; then
+                    echo "検索クエリを入力してください:"
+                    read -r query
+                else
+                    query="$args"
+                fi
+                research_ai_search "$query" "$presentation_path"
+                ;;
+            ai-result)
+                echo -e "${BLUE}AI結果を貼り付けてください（Ctrl+Dで終了）:${NC}"
+                local ai_result=""
+                while IFS= read -r line; do
+                    ai_result+="$line"$'\n'
+                done
+                
+                # 最新のAIセッションを検索
+                local latest_session=$(ls -t "$presentation_path/research/ai-research" 2>/dev/null | head -1)
+                if [ -n "$latest_session" ]; then
+                    local session_dir="$presentation_path/research/ai-research/$latest_session"
+                    echo "$ai_result" > "$session_dir/summary.md"
+                    echo -e "${GREEN}✅ AI結果を保存しました: $session_dir/summary.md${NC}"
+                    
+                    # ステータスを更新
+                    if [ -f "$session_dir/metadata.json" ]; then
+                        local temp_file=$(mktemp)
+                        jq '.status = "completed"' "$session_dir/metadata.json" > "$temp_file"
+                        mv "$temp_file" "$session_dir/metadata.json"
+                    fi
+                else
+                    echo -e "${YELLOW}⚠️  AIセッションが見つかりません。先にai-searchを実行してください${NC}"
+                fi
+                ;;
             list)
                 research_list "$presentation_path"
                 ;;
@@ -503,7 +654,7 @@ research_interactive() {
                 ;;
             *)
                 echo -e "${YELLOW}不明なコマンド: $cmd${NC}"
-                echo "利用可能: note, source, list, summary, exit"
+                echo "利用可能: note, source, ai-search, ai-result, list, summary, exit"
                 ;;
         esac
         echo ""

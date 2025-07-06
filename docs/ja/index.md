@@ -1,8 +1,8 @@
 ---
-layout: home
-title: ホーム
-nav_order: 1
-description: "Markdownベースのシンプルなプレゼンテーション作成ツール"
+layout: default
+title: 日本語
+nav_order: 2
+has_children: true
 permalink: /ja/
 ---
 

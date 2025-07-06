@@ -2,7 +2,7 @@
 layout: default
 title: Basic Workflow
 nav_order: 4
-parent: Getting Started
+parent: English
 ---
 
 # Basic Workflow

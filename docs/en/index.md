@@ -1,8 +1,8 @@
 ---
-layout: home
-title: Home
-nav_order: 1
-description: "A simple Markdown-based presentation creation tool"
+layout: default
+title: English
+nav_order: 3
+has_children: true
 permalink: /en/
 ---
 

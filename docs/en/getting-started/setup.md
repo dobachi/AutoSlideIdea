@@ -2,7 +2,7 @@
 layout: default
 title: Setup Guide
 nav_order: 2
-parent: Getting Started
+parent: English
 ---
 
 # Setup Guide

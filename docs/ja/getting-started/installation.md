@@ -2,7 +2,7 @@
 layout: default
 title: インストール
 nav_order: 1
-parent: はじめに
+parent: 日本語
 ---
 
 # インストールガイド
