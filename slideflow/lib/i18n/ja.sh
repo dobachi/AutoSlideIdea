@@ -28,6 +28,7 @@ MESSAGES=(
     ["cmd.phases.desc"]="AI支援のフェーズ一覧を表示"
     ["cmd.instructions.desc"]="AI指示書システムの状況確認"
     ["cmd.config.desc"]="設定の表示・変更"
+    ["cmd.research.desc"]="調査フェーズのサポート"
     ["cmd.help.desc"]="このヘルプを表示"
     
     # AIオプションの説明

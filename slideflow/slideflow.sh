@@ -25,6 +25,7 @@ source "$SLIDEFLOW_DIR/lib/ai_helper.sh"
 source "$SLIDEFLOW_DIR/lib/project.sh"
 source "$SLIDEFLOW_DIR/lib/ai_instruction_system.sh"
 source "$SLIDEFLOW_DIR/lib/interactive_ai.sh"
+source "$SLIDEFLOW_DIR/lib/research.sh"
 
 # ヘルプメッセージ
 show_help() {
@@ -50,6 +51,7 @@ $(msg "sf.commands"):
     phases              $(msg "cmd.phases.desc")
     instructions        $(msg "cmd.instructions.desc")
     config              $(msg "cmd.config.desc")
+    research [cmd] [path] $(msg "cmd.research.desc")
     help                $(msg "cmd.help.desc")
 
 $(msg "sf.examples"):
@@ -602,6 +604,74 @@ cmd_config() {
     esac
 }
 
+# 調査コマンド
+cmd_research() {
+    local subcommand="${1:-}"
+    shift || true
+    
+    case "$subcommand" in
+        init)
+            research_init "$@"
+            ;;
+        add-note|note)
+            if [ -z "$1" ]; then
+                echo -e "${YELLOW}メモの内容を指定してください${NC}"
+                echo "使用法: slideflow research add-note \"内容\" [path]"
+                exit 1
+            fi
+            research_add_note "$@"
+            ;;
+        add-source|source)
+            if [ -z "$1" ]; then
+                echo -e "${YELLOW}ソースのURLまたはパスを指定してください${NC}"
+                echo "使用法: slideflow research add-source \"URL\" [path] [type]"
+                exit 1
+            fi
+            research_add_source "$@"
+            ;;
+        list|ls)
+            research_list "$@"
+            ;;
+        summary)
+            local path="${1:-.}"
+            if [ -f "$path/research/summary.md" ]; then
+                cat "$path/research/summary.md"
+            else
+                echo -e "${YELLOW}調査サマリーがまだありません${NC}"
+                echo "ヒント: slideflow research init でディレクトリを初期化してください"
+            fi
+            ;;
+        interactive|-i|--interactive)
+            research_interactive "$@"
+            ;;
+        ""|help|--help|-h)
+            echo -e "${BLUE}📚 SlideFlow Research - 調査フェーズサポート${NC}"
+            echo ""
+            echo "使用法:"
+            echo "  slideflow research <subcommand> [options] [path]"
+            echo ""
+            echo "サブコマンド:"
+            echo "  init [path]              調査ディレクトリを初期化"
+            echo "  add-note \"内容\" [path]   メモを追加"
+            echo "  add-source URL [path]    ソース情報を追加"
+            echo "  list [path]              調査内容を一覧表示"
+            echo "  summary [path]           調査サマリーを表示"
+            echo "  interactive [path]       インタラクティブモード"
+            echo ""
+            echo "例:"
+            echo "  slideflow research init"
+            echo "  slideflow research add-note \"重要な発見：AIの活用方法\""
+            echo "  slideflow research add-source \"https://example.com/article\""
+            echo "  slideflow research interactive"
+            ;;
+        *)
+            echo -e "${YELLOW}不明なサブコマンド: $subcommand${NC}"
+            echo "ヘルプを表示: slideflow research help"
+            exit 1
+            ;;
+    esac
+}
+
 # フェーズ一覧表示
 cmd_phases() {
     echo -e "${BLUE}📦 $(msg "info.available_phases")${NC}"
@@ -743,6 +813,9 @@ main() {
             ;;
         config)
             cmd_config "$@"
+            ;;
+        research)
+            cmd_research "$@"
             ;;
         help|--help|-h)
             show_help

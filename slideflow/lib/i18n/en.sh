@@ -28,6 +28,7 @@ MESSAGES=(
     ["cmd.phases.desc"]="List AI support phases"
     ["cmd.instructions.desc"]="Check AI instruction system status"
     ["cmd.config.desc"]="Show or update configuration"
+    ["cmd.research.desc"]="Research phase support"
     ["cmd.help.desc"]="Show this help"
     
     # AI option descriptions
