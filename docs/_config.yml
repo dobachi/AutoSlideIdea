@@ -1,0 +1,28 @@
+# サイト設定
+title: AutoSlideIdea Documentation
+description: Markdownベースのシンプルなプレゼンテーション作成ツール
+baseurl: ""
+url: "https://dobachi.github.io/AutoSlideIdea"
+
+# テーマ（GitHub Pages標準テーマから開始）
+theme: jekyll-theme-cayman
+
+# 言語設定
+lang: ja
+
+# プラグイン
+plugins:
+  - jekyll-sitemap
+  - jekyll-seo-tag
+
+# Markdown設定
+markdown: kramdown
+kramdown:
+  syntax_highlighter: rouge
+  input: GFM
+
+# 除外ファイル
+exclude:
+  - "*.log"
+  - "JEKYLL_*.md"
+  - "planning/"
