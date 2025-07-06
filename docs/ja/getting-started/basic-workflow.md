@@ -1,6 +1,11 @@
-[English](basic-workflow.en.md) | 日本語
+---
+layout: default
+title: 基本的なワークフロー
+nav_order: 4
+parent: はじめに
+---
 
-# 作業フロー
+# 基本的なワークフロー
 
 ## 基本的なワークフロー
 
