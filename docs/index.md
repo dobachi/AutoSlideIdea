@@ -12,9 +12,9 @@ Markdownベースのシンプルなプレゼンテーション作成ツール
 
 ## クイックリンク
 
-- [クイックスタート](ja/quickstart/)
-- [インストール](ja/getting-started/installation)
-- [ユーザーガイド](ja/user-guide/)
+- [クイックスタート]({{ site.baseurl }}/ja/quickstart/)
+- [インストール]({{ site.baseurl }}/ja/getting-started/installation)
+- [ユーザーガイド]({{ site.baseurl }}/ja/user-guide/)
 
 ## 特徴
 
