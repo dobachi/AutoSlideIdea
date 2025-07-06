@@ -97,7 +97,9 @@ cd ../presentations/my-presentation
 - `info [path]` - プレゼンテーション情報を表示
 - `list [path]` - 作成済みプレゼンテーションを一覧表示
 - `templates` - 利用可能なテンプレートを表示
+- `phases` - AI支援のフェーズ一覧を表示
 - `instructions` - AI指示書システムの状況確認
+- `config` - 設定の表示・変更
 - `help` - ヘルプを表示
 
 ## 特徴

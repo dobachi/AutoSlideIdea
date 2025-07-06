@@ -47,6 +47,7 @@ $(msg "sf.commands"):
     info [path]         $(msg "cmd.info.desc")
     list [path]         $(msg "cmd.list.desc")
     templates           $(msg "cmd.templates.desc")
+    phases              $(msg "cmd.phases.desc")
     instructions        $(msg "cmd.instructions.desc")
     config              $(msg "cmd.config.desc")
     help                $(msg "cmd.help.desc")
@@ -601,6 +602,45 @@ cmd_config() {
     esac
 }
 
+# フェーズ一覧表示
+cmd_phases() {
+    echo -e "${BLUE}📦 $(msg "info.available_phases")${NC}"
+    echo ""
+    
+    # フェーズの定義
+    echo -e "${GREEN}planning${NC}"
+    echo "  $(msg "phase.planning.desc")"
+    echo "  $(msg "phase.planning.activities")"
+    echo ""
+    
+    echo -e "${GREEN}research${NC}"
+    echo "  $(msg "phase.research.desc")"
+    echo "  $(msg "phase.research.activities")"
+    echo ""
+    
+    echo -e "${GREEN}design${NC}"
+    echo "  $(msg "phase.design.desc")"
+    echo "  $(msg "phase.design.activities")"
+    echo ""
+    
+    echo -e "${GREEN}creation${NC}"
+    echo "  $(msg "phase.creation.desc")"
+    echo "  $(msg "phase.creation.activities")"
+    echo ""
+    
+    echo -e "${GREEN}review${NC}"
+    echo "  $(msg "phase.review.desc")"
+    echo "  $(msg "phase.review.activities")"
+    echo ""
+    
+    echo -e "${CYAN}$(msg "info.phase_usage")${NC}"
+    echo "  slideflow ai --phase <phase> [path]"
+    echo ""
+    echo -e "${CYAN}$(msg "info.phase_example")${NC}"
+    echo "  slideflow ai --phase planning"
+    echo "  slideflow ai --phase research ./presentations/my-presentation"
+}
+
 # テンプレート一覧表示
 cmd_templates() {
     echo -e "${BLUE}📋 $(msg "info.available_templates")${NC}"
@@ -694,6 +734,9 @@ main() {
             ;;
         templates)
             cmd_templates "$@"
+            ;;
+        phases)
+            cmd_phases "$@"
             ;;
         instructions)
             list_available_instructions

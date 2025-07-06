@@ -25,6 +25,7 @@ MESSAGES=(
     ["cmd.info.desc"]="Show presentation information"
     ["cmd.list.desc"]="List existing presentations"
     ["cmd.templates.desc"]="List available templates"
+    ["cmd.phases.desc"]="List AI support phases"
     ["cmd.instructions.desc"]="Check AI instruction system status"
     ["cmd.config.desc"]="Show or update configuration"
     ["cmd.help.desc"]="Show this help"
@@ -90,6 +91,9 @@ MESSAGES=(
     ["info.please_specify"]="Please specify one of the following"
     ["info.config_updated"]="Configuration updated: %1 = %2"
     ["info.config_usage"]="Usage: slideflow config [list|get <key>|set <key>=<value>]"
+    ["info.available_phases"]="Available phases"
+    ["info.phase_usage"]="Use AI support with a specific phase:"
+    ["info.phase_example"]="Examples:"
     
     # Prompts
     ["prompt.select_template"]="Please select a template"
@@ -123,4 +127,16 @@ MESSAGES=(
     ["opt.presentations_dir"]="Specify presentations directory"
     ["opt.config_list"]="Show current configuration"
     ["opt.config_set"]="Set configuration value"
+    
+    # Phase descriptions
+    ["phase.planning.desc"]="Plan and structure your presentation"
+    ["phase.planning.activities"]="Define objectives, analyze audience, create outline"
+    ["phase.research.desc"]="Gather and organize necessary information"
+    ["phase.research.activities"]="Collect data, research examples, verify facts"
+    ["phase.design.desc"]="Design slides and visual elements"
+    ["phase.design.activities"]="Create layouts, choose colors/fonts, design charts"
+    ["phase.creation.desc"]="Create the actual content"
+    ["phase.creation.activities"]="Write text, create graphics, build slides"
+    ["phase.review.desc"]="Review and improve completion"
+    ["phase.review.activities"]="Check content, proofread, apply feedback"
 )

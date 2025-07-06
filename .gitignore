@@ -84,3 +84,7 @@ Desktop.ini
 tmp/
 temp/
 instructions/ai_instruction_kits/
+
+# SlideFlow関連
+.slideflow_session/
+test-presentations/

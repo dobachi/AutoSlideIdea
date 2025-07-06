@@ -25,6 +25,7 @@ MESSAGES=(
     ["cmd.info.desc"]="プレゼンテーション情報を表示"
     ["cmd.list.desc"]="作成済みプレゼンテーションを一覧表示"
     ["cmd.templates.desc"]="利用可能なテンプレートを表示"
+    ["cmd.phases.desc"]="AI支援のフェーズ一覧を表示"
     ["cmd.instructions.desc"]="AI指示書システムの状況確認"
     ["cmd.config.desc"]="設定の表示・変更"
     ["cmd.help.desc"]="このヘルプを表示"
@@ -90,6 +91,9 @@ MESSAGES=(
     ["info.please_specify"]="以下のいずれかを指定してください"
     ["info.config_updated"]="設定を更新しました: %1 = %2"
     ["info.config_usage"]="使い方: slideflow config [list|get <key>|set <key>=<value>]"
+    ["info.available_phases"]="利用可能なフェーズ"
+    ["info.phase_usage"]="フェーズを指定してAI支援を受ける:"
+    ["info.phase_example"]="例:"
     
     # プロンプト
     ["prompt.select_template"]="テンプレートを選択してください"
@@ -123,4 +127,16 @@ MESSAGES=(
     ["opt.presentations_dir"]="プレゼンテーションディレクトリを指定"
     ["opt.config_list"]="現在の設定を表示"
     ["opt.config_set"]="設定値を変更"
+    
+    # フェーズの説明
+    ["phase.planning.desc"]="プレゼンテーションの企画や構想を練るフェーズ"
+    ["phase.planning.activities"]="目的の明確化、対象者分析、構成作成など"
+    ["phase.research.desc"]="必要な情報を収集・整理するフェーズ"
+    ["phase.research.activities"]="データ収集、事例調査、根拠の確認など"
+    ["phase.design.desc"]="スライドのデザインやビジュアルを設計するフェーズ"
+    ["phase.design.activities"]="レイアウト作成、色・フォント選定、図表設計など"
+    ["phase.creation.desc"]="実際にコンテンツを作成するフェーズ"
+    ["phase.creation.activities"]="テキスト作成、図表作成、スライド構築など"
+    ["phase.review.desc"]="完成度を確認し改善するフェーズ"
+    ["phase.review.activities"]="内容確認、校正、フィードバック反映など"
 )

@@ -95,7 +95,9 @@ cd ../presentations/my-presentation
 - `info [path]` - Show presentation information
 - `list [path]` - List existing presentations
 - `templates` - List available templates
+- `phases` - List AI support phases
 - `instructions` - Check AI instruction system status
+- `config` - Show or update configuration
 - `help` - Show help
 
 ## Features
