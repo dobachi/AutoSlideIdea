@@ -2,24 +2,3 @@
 ---
 
 @import "{{ site.theme }}";
-
-// カスタムスタイル（Caymanテーマの拡張）
-.page-header {
-    @extend .page-header;
-    
-    // ナビゲーションリンクを追加
-    .nav-links {
-        margin-top: 1rem;
-        
-        a {
-            color: rgba(255, 255, 255, 0.9);
-            margin: 0 1rem;
-            text-decoration: none;
-            
-            &:hover {
-                color: white;
-                text-decoration: underline;
-            }
-        }
-    }
-}

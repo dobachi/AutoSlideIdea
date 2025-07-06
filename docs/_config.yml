@@ -1,7 +1,7 @@
 # サイト設定
 title: AutoSlideIdea Documentation
 description: Markdownベースのシンプルなプレゼンテーション作成ツール
-baseurl: ""
+baseurl: "/AutoSlideIdea"
 url: "https://dobachi.github.io/AutoSlideIdea"
 
 # テーマ（GitHub Pages標準テーマから開始）
