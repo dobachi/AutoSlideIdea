@@ -16,22 +16,40 @@ if [ -f "$SLIDEFLOW_DIR/lib/ai_helper.sh" ]; then
     AI_ENABLED=true
 fi
 
+# プレゼンテーションディレクトリの検証
+validate_presentation_dir() {
+    local dir="${1:-.}"
+    local command="${2:-command}"
+    
+    # 絶対パスまたは明示的なパスが指定されている場合は、slides.mdの存在のみチェック
+    if [ "$dir" != "." ] || [ -f "$dir/slides.md" ]; then
+        if [ ! -f "$dir/slides.md" ]; then
+            echo -e "${YELLOW}⚠️  エラー: slides.mdが見つかりません: $dir${NC}"
+            return 1
+        fi
+        return 0
+    fi
+    
+    # 現在のディレクトリの場合、より詳細なエラーメッセージ
+    echo -e "${YELLOW}⚠️  現在のディレクトリはプレゼンテーションディレクトリではありません${NC}"
+    echo -e "${YELLOW}プレゼンテーションディレクトリ内で実行するか、パスを指定してください${NC}"
+    echo ""
+    echo "使用例:"
+    echo "  cd presentations/my-presentation"
+    echo "  slideflow ai deep-research $command"
+    echo ""
+    echo "または:"
+    echo "  slideflow ai deep-research $command presentations/my-presentation"
+    return 1
+}
+
 # 調査ディレクトリの初期化
 research_init() {
     local presentation_path="${1:-.}"
     local research_dir="$presentation_path/research"
     
-    # プレゼンテーションディレクトリかどうかチェック
-    if [ ! -f "$presentation_path/slides.md" ] && [ "$presentation_path" = "." ]; then
-        echo -e "${YELLOW}⚠️  現在のディレクトリはプレゼンテーションディレクトリではありません${NC}"
-        echo -e "${YELLOW}プレゼンテーションディレクトリ内で実行するか、パスを指定してください${NC}"
-        echo ""
-        echo "使用例:"
-        echo "  cd presentations/my-presentation"
-        echo "  slideflow ai deep-research init"
-        echo ""
-        echo "または:"
-        echo "  slideflow ai deep-research init presentations/my-presentation"
+    # プレゼンテーションディレクトリの検証
+    if ! validate_presentation_dir "$presentation_path" "init"; then
         return 1
     fi
     
@@ -102,10 +120,16 @@ research_add_note() {
     local research_dir="$presentation_path/research"
     local notes_dir="$research_dir/notes"
     
+    # プレゼンテーションディレクトリの検証
+    if ! validate_presentation_dir "$presentation_path" "add-note"; then
+        return 1
+    fi
+    
     # ディレクトリの確認
     if [ ! -d "$notes_dir" ]; then
-        echo -e "${YELLOW}⚠️  調査ディレクトリが見つかりません。初期化します...${NC}"
-        research_init "$presentation_path"
+        echo -e "${YELLOW}⚠️  調査ディレクトリが見つかりません${NC}"
+        echo "先に 'slideflow ai deep-research init' を実行してください"
+        return 1
     fi
     
     # タイムスタンプ付きファイル名
@@ -139,10 +163,16 @@ research_add_source() {
     local research_dir="$presentation_path/research"
     local sources_dir="$research_dir/sources/$source_type"
     
+    # プレゼンテーションディレクトリの検証
+    if ! validate_presentation_dir "$presentation_path" "add-source"; then
+        return 1
+    fi
+    
     # ディレクトリの確認
     if [ ! -d "$sources_dir" ]; then
-        echo -e "${YELLOW}⚠️  調査ディレクトリが見つかりません。初期化します...${NC}"
-        research_init "$presentation_path"
+        echo -e "${YELLOW}⚠️  調査ディレクトリが見つかりません${NC}"
+        echo "先に 'slideflow ai deep-research init' を実行してください"
+        return 1
     fi
     
     # タイムスタンプ付きファイル名
@@ -176,10 +206,16 @@ research_ai_search() {
     local timeout_seconds="${SLIDEFLOW_AI_TIMEOUT:-300}"  # 環境変数からタイムアウトを取得
     local research_dir="$presentation_path/research"
     
+    # プレゼンテーションディレクトリの検証
+    if ! validate_presentation_dir "$presentation_path" "search \"$query\""; then
+        return 1
+    fi
+    
     # ディレクトリの確認
     if [ ! -d "$research_dir" ]; then
-        echo -e "${YELLOW}⚠️  調査ディレクトリが見つかりません。初期化します...${NC}"
-        research_init "$presentation_path"
+        echo -e "${YELLOW}⚠️  調査ディレクトリが見つかりません${NC}"
+        echo "先に 'slideflow ai deep-research init' を実行してください"
+        return 1
     fi
     
     echo -e "${BLUE}🔍 AI Web検索を実行します...${NC}"
@@ -430,10 +466,16 @@ research_ai_analyze() {
         return 1
     fi
     
+    # プレゼンテーションディレクトリの検証
+    if ! validate_presentation_dir "$presentation_path" "analyze $file_path"; then
+        return 1
+    fi
+    
     # ディレクトリの確認
     if [ ! -d "$research_dir" ]; then
-        echo -e "${YELLOW}⚠️  調査ディレクトリが見つかりません。初期化します...${NC}"
-        research_init "$presentation_path"
+        echo -e "${YELLOW}⚠️  調査ディレクトリが見つかりません${NC}"
+        echo "先に 'slideflow ai deep-research init' を実行してください"
+        return 1
     fi
     
     echo -e "${BLUE}📄 AIドキュメント分析プロンプトを生成します...${NC}"
@@ -844,8 +886,14 @@ research_list() {
     local presentation_path="${1:-.}"
     local research_dir="$presentation_path/research"
     
+    # プレゼンテーションディレクトリの検証
+    if ! validate_presentation_dir "$presentation_path" "list"; then
+        return 1
+    fi
+    
     if [ ! -d "$research_dir" ]; then
         echo -e "${YELLOW}調査ディレクトリが見つかりません${NC}"
+        echo "先に 'slideflow ai deep-research init' を実行してください"
         return 1
     fi
     
