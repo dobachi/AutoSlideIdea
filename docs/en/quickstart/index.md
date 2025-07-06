@@ -1,7 +1,8 @@
 ---
 layout: default
 title: Quick Start
-nav_order: 5
+nav_order: 2
+parent: English
 ---
 
 # Quick Start

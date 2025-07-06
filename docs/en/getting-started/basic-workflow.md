@@ -3,6 +3,7 @@ layout: default
 title: Basic Workflow
 nav_order: 4
 parent: English
+nav_exclude: true
 ---
 
 # Basic Workflow
