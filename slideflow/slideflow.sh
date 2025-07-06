@@ -644,6 +644,22 @@ cmd_research() {
         interactive|-i|--interactive)
             research_interactive "$@"
             ;;
+        ai-search|search)
+            if [ -z "$1" ]; then
+                echo -e "${YELLOW}検索クエリを指定してください${NC}"
+                echo "使用法: slideflow research ai-search \"クエリ\" [path]"
+                exit 1
+            fi
+            research_ai_search "$@"
+            ;;
+        ai-analyze|analyze)
+            if [ -z "$1" ]; then
+                echo -e "${YELLOW}分析対象ファイルを指定してください${NC}"
+                echo "使用法: slideflow research ai-analyze <file> [path]"
+                exit 1
+            fi
+            research_ai_analyze "$@"
+            ;;
         ""|help|--help|-h)
             echo -e "${BLUE}📚 SlideFlow Research - 調査フェーズサポート${NC}"
             echo ""
@@ -656,6 +672,8 @@ cmd_research() {
             echo "  add-source URL [path]    ソース情報を追加"
             echo "  list [path]              調査内容を一覧表示"
             echo "  summary [path]           調査サマリーを表示"
+            echo "  ai-search \"クエリ\" [path] AI Web検索を実行"
+            echo "  ai-analyze <file> [path] AIドキュメント分析を実行"
             echo "  interactive [path]       インタラクティブモード"
             echo ""
             echo "例:"
