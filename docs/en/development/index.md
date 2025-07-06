@@ -3,6 +3,7 @@ layout: default
 title: For Developers
 nav_order: 16
 has_children: true
+parent: English
 ---
 
 # Developer Documentation

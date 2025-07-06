@@ -3,6 +3,7 @@ layout: default
 title: Demos & Samples
 nav_order: 17
 has_children: true
+parent: English
 ---
 
 # Demos & Samples

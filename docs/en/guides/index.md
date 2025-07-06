@@ -3,6 +3,7 @@ layout: default
 title: Guides
 nav_order: 50
 has_children: true
+parent: English
 ---
 
 # Guides
