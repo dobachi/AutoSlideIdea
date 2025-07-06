@@ -43,7 +43,14 @@ LANG=en slideflow.sh help
 ### 新しいプレゼンテーションを作成
 
 ```bash
+# デフォルト名で作成
+./slideflow.sh new
+
+# 名前を指定して作成
 ./slideflow.sh new my-presentation
+
+# パスを指定して作成
+./slideflow.sh new projects/conference-2024
 ```
 
 ### プレビューサーバーを起動
@@ -83,7 +90,7 @@ cd ../presentations/my-presentation
 
 ## コマンド一覧
 
-- `new <name>` - 新しいプレゼンテーションを作成
+- `new [path]` - 新しいプレゼンテーションを作成
 - `preview [path]` - プレゼンテーションをプレビュー
 - `ai [options] [path]` - AI支援
 - `build [format] [path]` - プレゼンテーションをビルド
@@ -107,6 +114,44 @@ cd ../presentations/my-presentation
   - Python 3（プレビューサーバー用）
   - AutoSlideIdeaのスクリプト群
 - **サイズ**: 約100行
+
+## 設定
+
+### プレゼンテーションディレクトリのカスタマイズ
+
+プレゼンテーションを保存するデフォルトディレクトリをカスタマイズできます：
+
+```bash
+# 環境変数で設定（一時的）
+export SLIDEFLOW_PRESENTATIONS_DIR=/path/to/my/presentations
+
+# 設定ファイルで設定（永続的）
+./slideflow.sh config set presentations_dir=/path/to/my/presentations
+
+# コマンド実行時に指定
+./slideflow.sh --presentations-dir /path/to/my/presentations new
+```
+
+### 設定管理
+
+```bash
+# 現在の設定を表示
+./slideflow.sh config list
+
+# 特定の設定値を取得
+./slideflow.sh config get presentations_dir
+
+# 設定値を変更
+./slideflow.sh config set preview_port=3000
+./slideflow.sh config set default_template=academic
+```
+
+### 設定の優先順位
+
+1. コマンドラインオプション (`--presentations-dir`)
+2. 環境変数 (`SLIDEFLOW_PRESENTATIONS_DIR`)
+3. 設定ファイル (`~/.slideflow/config`)
+4. デフォルト値
 
 ## 開発ドキュメント
 

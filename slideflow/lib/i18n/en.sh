@@ -14,6 +14,7 @@ MESSAGES=(
     ["sf.usage"]="Usage"
     ["sf.commands"]="Commands"
     ["sf.options"]="Options"
+    ["sf.global_options"]="Global Options"
     ["sf.examples"]="Examples"
     
     # Command descriptions
@@ -25,6 +26,7 @@ MESSAGES=(
     ["cmd.list.desc"]="List existing presentations"
     ["cmd.templates.desc"]="List available templates"
     ["cmd.instructions.desc"]="Check AI instruction system status"
+    ["cmd.config.desc"]="Show or update configuration"
     ["cmd.help.desc"]="Show this help"
     
     # AI option descriptions
@@ -34,8 +36,8 @@ MESSAGES=(
     ["ai.option.continue"]="Continue previous session"
     
     # Error messages
-    ["error.name_required"]="Error: Please specify presentation name"
-    ["error.usage_new"]="Usage: slideflow new <name>"
+    ["error.cannot_create_dir"]="Error: Cannot create directory: %1"
+    ["info.using_default_name"]="Using default name: %1"
     ["error.dir_not_found"]="Error: Directory not found: %1"
     ["error.no_slides"]="Error: slides.md not found"
     ["error.unknown_command"]="Error: Unknown command: %1"
@@ -46,6 +48,10 @@ MESSAGES=(
     ["error.supported_formats"]="Supported formats: html, pdf, pptx"
     ["error.path_not_found"]="Path not found: %1"
     ["error.not_presentation_file"]="Not a presentation file"
+    ["error.unknown_option"]="Unknown option: %1"
+    ["error.invalid_config_syntax"]="Invalid config syntax. Usage: --config <key>=<value>"
+    ["error.key_required"]="Please specify a key"
+    ["error.unknown_config_action"]="Unknown action: %1"
     
     # Success messages
     ["success.created"]="Created successfully!"
@@ -82,6 +88,8 @@ MESSAGES=(
     ["info.open_presentation"]="Open presentation:"
     ["info.multiple_presentations"]="Multiple presentations found"
     ["info.please_specify"]="Please specify one of the following"
+    ["info.config_updated"]="Configuration updated: %1 = %2"
+    ["info.config_usage"]="Usage: slideflow config [list|get <key>|set <key>=<value>]"
     
     # Prompts
     ["prompt.select_template"]="Please select a template"
@@ -110,4 +118,9 @@ MESSAGES=(
     ["misc.unknown_command"]="Unknown command: %1"
     ["misc.no_presentation"]="No presentation found"
     ["misc.bytes"]="bytes"
+    
+    # Global options
+    ["opt.presentations_dir"]="Specify presentations directory"
+    ["opt.config_list"]="Show current configuration"
+    ["opt.config_set"]="Set configuration value"
 )

@@ -14,6 +14,7 @@ MESSAGES=(
     ["sf.usage"]="使い方"
     ["sf.commands"]="コマンド"
     ["sf.options"]="オプション"
+    ["sf.global_options"]="グローバルオプション"
     ["sf.examples"]="例"
     
     # コマンドの説明
@@ -25,6 +26,7 @@ MESSAGES=(
     ["cmd.list.desc"]="作成済みプレゼンテーションを一覧表示"
     ["cmd.templates.desc"]="利用可能なテンプレートを表示"
     ["cmd.instructions.desc"]="AI指示書システムの状況確認"
+    ["cmd.config.desc"]="設定の表示・変更"
     ["cmd.help.desc"]="このヘルプを表示"
     
     # AIオプションの説明
@@ -34,8 +36,8 @@ MESSAGES=(
     ["ai.option.continue"]="前回セッション継続"
     
     # エラーメッセージ
-    ["error.name_required"]="エラー: プレゼンテーション名を指定してください"
-    ["error.usage_new"]="使い方: slideflow new <name>"
+    ["error.cannot_create_dir"]="エラー: ディレクトリを作成できません: %1"
+    ["info.using_default_name"]="デフォルト名を使用します: %1"
     ["error.dir_not_found"]="エラー: ディレクトリが見つかりません: %1"
     ["error.no_slides"]="エラー: slides.mdが見つかりません"
     ["error.unknown_command"]="エラー: 不明なコマンド: %1"
@@ -46,6 +48,10 @@ MESSAGES=(
     ["error.supported_formats"]="対応フォーマット: html, pdf, pptx"
     ["error.path_not_found"]="パスが見つかりません: %1"
     ["error.not_presentation_file"]="プレゼンテーションファイルではありません"
+    ["error.unknown_option"]="不明なオプション: %1"
+    ["error.invalid_config_syntax"]="設定の書式が無効です。使い方: --config <key>=<value>"
+    ["error.key_required"]="キーを指定してください"
+    ["error.unknown_config_action"]="不明なアクション: %1"
     
     # 成功メッセージ
     ["success.created"]="作成完了！"
@@ -82,6 +88,8 @@ MESSAGES=(
     ["info.open_presentation"]="プレゼンテーションを開く:"
     ["info.multiple_presentations"]="複数のプレゼンテーションが見つかりました"
     ["info.please_specify"]="以下のいずれかを指定してください"
+    ["info.config_updated"]="設定を更新しました: %1 = %2"
+    ["info.config_usage"]="使い方: slideflow config [list|get <key>|set <key>=<value>]"
     
     # プロンプト
     ["prompt.select_template"]="テンプレートを選択してください"
@@ -110,4 +118,9 @@ MESSAGES=(
     ["misc.unknown_command"]="不明なコマンド: %1"
     ["misc.no_presentation"]="プレゼンテーションが見つかりません"
     ["misc.bytes"]="バイト"
+    
+    # グローバルオプション
+    ["opt.presentations_dir"]="プレゼンテーションディレクトリを指定"
+    ["opt.config_list"]="現在の設定を表示"
+    ["opt.config_set"]="設定値を変更"
 )

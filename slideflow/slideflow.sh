@@ -15,7 +15,11 @@ NC='\033[0m' # No Color
 PROJECT_ROOT=$(cd "$(dirname "$0")/.." && pwd)
 SLIDEFLOW_DIR="$(cd "$(dirname "$0")" && pwd)"
 
+# グローバルオプション
+GLOBAL_PRESENTATIONS_DIR=""
+
 # ライブラリの読み込み
+source "$SLIDEFLOW_DIR/lib/config.sh"
 source "$SLIDEFLOW_DIR/lib/i18n.sh"
 source "$SLIDEFLOW_DIR/lib/ai_helper.sh"
 source "$SLIDEFLOW_DIR/lib/project.sh"
@@ -28,10 +32,15 @@ show_help() {
 $(msg "sf.title")
 
 $(msg "sf.usage"):
-    slideflow <command> [options] [path]
+    slideflow [global-options] <command> [options] [path]
+
+$(msg "sf.global_options"):
+    --presentations-dir <dir>   $(msg "opt.presentations_dir")
+    --config list              $(msg "opt.config_list")
+    --config <key>=<value>     $(msg "opt.config_set")
 
 $(msg "sf.commands"):
-    new <name>          $(msg "cmd.new.desc")
+    new [path]          $(msg "cmd.new.desc")
     preview [path]      $(msg "cmd.preview.desc")
     ai [options] [path] $(msg "cmd.ai.desc")
     build [format] [path] $(msg "cmd.build.desc")
@@ -39,10 +48,13 @@ $(msg "sf.commands"):
     list [path]         $(msg "cmd.list.desc")
     templates           $(msg "cmd.templates.desc")
     instructions        $(msg "cmd.instructions.desc")
+    config              $(msg "cmd.config.desc")
     help                $(msg "cmd.help.desc")
 
 $(msg "sf.examples"):
+    slideflow new
     slideflow new my-presentation
+    slideflow new projects/conference-2024
     slideflow preview presentations/my-presentation
     slideflow ai presentations/my-presentation
     slideflow ai --quick tech .
@@ -63,12 +75,32 @@ EOF
 
 # 新規プレゼンテーション作成
 cmd_new() {
-    local name="${1:-}"
+    local path="${1:-}"
+    local name
+    local full_path
     
-    if [[ -z "$name" ]]; then
-        echo -e "${YELLOW}$(msg "error.name_required")${NC}"
-        echo "$(msg "error.usage_new")"
-        exit 1
+    if [[ -z "$path" ]]; then
+        # パスが指定されていない場合は、デフォルト名を生成
+        name="presentation-$(date +%Y%m%d-%H%M%S)"
+        local default_dir="${GLOBAL_PRESENTATIONS_DIR:-$(get_config presentations_dir)}"
+        full_path="$default_dir/$name"
+        echo -e "${YELLOW}$(msg "info.using_default_name" "$name")${NC}"
+    elif [[ "$path" = /* ]]; then
+        # 絶対パスの場合
+        full_path="$path"
+        name="$(basename "$path")"
+    else
+        # 相対パスの場合
+        if [[ "$path" == */* ]]; then
+            # ディレクトリ階層を含む場合
+            full_path="$(pwd)/$path"
+            name="$(basename "$path")"
+        else
+            # 名前のみの場合（デフォルトディレクトリを使用）
+            name="$path"
+            local default_dir="${GLOBAL_PRESENTATIONS_DIR:-$(get_config presentations_dir)}"
+            full_path="$default_dir/$name"
+        fi
     fi
     
     # 既存のスクリプトを利用
@@ -76,11 +108,11 @@ cmd_new() {
     
     # テンプレートオプションを正しく処理
     local template="${TEMPLATE:-basic}"
-    "$PROJECT_ROOT/scripts/manage-presentation.sh" "$name" --template "$template"
+    "$PROJECT_ROOT/scripts/manage-presentation.sh" "$full_path" --template "$template"
     
     echo -e "${GREEN}✅ $(msg "success.created")${NC}"
     echo -e "$(msg "success.next_steps")"
-    echo -e "  cd presentations/$name"
+    echo -e "  cd $full_path"
     echo -e "  slideflow preview"
 }
 
@@ -456,7 +488,9 @@ cmd_info() {
 
 # 既存プレゼンテーション一覧表示
 cmd_list() {
-    local search_dir="${1:-$PROJECT_ROOT/presentations}"
+    # デフォルトディレクトリを取得
+    local default_dir="${GLOBAL_PRESENTATIONS_DIR:-$(get_config presentations_dir)}"
+    local search_dir="${1:-$default_dir}"
     
     # パスを絶対パスに変換
     if [[ ! "$search_dir" = /* ]]; then
@@ -529,13 +563,42 @@ cmd_list() {
         echo "  slideflow new my-first-presentation"
     else
         echo -e "${CYAN}$(msg "info.open_presentation")${NC}"
-        if [[ "$search_dir" == "$PROJECT_ROOT/presentations" ]]; then
-            echo "  cd presentations/<name>"
-        else
-            echo "  cd <presentation-path>"
-        fi
+        echo "  cd <presentation-path>"
         echo "  slideflow preview"
     fi
+}
+
+# 設定管理
+cmd_config() {
+    local action="${1:-list}"
+    
+    case "$action" in
+        list|show)
+            show_config
+            ;;
+        get)
+            local key="${2:-}"
+            if [[ -z "$key" ]]; then
+                echo -e "${YELLOW}$(msg "error.key_required")${NC}"
+                exit 1
+            fi
+            echo "$(get_config "$key")"
+            ;;
+        set)
+            local key_value="${2:-}"
+            if [[ ! "$key_value" =~ ^([^=]+)=(.+)$ ]]; then
+                echo -e "${YELLOW}$(msg "error.invalid_config_syntax")${NC}"
+                exit 1
+            fi
+            set_config "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
+            echo -e "${GREEN}$(msg "info.config_updated" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}")${NC}"
+            ;;
+        *)
+            echo -e "${YELLOW}$(msg "error.unknown_config_action" "$action")${NC}"
+            echo "$(msg "info.config_usage")"
+            exit 1
+            ;;
+    esac
 }
 
 # テンプレート一覧表示
@@ -577,6 +640,36 @@ cmd_templates() {
 
 # メインコマンド処理
 main() {
+    # グローバルオプションの処理
+    while [[ $# -gt 0 ]]; do
+        case "$1" in
+            --presentations-dir)
+                GLOBAL_PRESENTATIONS_DIR="$2"
+                shift 2
+                ;;
+            --config)
+                if [[ "$2" == "list" ]]; then
+                    show_config
+                    exit 0
+                elif [[ "$2" =~ ^([^=]+)=(.+)$ ]]; then
+                    set_config "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}"
+                    echo -e "${GREEN}$(msg "info.config_updated" "${BASH_REMATCH[1]}" "${BASH_REMATCH[2]}")${NC}"
+                    exit 0
+                else
+                    echo -e "${YELLOW}$(msg "error.invalid_config_syntax")${NC}"
+                    exit 1
+                fi
+                ;;
+            -*)
+                echo -e "${YELLOW}$(msg "error.unknown_option" "$1")${NC}"
+                exit 1
+                ;;
+            *)
+                break
+                ;;
+        esac
+    done
+    
     local command="${1:-help}"
     shift || true
     
@@ -604,6 +697,9 @@ main() {
             ;;
         instructions)
             list_available_instructions
+            ;;
+        config)
+            cmd_config "$@"
             ;;
         help|--help|-h)
             show_help

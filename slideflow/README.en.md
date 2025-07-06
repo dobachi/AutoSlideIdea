@@ -41,7 +41,14 @@ LANG=en slideflow.sh help
 ### Create a new presentation
 
 ```bash
+# Create with default name
+./slideflow.sh new
+
+# Create with specified name
 ./slideflow.sh new my-presentation
+
+# Create with specified path
+./slideflow.sh new projects/conference-2024
 ```
 
 ### Start preview server
@@ -81,7 +88,7 @@ cd ../presentations/my-presentation
 
 ## Command List
 
-- `new <name>` - Create a new presentation
+- `new [path]` - Create a new presentation
 - `preview [path]` - Preview presentation
 - `ai [options] [path]` - AI assistance
 - `build [format] [path]` - Build presentation
@@ -129,6 +136,44 @@ MIT License
 ## Author
 
 dobachi
+
+## Configuration
+
+### Customizing the Presentations Directory
+
+You can customize the default directory where presentations are stored:
+
+```bash
+# Set via environment variable (temporary)
+export SLIDEFLOW_PRESENTATIONS_DIR=/path/to/my/presentations
+
+# Set via config file (persistent)
+./slideflow.sh config set presentations_dir=/path/to/my/presentations
+
+# Specify at command execution
+./slideflow.sh --presentations-dir /path/to/my/presentations new
+```
+
+### Configuration Management
+
+```bash
+# Show current configuration
+./slideflow.sh config list
+
+# Get specific configuration value
+./slideflow.sh config get presentations_dir
+
+# Set configuration value
+./slideflow.sh config set preview_port=3000
+./slideflow.sh config set default_template=academic
+```
+
+### Configuration Priority
+
+1. Command-line options (`--presentations-dir`)
+2. Environment variables (`SLIDEFLOW_PRESENTATIONS_DIR`)
+3. Config file (`~/.slideflow/config`)
+4. Default values
 
 ## Development Documents
 
