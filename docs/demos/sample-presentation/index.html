@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoSlideIdea サンプルプレゼンテーション</title>
+    <link rel="stylesheet" href="https://unpkg.com/@marp-team/marp-core/lib/marp.css">
+    <style>
+        body {
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .header {
+            background: #2e86ab;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        .header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.9;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        .demo-selector {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .demo-button {
+            padding: 0.5rem 1rem;
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .demo-button:hover {
+            background: #e0e0e0;
+        }
+        .demo-button.active {
+            background: #2e86ab;
+            color: white;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .info {
+            margin-top: 2rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 1rem;
+            color: #2e86ab;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AutoSlideIdea サンプルプレゼンテーション</h1>
+        <p>Markdownで作成されたプレゼンテーションの実例をご覧いただけます</p>
+    </div>
+    
+    <div class="container">
+        <a href="../../" class="back-link">← ドキュメントに戻る</a>
+        
+        <div class="demo-selector">
+            <button class="demo-button active" onclick="loadDemo('basic')">基本的な例</button>
+            <button class="demo-button" onclick="loadDemo('business')">ビジネス提案</button>
+            <button class="demo-button" onclick="loadDemo('technical')">技術プレゼン</button>
+        </div>
+        
+        <iframe id="demo-frame" src="basic.html"></iframe>
+        
+        <div class="info">
+            <h2>このデモについて</h2>
+            <p>このサンプルプレゼンテーションは、AutoSlideIdeaを使用して作成されました。</p>
+            <ul>
+                <li>Markdownファイルから自動生成</li>
+                <li>Marpによるスライド変換</li>
+                <li>CSSテーマによるカスタマイズ</li>
+                <li>Mermaid図表のサポート</li>
+            </ul>
+            <p>詳しい作成方法は<a href="../../ja/quickstart/">クイックスタート</a>をご覧ください。</p>
+        </div>
+    </div>
+    
+    <script>
+        function loadDemo(type) {
+            document.getElementById('demo-frame').src = type + '.html';
+            document.querySelectorAll('.demo-button').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>

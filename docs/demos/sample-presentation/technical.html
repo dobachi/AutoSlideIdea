@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>技術プレゼンテーション</title>
+<link rel="stylesheet" href="https://unpkg.com/@marp-team/marp-core/lib/marp.css">
+<style>
+section {
+  width: 1280px;
+  height: 720px;
+  font-size: 32px;
+  padding: 40px;
+  background: #1a1a1a;
+  color: #e0e0e0;
+}
+h1 {
+  color: #4fc3f7;
+  font-family: 'Courier New', monospace;
+}
+h2 {
+  color: #81c784;
+}
+pre {
+  background: #2d2d2d;
+  border: 1px solid #444;
+  border-radius: 5px;
+  padding: 15px;
+}
+code {
+  color: #ffab00;
+}
+strong {
+  color: #ff5252;
+}
+</style>
+</head>
+<body>
+<section>
+<h1>マイクロサービス アーキテクチャ</h1>
+<h2>スケーラブルなシステム設計</h2>
+<p>Tech Conference 2024<br>
+@dobachi</p>
+</section>
+
+<section>
+<h1>アーキテクチャ概要</h1>
+<pre><code>┌─────────────┐     ┌─────────────┐     ┌─────────────┐
+│   Frontend  │────▶│ API Gateway │────▶│  Services   │
+└─────────────┘     └─────────────┘     └─────────────┘
+                            │                    │
+                            ▼                    ▼
+                    ┌─────────────┐     ┌─────────────┐
+                    │    Auth     │     │   Database  │
+                    └─────────────┘     └─────────────┘</code></pre>
+</section>
+
+<section>
+<h1>技術スタック</h1>
+<ul>
+<li><strong>Frontend:</strong> React + TypeScript</li>
+<li><strong>Backend:</strong> Node.js + Express</li>
+<li><strong>Database:</strong> PostgreSQL + Redis</li>
+<li><strong>Container:</strong> Docker + Kubernetes</li>
+<li><strong>CI/CD:</strong> GitHub Actions</li>
+</ul>
+</section>
+
+<section>
+<h1>実装例</h1>
+<pre><code class="language-typescript">// API Gateway実装
+export class ApiGateway {
+  private services: Map&lt;string, ServiceClient&gt;;
+
+  async route(request: Request): Promise&lt;Response&gt; {
+    const service = this.getService(request.path);
+    
+    return await service.forward(request);
+  }
+
+  private getService(path: string): ServiceClient {
+    const serviceName = path.split('/')[1];
+    return this.services.get(serviceName);
+  }
+}</code></pre>
+</section>
+
+<section>
+<h1>パフォーマンス改善</h1>
+<table>
+<tr>
+<th>メトリクス</th>
+<th>改善前</th>
+<th>改善後</th>
+</tr>
+<tr>
+<td>レスポンス時間</td>
+<td>850ms</td>
+<td><strong>120ms</strong></td>
+</tr>
+<tr>
+<td>スループット</td>
+<td>1,000 req/s</td>
+<td><strong>15,000 req/s</strong></td>
+</tr>
+<tr>
+<td>可用性</td>
+<td>99.0%</td>
+<td><strong>99.99%</strong></td>
+</tr>
+</table>
+</section>
+
+<section>
+<h1>まとめ</h1>
+<ul>
+<li>✨ <strong>マイクロサービス</strong>で柔軟な開発</li>
+<li>🚀 <strong>パフォーマンス</strong>の大幅改善</li>
+<li>📈 <strong>スケーラビリティ</strong>の確保</li>
+<li>🔧 <strong>保守性</strong>の向上</li>
+</ul>
+<p>ソースコード: <a href="https://github.com/example/microservices-demo">github.com/example/microservices-demo</a></p>
+</section>
+</body>
+</html>

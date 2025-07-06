@@ -110,7 +110,7 @@ brew install --cask font-noto-sans-cjk
 
 ## 環境設定の確認
 
-> 💡 **参考**: [デモサイト](https://dobachi.github.io/AutoSlideIdea/)で実際の出力例を確認できます
+> 💡 **参考**: [サンプルプレゼンテーション](../../demos/sample-presentation/)で実際の出力例を確認できます
 
 ### テスト用スライドの作成
 

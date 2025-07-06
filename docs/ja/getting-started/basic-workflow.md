@@ -9,7 +9,7 @@ parent: はじめに
 
 ## 基本的なワークフロー
 
-> 💡 **参考**: [デモサイト](https://dobachi.github.io/AutoSlideIdea/)で実際の出力例を確認
+> 💡 **参考**: [サンプルプレゼンテーション](../../demos/sample-presentation/)で実際の出力例を確認
 
 ### 1. プレゼンテーションの作成・管理
 
