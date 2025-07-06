@@ -227,48 +227,108 @@ research_ai_search() {
     echo "$ai_prompt" > "$session_dir/ai-prompt.txt"
     
     # 利用可能なAIコマンドを検索して自動実行
-    local ai_command=""
-    local ai_command_name=""
+    local ai_executed=false
+    local result=""
     
-    # 優先順位: claude > gemini > llm > ollama
+    # 優先順位: 1. claude, 2. gemini, 3. llm, 4. ollama, 5. continue, 6. aider, 7. gh copilot
+    
+    # 1. Claude
     if command -v claude >/dev/null 2>&1; then
-        ai_command="claude"
-        ai_command_name="claude"
-    elif command -v gemini >/dev/null 2>&1; then
-        ai_command="gemini"
-        ai_command_name="gemini"
-    elif command -v llm >/dev/null 2>&1; then
-        ai_command="llm"
-        ai_command_name="llm"
-    elif command -v ollama >/dev/null 2>&1; then
-        # Ollamaの場合はモデル名を指定
-        ai_command="ollama run llama2"
-        ai_command_name="ollama"
+        echo -e "${CYAN}claudeコマンドを使用してAI検索を実行します...${NC}"
+        result=$(timeout 60 claude "$ai_prompt" 2>/dev/null)
+        if [ $? -eq 0 ] && [ -n "$result" ]; then
+            echo "$result" > "$session_dir/summary.md"
+            ai_executed=true
+        else
+            echo -e "${YELLOW}⚠️  claudeコマンドの実行に失敗しました${NC}"
+        fi
     fi
     
-    if [ -n "$ai_command" ]; then
-        echo -e "${CYAN}${ai_command_name}コマンドを使用してAI検索を実行します...${NC}"
-        
-        # AIコマンドで実行（タイムアウト60秒）
-        local result=$(timeout 60 $ai_command "$ai_prompt" 2>/dev/null)
-        
+    # 2. Gemini
+    if [ "$ai_executed" = false ] && command -v gemini >/dev/null 2>&1; then
+        echo -e "${CYAN}geminiコマンドを使用してAI検索を実行します...${NC}"
+        result=$(timeout 60 gemini "$ai_prompt" 2>/dev/null)
         if [ $? -eq 0 ] && [ -n "$result" ]; then
-            # 結果を保存
             echo "$result" > "$session_dir/summary.md"
-            echo -e "${GREEN}✅ AI検索が完了し、結果を保存しました${NC}"
-            echo -e "保存先: $session_dir/summary.md"
-            
-            # ステータスを更新
-            local temp_file=$(mktemp)
-            jq '.status = "completed"' "$session_dir/metadata.json" > "$temp_file"
-            mv "$temp_file" "$session_dir/metadata.json"
-            
-            # サマリーの更新
-            update_research_summary "$presentation_path"
-            return 0
+            ai_executed=true
         else
-            echo -e "${YELLOW}⚠️  ${ai_command_name}コマンドの実行に失敗しました${NC}"
+            echo -e "${YELLOW}⚠️  geminiコマンドの実行に失敗しました${NC}"
         fi
+    fi
+    
+    # 3. llm
+    if [ "$ai_executed" = false ] && command -v llm >/dev/null 2>&1; then
+        echo -e "${CYAN}llmコマンドを使用してAI検索を実行します...${NC}"
+        result=$(timeout 60 llm "$ai_prompt" 2>/dev/null)
+        if [ $? -eq 0 ] && [ -n "$result" ]; then
+            echo "$result" > "$session_dir/summary.md"
+            ai_executed=true
+        else
+            echo -e "${YELLOW}⚠️  llmコマンドの実行に失敗しました${NC}"
+        fi
+    fi
+    
+    # 4. Ollama
+    if [ "$ai_executed" = false ] && command -v ollama >/dev/null 2>&1; then
+        echo -e "${CYAN}ollamaを使用してAI検索を実行します...${NC}"
+        # Ollamaは少し異なる形式
+        result=$(timeout 60 ollama run llama2 "$ai_prompt" 2>/dev/null)
+        if [ $? -eq 0 ] && [ -n "$result" ]; then
+            echo "$result" > "$session_dir/summary.md"
+            ai_executed=true
+        else
+            echo -e "${YELLOW}⚠️  ollamaコマンドの実行に失敗しました${NC}"
+        fi
+    fi
+    
+    # 5. Continue (VS Code Extension CLI)
+    if [ "$ai_executed" = false ] && command -v continue >/dev/null 2>&1; then
+        echo -e "${CYAN}continueコマンドを使用してAI検索を実行します...${NC}"
+        result=$(timeout 60 continue ask "$ai_prompt" 2>/dev/null)
+        if [ $? -eq 0 ] && [ -n "$result" ]; then
+            echo "$result" > "$session_dir/summary.md"
+            ai_executed=true
+        else
+            echo -e "${YELLOW}⚠️  continueコマンドの実行に失敗しました${NC}"
+        fi
+    fi
+    
+    # 6. aider (AI pair programming tool)
+    if [ "$ai_executed" = false ] && command -v aider >/dev/null 2>&1; then
+        echo -e "${CYAN}aiderを使用してAI検索を実行します...${NC}"
+        # aiderは一時ファイル経由で実行
+        echo "$ai_prompt" | timeout 60 aider --no-git --yes --message-file - 2>/dev/null > "$session_dir/summary.md"
+        if [ $? -eq 0 ] && [ -s "$session_dir/summary.md" ]; then
+            ai_executed=true
+        else
+            echo -e "${YELLOW}⚠️  aiderコマンドの実行に失敗しました${NC}"
+        fi
+    fi
+    
+    # 7. GitHub Copilot CLI
+    if [ "$ai_executed" = false ] && command -v gh >/dev/null 2>&1 && gh copilot --version >/dev/null 2>&1; then
+        echo -e "${CYAN}GitHub Copilot CLIを使用してAI検索を実行します...${NC}"
+        result=$(timeout 60 gh copilot suggest "$ai_prompt" 2>/dev/null)
+        if [ $? -eq 0 ] && [ -n "$result" ]; then
+            echo "$result" > "$session_dir/summary.md"
+            ai_executed=true
+        else
+            echo -e "${YELLOW}⚠️  GitHub Copilot CLIの実行に失敗しました${NC}"
+        fi
+    fi
+    
+    if [ "$ai_executed" = true ]; then
+        echo -e "${GREEN}✅ AI検索が完了し、結果を保存しました${NC}"
+        echo -e "保存先: $session_dir/summary.md"
+        
+        # ステータスを更新
+        local temp_file=$(mktemp)
+        jq '.status = "completed"' "$session_dir/metadata.json" > "$temp_file"
+        mv "$temp_file" "$session_dir/metadata.json"
+        
+        # サマリーの更新
+        update_research_summary "$presentation_path"
+        return 0
     fi
     
     # llmコマンドが使えない場合は手動実行を促す
@@ -280,10 +340,13 @@ research_ai_search() {
     echo -e "${YELLOW}👉 以下のいずれかの方法で実行してください:${NC}"
     echo -e "${YELLOW}   1. 上記のプロンプトをAIツール（Claude Code、Cursor等）にコピー${NC}"
     echo -e "${YELLOW}   2. AIコマンドをインストール:${NC}"
-    echo -e "${YELLOW}      - claude: pip install anthropic-cli${NC}"
-    echo -e "${YELLOW}      - gemini: pip install google-generativeai-cli${NC}"
+    echo -e "${YELLOW}      - claude: Anthropic Claude CLI${NC}"
+    echo -e "${YELLOW}      - gemini: Google Gemini CLI${NC}"
     echo -e "${YELLOW}      - llm: pip install llm${NC}"
     echo -e "${YELLOW}      - ollama: https://ollama.ai${NC}"
+    echo -e "${YELLOW}      - continue: VS Code Continue拡張機能${NC}"
+    echo -e "${YELLOW}      - aider: pip install aider-chat${NC}"
+    echo -e "${YELLOW}      - gh copilot: gh extension install github/gh-copilot${NC}"
     echo -e "${YELLOW}   3. インタラクティブモードで結果を貼り付け: slideflow research interactive${NC}"
     echo ""
     echo -e "${YELLOW}AIが調査結果を保存する場所: $session_dir${NC}"
@@ -393,56 +456,98 @@ research_ai_analyze() {
     echo "$ai_prompt" > "$session_dir/ai-prompt.txt"
     
     # 利用可能なAIコマンドを検索して自動実行
-    local ai_command=""
-    local ai_command_name=""
-    
-    # 優先順位: claude > gemini > llm > ollama
-    if command -v claude >/dev/null 2>&1; then
-        ai_command="claude"
-        ai_command_name="claude"
-    elif command -v gemini >/dev/null 2>&1; then
-        ai_command="gemini"
-        ai_command_name="gemini"
-    elif command -v llm >/dev/null 2>&1; then
-        ai_command="llm"
-        ai_command_name="llm"
-    elif command -v ollama >/dev/null 2>&1; then
-        # Ollamaの場合はモデル名を指定
-        ai_command="ollama run llama2"
-        ai_command_name="ollama"
-    fi
-    
-    if [ -n "$ai_command" ]; then
-        echo -e "${CYAN}${ai_command_name}コマンドを使用してドキュメント分析を実行します...${NC}"
-        
-        # ファイル内容を含めたプロンプトを作成
-        local full_prompt="$ai_prompt
+    local ai_executed=false
+    local result=""
+    local full_prompt="$ai_prompt
 
 以下がファイルの内容です:
 ---
 $(cat "$file_path" 2>/dev/null | head -5000)
 ---"
-        
-        # AIコマンドで実行（タイムアウト60秒）
-        local result=$(timeout 60 $ai_command "$full_prompt" 2>/dev/null)
-        
+    
+    # 優先順位: 1. claude, 2. gemini, 3. llm, 4. ollama, 5. continue, 6. aider, 7. gh copilot
+    
+    # 1. Claude
+    if command -v claude >/dev/null 2>&1; then
+        echo -e "${CYAN}claudeコマンドを使用してドキュメント分析を実行します...${NC}"
+        result=$(timeout 60 claude "$full_prompt" 2>/dev/null)
         if [ $? -eq 0 ] && [ -n "$result" ]; then
-            # 結果を保存
             echo "$result" > "$session_dir/analysis.md"
-            echo -e "${GREEN}✅ ドキュメント分析が完了し、結果を保存しました${NC}"
-            echo -e "保存先: $session_dir/analysis.md"
-            
-            # ステータスを更新
-            local temp_file=$(mktemp)
-            jq '.status = "completed"' "$session_dir/metadata.json" > "$temp_file"
-            mv "$temp_file" "$session_dir/metadata.json"
-            
-            # サマリーの更新
-            update_research_summary "$presentation_path"
-            return 0
-        else
-            echo -e "${YELLOW}⚠️  ${ai_command_name}コマンドの実行に失敗しました${NC}"
+            ai_executed=true
         fi
+    fi
+    
+    # 2. Gemini
+    if [ "$ai_executed" = false ] && command -v gemini >/dev/null 2>&1; then
+        echo -e "${CYAN}geminiコマンドを使用してドキュメント分析を実行します...${NC}"
+        result=$(timeout 60 gemini "$full_prompt" 2>/dev/null)
+        if [ $? -eq 0 ] && [ -n "$result" ]; then
+            echo "$result" > "$session_dir/analysis.md"
+            ai_executed=true
+        fi
+    fi
+    
+    # 3. llm
+    if [ "$ai_executed" = false ] && command -v llm >/dev/null 2>&1; then
+        echo -e "${CYAN}llmコマンドを使用してドキュメント分析を実行します...${NC}"
+        result=$(timeout 60 llm "$full_prompt" 2>/dev/null)
+        if [ $? -eq 0 ] && [ -n "$result" ]; then
+            echo "$result" > "$session_dir/analysis.md"
+            ai_executed=true
+        fi
+    fi
+    
+    # 4. Ollama
+    if [ "$ai_executed" = false ] && command -v ollama >/dev/null 2>&1; then
+        echo -e "${CYAN}ollamaを使用してドキュメント分析を実行します...${NC}"
+        result=$(timeout 60 ollama run llama2 "$full_prompt" 2>/dev/null)
+        if [ $? -eq 0 ] && [ -n "$result" ]; then
+            echo "$result" > "$session_dir/analysis.md"
+            ai_executed=true
+        fi
+    fi
+    
+    # 5. Continue
+    if [ "$ai_executed" = false ] && command -v continue >/dev/null 2>&1; then
+        echo -e "${CYAN}continueコマンドを使用してドキュメント分析を実行します...${NC}"
+        result=$(timeout 60 continue ask "$full_prompt" 2>/dev/null)
+        if [ $? -eq 0 ] && [ -n "$result" ]; then
+            echo "$result" > "$session_dir/analysis.md"
+            ai_executed=true
+        fi
+    fi
+    
+    # 6. aider
+    if [ "$ai_executed" = false ] && command -v aider >/dev/null 2>&1; then
+        echo -e "${CYAN}aiderを使用してドキュメント分析を実行します...${NC}"
+        echo "$full_prompt" | timeout 60 aider --no-git --yes --message-file - 2>/dev/null > "$session_dir/analysis.md"
+        if [ $? -eq 0 ] && [ -s "$session_dir/analysis.md" ]; then
+            ai_executed=true
+        fi
+    fi
+    
+    # 7. GitHub Copilot CLI
+    if [ "$ai_executed" = false ] && command -v gh >/dev/null 2>&1 && gh copilot --version >/dev/null 2>&1; then
+        echo -e "${CYAN}GitHub Copilot CLIを使用してドキュメント分析を実行します...${NC}"
+        result=$(timeout 60 gh copilot suggest "$full_prompt" 2>/dev/null)
+        if [ $? -eq 0 ] && [ -n "$result" ]; then
+            echo "$result" > "$session_dir/analysis.md"
+            ai_executed=true
+        fi
+    fi
+    
+    if [ "$ai_executed" = true ]; then
+        echo -e "${GREEN}✅ ドキュメント分析が完了し、結果を保存しました${NC}"
+        echo -e "保存先: $session_dir/analysis.md"
+        
+        # ステータスを更新
+        local temp_file=$(mktemp)
+        jq '.status = "completed"' "$session_dir/metadata.json" > "$temp_file"
+        mv "$temp_file" "$session_dir/metadata.json"
+        
+        # サマリーの更新
+        update_research_summary "$presentation_path"
+        return 0
     fi
     
     # llmコマンドが使えない場合は手動実行を促す
@@ -454,10 +559,13 @@ $(cat "$file_path" 2>/dev/null | head -5000)
     echo -e "${YELLOW}👉 以下のいずれかの方法で実行してください:${NC}"
     echo -e "${YELLOW}   1. 上記のプロンプトをAIツール（Claude Code、Cursor等）にコピー${NC}"
     echo -e "${YELLOW}   2. AIコマンドをインストール:${NC}"
-    echo -e "${YELLOW}      - claude: pip install anthropic-cli${NC}"
-    echo -e "${YELLOW}      - gemini: pip install google-generativeai-cli${NC}"
+    echo -e "${YELLOW}      - claude: Anthropic Claude CLI${NC}"
+    echo -e "${YELLOW}      - gemini: Google Gemini CLI${NC}"
     echo -e "${YELLOW}      - llm: pip install llm${NC}"
     echo -e "${YELLOW}      - ollama: https://ollama.ai${NC}"
+    echo -e "${YELLOW}      - continue: VS Code Continue拡張機能${NC}"
+    echo -e "${YELLOW}      - aider: pip install aider-chat${NC}"
+    echo -e "${YELLOW}      - gh copilot: gh extension install github/gh-copilot${NC}"
     echo -e "${YELLOW}   3. インタラクティブモードで結果を貼り付け: slideflow research interactive${NC}"
     echo ""
     echo -e "${YELLOW}対象ファイル: $file_path${NC}"

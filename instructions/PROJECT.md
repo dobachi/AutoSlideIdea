@@ -60,10 +60,13 @@ mkdir -p "$SESSION_DIR"/{raw-results,analysis}
 ### AI自動実行オプション
 
 1. **AIコマンド対応**: 以下のコマンドがインストールされている場合は自動実行（優先順位順）
-   - `claude`: Anthropic CLI
-   - `gemini`: Google Generative AI CLI
-   - `llm`: 汎用LLMツール
-   - `ollama`: ローカルLLM
+   - `claude`: Anthropic Claude CLI
+   - `gemini`: Google Gemini CLI
+   - `llm`: 汎用LLMツール (pip install llm)
+   - `ollama`: ローカルLLM (https://ollama.ai)
+   - `continue`: VS Code Continue拡張機能
+   - `aider`: AI pair programming (pip install aider-chat)
+   - `gh copilot`: GitHub Copilot CLI
 2. **インタラクティブモード**: `slideflow research interactive`でAI結果を貼り付け
 3. **手動実行**: プロンプトをコピーしてAIツールで実行
 
