@@ -1,6 +1,11 @@
-# AutoSlideIdea Roadmap
+---
+layout: default
+title: Roadmap
+nav_order: 3
+parent: For Developers
+---
 
-[English](roadmap.en.md) | [日本語](roadmap.md)
+# AutoSlideIdea Roadmap
 
 ## Completed Features ✅
 

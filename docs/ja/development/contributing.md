@@ -1,6 +1,11 @@
-# コントリビューションガイド
+---
+layout: default
+title: コントリビューションガイド
+nav_order: 1
+parent: 開発者向け
+---
 
-[English](contributing.en.md) | 日本語
+# コントリビューションガイド
 
 ## コミットメッセージ
 

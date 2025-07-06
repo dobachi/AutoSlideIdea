@@ -1,4 +1,11 @@
-# AutoSlideIdea 英語対応方針
+---
+layout: default
+title: ローカライゼーション
+nav_order: 2
+parent: 開発者向け
+---
+
+# ローカライゼーション（多言語対応）ガイド
 
 ## 現状分析
 

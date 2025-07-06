@@ -1,6 +1,11 @@
-# AutoSlideIdea ロードマップ
+---
+layout: default
+title: ロードマップ
+nav_order: 3
+parent: 開発者向け
+---
 
-[English](roadmap.en.md) | 日本語
+# AutoSlideIdea ロードマップ
 
 ## 完了した機能 ✅
 

@@ -1,6 +1,11 @@
-# Contribution Guidelines
+---
+layout: default
+title: Contributing Guide
+nav_order: 1
+parent: For Developers
+---
 
-[English](contributing.en.md) | [日本語](contributing.md)
+# Contributing Guide
 
 ## Code of Conduct
 
