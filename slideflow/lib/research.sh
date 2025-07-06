@@ -21,6 +21,20 @@ research_init() {
     local presentation_path="${1:-.}"
     local research_dir="$presentation_path/research"
     
+    # プレゼンテーションディレクトリかどうかチェック
+    if [ ! -f "$presentation_path/slides.md" ] && [ "$presentation_path" = "." ]; then
+        echo -e "${YELLOW}⚠️  現在のディレクトリはプレゼンテーションディレクトリではありません${NC}"
+        echo -e "${YELLOW}プレゼンテーションディレクトリ内で実行するか、パスを指定してください${NC}"
+        echo ""
+        echo "使用例:"
+        echo "  cd presentations/my-presentation"
+        echo "  slideflow ai deep-research init"
+        echo ""
+        echo "または:"
+        echo "  slideflow ai deep-research init presentations/my-presentation"
+        return 1
+    fi
+    
     echo -e "${BLUE}📚 調査ディレクトリを初期化します...${NC}"
     
     # ディレクトリ構造の作成
