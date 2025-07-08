@@ -14,15 +14,18 @@ declare -A INSTRUCTION_TYPES=(
     ["data_analysis"]="analysis/basic_data_analysis.md"
     ["creative"]="creative/basic_creative_work.md"
     ["text_creation"]="writing/basic_text_creation.md"
+    ["marp_specialist"]="presentation/marp_specialist.md"
+    ["technical_design"]="presentation/technical_design.md"
+    ["accessibility"]="presentation/accessibility.md"
 )
 
 # フェーズと指示書の対応
 declare -A PHASE_INSTRUCTIONS=(
     ["planning"]="presentation,creative"
     ["research"]="data_analysis,text_creation"
-    ["design"]="presentation,creative"
-    ["creation"]="technical_writer,text_creation"
-    ["review"]="technical_writer,presentation"
+    ["design"]="presentation,marp_specialist,technical_design"
+    ["creation"]="marp_specialist,technical_writer,text_creation"
+    ["review"]="technical_writer,presentation,accessibility"
 )
 
 # 指示書の存在確認
